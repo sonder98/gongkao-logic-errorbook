@@ -207,7 +207,7 @@
 ## 9. GitHub题库工程规则（与知识框架同时继承）
 
 - GitHub 仓库：`sonder98/gongkao-logic-errorbook`；正式网站：`https://sonder98.github.io/gongkao-logic-errorbook/`。
-- 现有单页题库主要位于 `index.html` 里的 `QUESTIONS` 数组；**已收录8道题**，所有旧题ID不能修改。
+- 现有单页题库主要位于 `questions.json` 独立题库（由 `index.html` 加载）；**已收录8道题**，所有旧题ID不能修改。
 - 题目字段：`id, year, exam, title, category, type, difficulty, stem, ask, options, answer, structure, reason, trap, rule, image`（以实际代码为准）。
 - 数据同步架构：**题目/答案**由 GitHub Pages 的静态代码提供；**个人答题记录、笔记、待复习状态**按既有 Supabase Auth/RLS 保存。添加一题通常**无需修改数据库表**。
 - 每个新题必须稳定、唯一的id，不能修改旧记录的id；测试新旧题记录兼容。
@@ -243,3 +243,6 @@
 - 实施用户最新流程：新题不再附原图、不联网核验题目来源年份；缺失填未知。
 - 更新第6题与医学调剂生题的已入库状态、GitHub写入状态和测试说明。
 - 新增第7题多动症干预与第8题桃园套袋；两题答案均为D，新题不保存图片，桃园题年份/来源未知；保留C/D选项力度比较与用户纠错记录。
+### 题库结构迁移（2026-10-28）
+
+所有题目现已单独存于 `questions.json`；六张旧图完整保存在 `legacy/questions-with-original-images-20261028.html`，按需查看。新增题只改 JSON，不再传图或写大型 HTML。全部 ID 和 Supabase 记录主键保持不变。

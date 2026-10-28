@@ -26,6 +26,13 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const expectedQuestions = Number(await page.locator('#questionCount').innerText());
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
+  const jsonResponse=await page.request.get(new URL('questions.json',url).href);
+  assert.equal(jsonResponse.status(),200,'questions.json HTTP 200');
+  const catalog=await jsonResponse.json();
+  assert.equal(catalog.length,expectedQuestions);
+  assert.equal(new Set(catalog.map(q=>q.id)).size,expectedQuestions);
+  assert.equal(catalog.filter(q=>q.image.startsWith('legacy:')).length,6);
+
   assert.equal(await page.locator('.choice').count(), 5);
 
   await page.locator('[data-answer="E"]').click();
@@ -51,7 +58,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('.choice').count(), 4);
   assert.match(await page.locator('.qtop').innerText(), /两句式推理/);
   await page.locator('#toggleImage').click();
-  assert.equal(await page.locator('#shot').evaluate(img => img.complete && img.naturalWidth > 0), true);
+  await page.waitForFunction(() => {const img=document.querySelector('#shot'); return Boolean(img&&img.complete&&img.naturalWidth>0)},null,{timeout:12000});
   await page.locator('[data-answer="D"]').click();
   await page.locator('#submit').click();
   assert.match(await page.locator('.result').innerText(), /答对了/);

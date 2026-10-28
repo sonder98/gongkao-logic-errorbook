@@ -1,6 +1,6 @@
 # 公考逻辑判断交互错题本
 
-一个可本地使用、可通过 Supabase 登录同步的单页错题本。目前收录 8 道逻辑判断题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
+一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前收录 8 道逻辑判断题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
 
 ## 当前状态
 
@@ -23,7 +23,7 @@
 
 ## 本地使用
 
-直接用浏览器打开 `index.html` 即可使用本地模式。未配置 Supabase 时：
+题目现由独立 `questions.json` 加载。正式使用请打开 GitHub Pages；本地使用可在项目根目录执行 `python -m http.server 8000`，再访问 `http://localhost:8000/`。由于浏览器安全限制，不能直接双击 `index.html` 以 `file://` 方式打开。未配置 Supabase 时：
 
 - 可以正常刷题；
 - 记录保存在当前浏览器；
@@ -49,6 +49,16 @@
    ```
 
 7. 绝对不要使用 `service_role`、secret key 或数据库密码。
+
+## 题库结构与快速入库
+
+- `index.html`：页面、答题和 Supabase 同步代码，不再内嵌题目或原图。
+- `questions.json`：**唯一题库数据文件**；今后新增题目只追加 JSON 对象，保留全部历史 ID，不再上传图片。
+- `legacy/questions-with-original-images-20261028.html`：迁移前原版页面的 Git Blob 归档，保存原有6张题图，只有查看旧题原图时才会下载。
+- 旧题 `image: "legacy:<id>"`；新题 `image: ""`。不要把原图 Base64 再写回 `questions.json`。
+- `node tests/validate-questions.cjs`：快速校验 JSON、旧题 ID 与历史原图；不依赖第三方包。
+- `tests/smoke.cjs`：浏览器完整冒烟测试，核验答题、旧图及本地/云端交互。未运行时不能宣称通过。
+- 普通新增题只需修改约几KB的 JSON 文件，提交速度不会再受旧图数据体积影响。
 
 ## 数据与同步
 
@@ -109,6 +119,10 @@
 ```text
 .
 ├─ index.html
+├─ questions.json
+├─ tests/
+│  ├─ validate-questions.cjs
+│  └─ smoke.cjs
 ├─ README.md
 ├─ SUPABASE_SETUP.md
 ├─ TESTING.md
@@ -117,6 +131,7 @@
 ├─ supabase/
 │  └─ schema.sql
 └─ legacy/
+   ├─ questions-with-original-images-20261028.html
    ├─ 公考逻辑判断_交互错题本_V1.html
    └─ 公考逻辑判断_云同步错题本_V2_原版.html
 ```
