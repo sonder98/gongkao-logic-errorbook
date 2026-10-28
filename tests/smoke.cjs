@@ -23,7 +23,9 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.waitForSelector('.nav-item', { timeout: 15000 });
 
   assert.equal(await page.title(), '逻辑判断 · 云同步错题本 V2');
-  assert.equal(await page.locator('.nav-item').count(), 5);
+  const expectedQuestions = Number(await page.locator('#questionCount').innerText());
+  assert.ok(expectedQuestions >= 6, 'Question count must be at least six');
+  assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
   assert.equal(await page.locator('.choice').count(), 5);
 
   await page.locator('[data-answer="E"]').click();
@@ -37,12 +39,23 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   assert.equal(await page.locator('#note').inputValue(), '自动化冒烟测试笔记');
   assert.equal(await page.locator('#review').isChecked(), true);
-  assert.match(await page.locator('.stats .num').first().innerText(), /^1\s*\/\s*5$/);
+  assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '1/'+expectedQuestions);
 
   await page.locator('[data-id="2022-dingcan"]').click();
   await page.locator('#show').click();
   assert.match(await page.locator('.result').innerText(), /正确答案 B/);
-  assert.match(await page.locator('.stats .num').first().innerText(), /^1\s*\/\s*5$/);
+  assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '1/'+expectedQuestions);
+
+
+  await page.locator('[data-id="2024-hebei-diet-cognition"]').click();
+  assert.equal(await page.locator('.choice').count(), 4);
+  assert.match(await page.locator('.qtop').innerText(), /两句式推理/);
+  await page.locator('#toggleImage').click();
+  assert.equal(await page.locator('#shot').evaluate(img => img.complete && img.naturalWidth > 0), true);
+  await page.locator('[data-answer="D"]').click();
+  await page.locator('#submit').click();
+  assert.match(await page.locator('.result').innerText(), /答对了/);
+  assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '2/'+expectedQuestions);
 
   await page.locator('#note').fill('<img src=x onerror="window.__xss=true">');
   await page.reload({ waitUntil: 'domcontentloaded' });
@@ -91,7 +104,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     ok: true,
     url,
     browserChannel,
-    questions: 5,
+    questions: expectedQuestions,
     persistence: true,
     directRevealDoesNotComplete: true,
     xssEscaping: true,
