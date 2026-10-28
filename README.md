@@ -7,9 +7,9 @@
 - 本地版功能已整理为 `index.html`；
 - 原始 V1、V2 保存在 `legacy/`，请勿覆盖；
 - Supabase 建表、RLS、自动更新时间和冲突检测函数位于 `supabase/schema.sql`；
-- 正式 Supabase 项目尚未创建或连接；
-- GitHub Pages 尚未部署；
-- `index.html` 中的 `CLOUD_URL` 和 `CLOUD_PUBLIC_KEY` 仍为空。
+- 正式 Supabase 项目已创建，公开 Project URL 与 publishable key 已接入；
+- GitHub Pages 已部署到 `https://sonder98.github.io/gongkao-logic-errorbook/`；
+- 数据库 SQL、Auth 回跳地址与双账号 RLS 测试仍需完成。
 
 ## 免费使用说明
 
