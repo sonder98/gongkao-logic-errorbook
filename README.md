@@ -9,7 +9,7 @@
 - Supabase 建表、RLS、自动更新时间和冲突检测函数位于 `supabase/schema.sql`；
 - 正式 Supabase 项目已创建，公开 Project URL 与 publishable key 已接入；
 - GitHub Pages 已部署到 `https://sonder98.github.io/gongkao-logic-errorbook/`；
-- 数据库 SQL、Auth 回跳地址与双账号 RLS 测试仍需完成。
+- 数据库 SQL 与 Auth 回跳地址已完成；匿名权限和浏览器功能测试已通过；真实邮箱登录、跨设备同步与双账号 RLS 仍需人工验收。
 
 ## 免费使用说明
 
@@ -112,6 +112,7 @@
 ├─ README.md
 ├─ SUPABASE_SETUP.md
 ├─ TESTING.md
+├─ TEST_REPORT.md
 ├─ .nojekyll
 ├─ supabase/
 │  └─ schema.sql
