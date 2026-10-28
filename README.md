@@ -110,6 +110,7 @@
 .
 ├─ index.html
 ├─ README.md
+├─ SUPABASE_SETUP.md
 ├─ TESTING.md
 ├─ .nojekyll
 ├─ supabase/
