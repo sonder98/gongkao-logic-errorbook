@@ -1,0 +1,14 @@
+# Local environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Editor and OS files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test output
+test-results/
+playwright-report/
