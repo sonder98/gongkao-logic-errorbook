@@ -24,7 +24,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   assert.equal(await page.title(), '逻辑判断 · 云同步错题本 V2');
   const expectedQuestions = Number(await page.locator('#questionCount').innerText());
-  assert.ok(expectedQuestions >= 6, 'Question count must be at least six');
+  assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
   assert.equal(await page.locator('.choice').count(), 5);
 
@@ -56,6 +56,25 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#submit').click();
   assert.match(await page.locator('.result').innerText(), /答对了/);
   assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '2/'+expectedQuestions);
+
+
+  // New text-only questions: four choices, correct answer D, no screenshot control.
+  for (const id of ['2025-guangdong-sanzhiyifu-adhd-intervention','unknown-peach-bagging-small-fruit']) {
+    await page.locator('[data-id="'+id+'"]').click();
+    assert.equal(await page.locator('.choice').count(), 4);
+    assert.match(await page.locator('.qtop').innerText(), /由果推因/);
+    assert.equal(await page.locator('#toggleImage').count(), 0);
+    await page.locator('[data-answer="D"]').click();
+    await page.locator('#submit').click();
+    assert.match(await page.locator('.result').innerText(), /答对了/);
+  }
+  assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '4/'+expectedQuestions);
+
+  // Existing IDs and answers continue to work after appending two new questions.
+  await page.locator('[data-id="medical"]').click();
+  assert.match(await page.locator('.qtop').innerText(), /两句式推理/);
+  assert.equal(await page.locator('.choice').count(), 5);
+  await page.locator('[data-id="unknown-peach-bagging-small-fruit"]').click();
 
   await page.locator('#note').fill('<img src=x onerror="window.__xss=true">');
   await page.reload({ waitUntil: 'domcontentloaded' });
