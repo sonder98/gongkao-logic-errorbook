@@ -54,6 +54,36 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.locator('.maincard').isVisible(), true);
   assert.equal(await page.locator('.choice').first().isVisible(), true);
+  const mobileLayout = await page.evaluate(() => ({
+    viewportWidth: document.documentElement.clientWidth,
+    pageWidth: document.documentElement.scrollWidth,
+    overflowing: [...document.querySelectorAll('body *')]
+      .map(element => ({
+        tag: element.tagName,
+        id: element.id,
+        className: typeof element.className === 'string' ? element.className : '',
+        left: Math.round(element.getBoundingClientRect().left),
+        right: Math.round(element.getBoundingClientRect().right),
+        width: Math.round(element.getBoundingClientRect().width)
+      }))
+      .filter(item => item.left < -1 || item.right > document.documentElement.clientWidth + 1)
+      .slice(0, 20)
+  }));
+  assert.equal(
+    mobileLayout.pageWidth,
+    mobileLayout.viewportWidth,
+    `mobile page overflows horizontally: ${JSON.stringify(mobileLayout)}`
+  );
+  await page.setViewportSize({ width: 320, height: 720 });
+  const narrowMobileLayout = await page.evaluate(() => ({
+    viewportWidth: document.documentElement.clientWidth,
+    pageWidth: document.documentElement.scrollWidth
+  }));
+  assert.equal(
+    narrowMobileLayout.pageWidth,
+    narrowMobileLayout.viewportWidth,
+    `narrow mobile page overflows horizontally: ${JSON.stringify(narrowMobileLayout)}`
+  );
 
   await browser.close();
 
@@ -66,6 +96,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     directRevealDoesNotComplete: true,
     xssEscaping: true,
     mobileViewport: true,
+    mobileWidths: [390, 320],
+    mobileHorizontalOverflow: false,
     authStatus,
     consoleErrors,
     failedResources
