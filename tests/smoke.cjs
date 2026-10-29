@@ -57,6 +57,20 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(catalog.length,expectedQuestions);
   assert.equal(new Set(catalog.map(q=>q.id)).size,expectedQuestions);
   assert.equal(catalog.filter(q=>q.image.startsWith('legacy:')).length,6);
+  // Editorial importance is visible, searchable and separate from personal review.
+  const keyQuestion=catalog.find(q=>q.id==='unknown-black-carbon-neurocognition');
+  assert.equal(keyQuestion.important,true);
+  assert.equal(keyQuestion.answer,'D');
+  await page.locator('#importantFilter').check();
+  assert.equal(await page.locator('.nav-item').count(),catalog.filter(q=>q.important===true).length);
+  await page.locator('[data-id="unknown-black-carbon-neurocognition"]').click();
+  assert.match(await page.locator('.qtop').innerText(),/重点题/);
+  assert.equal(await page.locator('.choice').count(),4);
+  assert.equal(await page.locator('#review').isChecked(),false);
+  await page.locator('#importantFilter').uncheck();
+  assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
+  await page.locator('[data-id="2008-yumi"]').click();
+
 
 
   // Knowledge tab: searchable navigation, structured notes, and both-way links.
@@ -67,6 +81,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(knowledgeResponse.status(),200);
   const book=await knowledgeResponse.json();
   const totalTopics=book.sections.reduce((n,s)=>n+s.topics.length,0);
+  assert.ok(book.sections.some(s=>s.topics.some(t=>t.id==='susceptibility-selection-bias'&&t.questionIds.includes('unknown-black-carbon-neurocognition'))));
+
   assert.ok(totalTopics>=15,'Knowledge library should contain substantive topics');
   const initialTopics=book.sections[0].topics.length;
   assert.equal(await page.locator('[data-knowledge-section]').count(),book.sections.length);

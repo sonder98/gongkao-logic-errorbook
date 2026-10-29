@@ -14,6 +14,7 @@ for(const item of q){
  assert.ok(item.options.every(opt=>typeof opt==='string'&&opt.trim()),item.id+' 选项不完整');
  assert.ok('ABCDE'.slice(0,item.options.length).includes(item.answer),item.id+' 正确答案无效');
  assert.ok(item.image===''||item.image==='legacy:'+item.id,item.id+' 图片字段不符合规则');
+ if(Object.hasOwn(item,'important'))assert.equal(typeof item.important,'boolean',item.id+' 重点标记须为布尔值');
 }
 const archive=path.join(root,'legacy/questions-with-original-images-20261028.html');
 assert.ok(fs.existsSync(archive),'原图历史文件不存在');
