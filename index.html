@@ -18,7 +18,7 @@
 .nav-status{flex:none;font-size:13px;color:#9ca9b2;line-height:1}
 .nav-status.correct{color:#168061}
 .nav-status.incorrect{color:#b34242}
-.nav-status.review{color:#bb821a}
+.nav-status.review{color:#bb821a}.nav-pin{flex:none;font-size:12px;color:#a97818}.tag.important{background:#fff8e8;border-color:#e7c886;color:#855b0f;font-weight:850}
 .question-list .empty{padding:18px 10px;font-size:12px;line-height:1.5}
 .tag{font-size:11px;border:1px solid #d9e9e6;color:#17756b;background:#f2faf8;padding:2px 9px;border-radius:100px;white-space:nowrap}.tag.negative{color:#965d11;background:#fff7e7;border-color:#f0dfbc}.filter{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.filter button{border:1px solid var(--line);color:var(--sub);background:white;padding:5px 10px;border-radius:9px;font-size:12px}.filter button.active{background:#eaf7f4;color:var(--accent);border-color:#a9d8cd}.maincard{padding:26px 30px}.qtop{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}.qtop .subtle{margin-left:auto;color:var(--sub);font-size:12px}.title{font-size:24px;line-height:1.35;font-weight:800;margin:4px 0 19px}.label{color:var(--sub);font-size:12px;font-weight:800;margin:18px 0 7px;letter-spacing:.05em}.stem{font-size:16px;line-height:2.0;white-space:pre-line}.ask{font-size:16px;font-weight:750;white-space:pre-line;margin:14px 0}.choices{display:grid;gap:10px}.choice{display:flex;gap:13px;text-align:left;align-items:flex-start;padding:15px 16px;width:100%;border:1px solid var(--line);background:white;border-radius:12px;color:var(--ink);line-height:1.65;transition:.16s}.choice:hover:not(:disabled){border-color:#7cc7b8;background:#fbfffe}.letter{width:25px;height:25px;display:inline-flex;flex:none;align-items:center;justify-content:center;font-size:12px;border-radius:7px;background:#eef2f3;color:#51606c;font-weight:800}.choice.chosen{border-color:var(--accent);background:#f0fbf8}.choice.chosen .letter{background:var(--accent);color:white}.choice.correct{border-color:#6abea3;background:#eef9f3}.choice.incorrect{border-color:#d78c8c;background:#fff3f3}.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.actions{margin-top:18px}.btn{padding:10px 17px;border:1px solid var(--line);background:white;border-radius:10px;color:var(--ink);font-weight:700}.btn.primary{background:var(--accent);border-color:var(--accent);color:white}.btn:disabled{opacity:.4;cursor:not-allowed}.btn:hover:not(:disabled){filter:brightness(.97)}.result{margin-top:20px;border-radius:12px;border:1px solid var(--line);padding:18px;background:#fafcfc}.result.good{background:#f0faf5;border-color:#cde8da}.result.bad{background:#fff8f5;border-color:#efd5c8}.result h3{margin:0 0 10px;font-size:18px}.result p{margin:7px 0;font-size:14px}.result b{color:#213b47}.note{width:100%;border-radius:10px;border:1px solid var(--line);padding:11px 12px;resize:vertical;min-height:82px;outline-color:var(--accent);background:#fff}.muted{color:var(--sub);font-size:12px}.outline{background:transparent;border:none;color:var(--accent);font-weight:700;padding:6px 0}.shot{display:none;margin-top:14px;max-width:100%;border-radius:8px;border:1px solid var(--line)}.shot.open{display:block}.empty{padding:40px;text-align:center;color:var(--sub)}.footer-nav{display:flex;align-items:center;justify-content:space-between;margin:22px 0 0;gap:10px}.pill{padding:5px 11px;font-size:11px;border-radius:100px;background:#eff3f5;color:var(--sub)}.mini{color:var(--sub);font-size:12px;margin:3px 0}.bottom-help{margin:16px 2px;color:var(--sub);font-size:12px}.key{border:1px solid #d4dde1;border-radius:4px;padding:0 5px;background:white;font-size:11px}.switch{display:flex;gap:8px;align-items:center;cursor:pointer}.switch input{accent-color:var(--accent)}@media(max-width:800px){.shell{grid-template-columns:1fr;margin-top:-10px;padding:0 12px}aside{position:static;padding:14px}.question-list{max-height:190px}.nav-item{min-width:0}.maincard{padding:18px}.title{font-size:21px}header{padding:24px 19px 28px}h1{font-size:26px}.stats{gap:15px;justify-content:space-around}.stem{font-size:15px}}
 
@@ -144,7 +144,7 @@
 <input id="questionSearch" class="question-search" type="search" placeholder="搜索题名、题干、来源…" autocomplete="off">
 <div id="filters" class="filter"></div>
 <div class="question-list" id="questionList" aria-label="题目列表"></div>
-<p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
+<p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
 <button class="outline" id="exportBackup" type="button">导出 JSON 备份</button>
 <label class="switch" style="display:block;margin-top:8px">导入 JSON 备份 <input id="importBackup" type="file" accept=".json,application/json" style="max-width:100%;margin-top:6px"></label>
 <button class="outline" id="reset" type="button">清空答题记录</button></aside>
@@ -176,7 +176,7 @@ function readJSON(key,fall={}){try{return JSON.parse(localStorage.getItem(key)||
 function clone(value){return JSON.parse(JSON.stringify(value))}
 function cloudRecord(value){const copy=clone(value||{});delete copy._syncConflict;return copy}
 let user=null, db=null, pending=new Set(), cloudMeta={}, syncing=false, syncTimer=null;
-let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,searchTerm='',lastNavActive=null;
+let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
 const userKey=()=>KEY+'_user_'+user.id;
 const pendingKey=()=>userKey()+'_pending';
 const metaKey=()=>userKey()+'_cloud_meta';
@@ -468,7 +468,7 @@ function openKnowledge(id){
 function openPractice(id){
  if(!QUESTIONS.some(q=>q.id===id))return;
  active=id;
- category='全部';wrongOnly=false;searchTerm='';
+ category='全部';wrongOnly=false;importantOnly=false;searchTerm='';
  $('questionSearch').value='';
  switchView('practice');
  window.scrollTo({top:0,behavior:'smooth'});
@@ -531,6 +531,7 @@ function filtered(){
  return QUESTIONS.filter(q=>
   (category==='全部'||q.category===category)&&
   (!wrongOnly||record(q.id).wrong||record(q.id).review)&&
+  (!importantOnly||q.important===true)&&
   (!needle||[q.title,q.stem,q.exam,q.year,q.category].some(value=>String(value||'').toLocaleLowerCase().includes(needle)))
  );
 }
@@ -539,13 +540,15 @@ function render(){const f=filtered();if(!f.some(q=>q.id===active)&&f.length)acti
 let cats=['全部',...new Set(QUESTIONS.map(q=>q.category))];$('filters').innerHTML=cats.map(c=>`<button class="${category===c?'active':''}" data-cat="${safe(c)}">${safe(c)}</button>`).join('');
 $('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render();if(currentView==='practice')updateViewHash()});
 $('wrongFilter').checked=wrongOnly;
+$('importantFilter').checked=importantOnly;
 $('navCount').textContent=f.length+' / '+QUESTIONS.length+' 题';
 const list=$('questionList'),oldScroll=list.scrollTop,activeChanged=lastNavActive!==active;
 list.innerHTML=f.length?f.map((q,i)=>{
  const r=record(q.id),status=r.submitted?(r.selected===q.answer?'✓':'×'):(r.review?'★':'·');
  const statusClass=r.submitted?(r.selected===q.answer?'correct':'incorrect'):(r.review?'review':'');
  const statusName=r.submitted?(r.selected===q.answer?'已答对':'已答错'):(r.review?'待复习':'未完成');
- return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span><span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
+ const pin=q.important===true?'<span class="nav-pin" aria-hidden="true">★</span>':'';
+ return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
 }).join(''):'<div class="empty">未找到匹配的题目，请调整搜索或筛选条件</div>';
 list.scrollTop=oldScroll;
 list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
@@ -565,7 +568,7 @@ const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active)
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
-$('card').innerHTML=`<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span><span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
+$('card').innerHTML=`<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">原始题干</p><div class="stem">${safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
  <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn">${(r.submitted||r.revealed)?'解析已展开':'直接查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
@@ -600,6 +603,7 @@ $('next').onclick=()=>{if(ix<f.length-1){active=f[ix+1].id;render();updateViewHa
 function submit(q,r){if(!r.selected)return;r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
 $('questionSearch').oninput=e=>{searchTerm=e.target.value;render();if(currentView==='practice')updateViewHash()};
 $('wrongFilter').onchange=e=>{wrongOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
+$('importantFilter').onchange=e=>{importantOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
 function downloadBackup(label=''){
  const payload={format:'gongkao-logic-backup-v3',schema_version:APP_SCHEMA_VERSION,exported_at:new Date().toISOString(),progress:state};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -642,7 +646,7 @@ $('reset').onclick=async()=>{
    pending.clear();cloudMeta={};localStorage.removeItem(pendingKey());localStorage.removeItem(metaKey());
  }
   state={};persistUserState();
- category='全部';wrongOnly=false;active=QUESTIONS[0].id;render();
+ category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0].id;render();
  setStatus(user?'已清空当前账号的云端记录':'已清空本地记录','good');
 };
 document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
