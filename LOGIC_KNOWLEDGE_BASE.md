@@ -1,3 +1,5 @@
+> **历史存档（不作为现行分类与工程操作的权威规范）。** 此文保留旧聊天讨论、曾经的修正与已废弃的建议。新 AI 请优先读 [AI_HANDOFF.md](AI_HANDOFF.md)、[STUDY_FRAMEWORK.md](STUDY_FRAMEWORK.md)；考生正式笔记以 [knowledge.json](knowledge.json) 为准。发生冲突时，以最新学习原则、现行数据和用户当前指示为准。
+
 # 公考逻辑判断：加强削弱与两句式推理知识体系
 
 > 版本：2026-10-28（初版）  

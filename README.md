@@ -1,4 +1,8 @@
-# 公考逻辑判断交互错题本
+# 公考逻辑判断 · 学习与交互错题本
+
+**网站入口：** <https://sonder98.github.io/gongkao-logic-errorbook/>（默认进入错题练习；点击顶部「知识体系」阅读笔记）。
+
+**新 AI / 新对话请从 [AI_HANDOFF.md](AI_HANDOFF.md) 开始**，再读 [STUDY_FRAMEWORK.md](STUDY_FRAMEWORK.md)、[AGENTS.md](AGENTS.md)。旧知识库仅历史归档。
 
 一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前收录 8 道逻辑判断题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
 
@@ -120,8 +124,14 @@
 .
 ├─ index.html
 ├─ questions.json
+├─ knowledge.json
+├─ AGENTS.md
+├─ AI_HANDOFF.md
+├─ STUDY_FRAMEWORK.md
+├─ LOGIC_KNOWLEDGE_BASE.md  # 历史存档
 ├─ tests/
 │  ├─ validate-questions.cjs
+│  ├─ validate-knowledge.cjs
 │  └─ smoke.cjs
 ├─ README.md
 ├─ SUPABASE_SETUP.md
@@ -138,9 +148,16 @@
 
 
 
+## 新对话与 AI 接力
+
+- [AI_HANDOFF.md](AI_HANDOFF.md)：完整接力总入口，说明职责、工作流、稳定约束、当前学习框架与数据兼容。
+- [STUDY_FRAMEWORK.md](STUDY_FRAMEWORK.md)：公考逻辑判断的现行教学理论和边界，不因过往纠错记录产生歧义。
+- [AGENTS.md](AGENTS.md)：代码代理规则与最小修改集。
+- `LOGIC_KNOWLEDGE_BASE.md`：**历史讨论归档，可能含过时建议**，不再作为正式规范。
+
 ## 知识体系与错题练习
 
-网站顶部提供两个入口：**知识体系**与**错题练习**。知识体系采用纯静态的 `knowledge.json`，已按「论证基础 → 题型与方法（由因推果、由果推因、相关性推因果、两句式推理）→ 选项陷阱」整理。每个知识点独立维护，加强与削弱放在同一个方法下，方便持续补充。
+网站顶部提供两个入口：**知识体系**与**错题练习**。**根网址默认打开错题练习**；仅在显式 `#knowledge/<topic-id>` 深链时直接打开对应知识。左侧知识目录按章节折叠（默认仅展开当前章节）、限高纵向滚动（桌面400px、移动端210px），搜索自动展开匹配结果。知识体系采用纯静态的 `knowledge.json`，已按「论证基础 → 题型与方法（由因推果、由果推因、相关性推因果、两句式推理）→ 选项陷阱」整理。每个知识点独立维护，加强与削弱放在同一个方法下，方便持续补充。
 
 - 知识正文仅维护 `knowledge.json`；`LOGIC_KNOWLEDGE_BASE.md` 仍作内部讨论归档，不在页面直接展示。
 - `knowledge.json` 中各 `sections[].topics[]` 必须有稳定唯一的 `id`、`title`、`summary`；可选字段包括 `recognize`、`patterns`、`strengthen`、`weaken`、`pitfalls`（字符串数组）、`examples`（标题与正文数组）、`questionIds`（题目 ID 数组）。
