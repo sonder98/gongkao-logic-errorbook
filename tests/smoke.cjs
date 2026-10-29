@@ -83,6 +83,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('[data-knowledge-section="effect"]').click();
   assert.equal(await page.locator('[data-knowledge-section="effect"]').getAttribute('aria-expanded'),'true');
   assert.equal(await page.locator('[data-knowledge-section="foundation"]').getAttribute('aria-expanded'),'false');
+  assert.match(await page.locator('#knowledgeCard h2').innerText(),/由果推因/);
+  assert.match(page.url(),/#knowledge\/effect-overview$/);
   assert.equal(await page.locator('[data-knowledge-topic]').count(),
     book.sections.find(s=>s.id==='effect').topics.length);
   await page.locator('#knowledgeSearch').fill('规范性前提');
