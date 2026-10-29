@@ -164,3 +164,10 @@
 - 为现有知识点增补内容时保持 `id` 不变；`questionIds` 必须对应 `questions.json` 中真实存在的 ID。知识页和答题页自动生成双向跳转链接。
 - 知识库无需注册账号即可阅读；答题记录、笔记和待复习状态仍由原有 Supabase / 本地逻辑保存，旧数据不迁移。
 - 快速检查：`node tests/validate-knowledge.cjs`、`node tests/validate-questions.cjs`；浏览器测试：`node tests/smoke.cjs`（需要 Playwright 环境）。
+
+
+## 重点题标记和筛选
+
+题目可在 `questions.json` 中设置可选字段 `important:true`。这表示全站编辑重点题，网页会显示「★ 重点题」，导航支持「只看重点题」筛选。此标记和用户私有的 `review` 待复习状态不同，不修改 Supabase 进度数据。
+
+首个重点题 `unknown-black-carbon-neurocognition` 对应知识点 `susceptibility-selection-bias`，讲解群体易感性、基线混杂与严格选择偏差的区别。知识页和原题页仍可双向跳转。
