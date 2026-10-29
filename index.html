@@ -484,7 +484,7 @@ function filtered(){
 function safe(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 function render(){const f=filtered();if(!f.some(q=>q.id===active)&&f.length)active=f[0].id;
 let cats=['全部',...new Set(QUESTIONS.map(q=>q.category))];$('filters').innerHTML=cats.map(c=>`<button class="${category===c?'active':''}" data-cat="${safe(c)}">${safe(c)}</button>`).join('');
-$('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render()});
+$('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render();if(currentView==='practice')updateViewHash()});
 $('wrongFilter').checked=wrongOnly;
 $('navCount').textContent=f.length+' / '+QUESTIONS.length+' 题';
 const list=$('questionList'),oldScroll=list.scrollTop,activeChanged=lastNavActive!==active;
@@ -495,7 +495,7 @@ list.innerHTML=f.length?f.map((q,i)=>{
  return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span><span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
 }).join(''):'<div class="empty">未找到匹配的题目，请调整搜索或筛选条件</div>';
 list.scrollTop=oldScroll;
-list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render()});
+list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
 if(activeChanged){
  const item=Array.from(list.querySelectorAll('.nav-item')).find(el=>el.dataset.id===active);
  if(item){
@@ -538,15 +538,15 @@ if($('toggleImage'))if($('toggleImage'))$('toggleImage').onclick=async()=>{
   $('toggleImage').textContent='截图加载失败，点击重试';
  }
 };
-$('prev').onclick=()=>{if(ix>0){active=f[ix-1].id;render();window.scrollTo({top:0,behavior:'smooth'})}};
-$('next').onclick=()=>{if(ix<f.length-1){active=f[ix+1].id;render();window.scrollTo({top:0,behavior:'smooth'})}};
+$('prev').onclick=()=>{if(ix>0){active=f[ix-1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
+$('next').onclick=()=>{if(ix<f.length-1){active=f[ix+1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
  if($('retry'))$('retry').onclick=()=>{r.selected='';r.submitted=false;r.revealed=false;save();render()};
  if($('keepLocal'))$('keepLocal').onclick=()=>useLocalConflict(q.id);
  if($('useCloud'))$('useCloud').onclick=()=>useCloudConflict(q.id);
 }
 function submit(q,r){if(!r.selected)return;r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
-$('questionSearch').oninput=e=>{searchTerm=e.target.value;render()};
-$('wrongFilter').onchange=e=>{wrongOnly=e.target.checked;render()};
+$('questionSearch').oninput=e=>{searchTerm=e.target.value;render();if(currentView==='practice')updateViewHash()};
+$('wrongFilter').onchange=e=>{wrongOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
 function downloadBackup(label=''){
  const payload={format:'gongkao-logic-backup-v3',schema_version:APP_SCHEMA_VERSION,exported_at:new Date().toISOString(),progress:state};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
@@ -592,7 +592,7 @@ $('reset').onclick=async()=>{
  category='全部';wrongOnly=false;active=QUESTIONS[0].id;render();
  setStatus(user?'已清空当前账号的云端记录':'已清空本地记录','good');
 };
-document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render()}})
+document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
  const res=await fetch('questions.json',{cache:'no-cache'});
  if(!res.ok)throw new Error('题库请求失败：HTTP '+res.status);

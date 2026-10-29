@@ -73,9 +73,11 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#knowledgeCard [data-open-question="unknown-peach-bagging-small-fruit"]').click();
   assert.equal(await page.locator('#practiceView').isVisible(),true);
   assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),'unknown-peach-bagging-small-fruit');
+  assert.match(page.url(),/#practice\/unknown-peach-bagging-small-fruit$/);
   await page.locator('#card [data-open-topic="alternative-causes"]').click();
   assert.equal(await page.locator('#knowledgeView').isVisible(),true);
   assert.match(await page.locator('#knowledgeCard h2').innerText(),/他因分析/);
+  assert.match(page.url(),/#knowledge\/alternative-causes$/);
   await page.locator('#tabPractice').click();
   await page.locator('[data-id="2008-yumi"]').click();
 
