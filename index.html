@@ -49,10 +49,21 @@
 .kb-count{font-size:11px;color:var(--sub)}
 .kb-search{display:block;width:100%;border:1px solid var(--line);border-radius:10px;font-size:13px;padding:10px 12px;background:#fafcfc;color:var(--ink);outline-offset:2px}
 .kb-search:focus{outline:2px solid #79c7bb;border-color:var(--accent)}
-.kb-nav{margin:14px 0 0;max-height:calc(100vh - 216px);min-height:180px;overflow:auto;scrollbar-width:thin;overscroll-behavior-y:contain;padding-right:3px}
+.kb-nav{margin:14px 0 0;max-height:400px;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;overscroll-behavior-y:contain;padding-right:3px}
 .kb-chapter{margin:17px 0 5px;color:#82919d;font-size:10px;font-weight:850;letter-spacing:.08em}
 .kb-chapter:first-child{margin-top:1px}
-.kb-group{margin:12px 0 5px;color:#223e4b;font-size:12px;font-weight:850}
+.kb-group{display:flex;align-items:center;gap:9px;width:100%;min-width:0;border:1px solid transparent;background:transparent;border-radius:9px;padding:10px 9px;margin:5px 0 2px;text-align:left;color:#223e4b;font-size:12px;font-weight:800;line-height:1.4}
+.kb-group:hover{background:#f2f7f6}
+.kb-group:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kb-group[aria-expanded="true"]{background:#f3f7f6;color:#146c63}
+.kb-group-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kb-group-count{flex:none;color:var(--sub);font-size:10px;font-weight:650;font-variant-numeric:tabular-nums}
+.kb-group-chevron{flex:none;font-size:12px;color:#8a9da5;transition:transform .15s}
+.kb-group[aria-expanded="true"] .kb-group-chevron{transform:rotate(90deg)}
+.kb-group-search{cursor:default}
+.kb-group-search:hover{background:transparent}
+.kb-topic-list{padding-left:10px;margin:1px 0 8px;border-left:1px solid #e5ecea}
+.kb-nav:not(:has(.kb-topic-list)) .kb-chapter{margin-bottom:9px}
 .kb-nav-item{display:flex;align-items:center;gap:6px;width:100%;text-align:left;padding:8px 10px;margin:2px 0;border:1px solid transparent;background:transparent;color:#526574;border-radius:9px;font-size:12px;line-height:1.35}
 .kb-nav-item span{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kb-nav-item:hover{background:#f1f6f6}
@@ -93,7 +104,7 @@
  .site-tab{padding:10px 15px;flex:1;font-size:13px}
  .site-tagline{display:none}
  .knowledge-shell .maincard{padding:21px 18px}
- .kb-nav{max-height:220px;min-height:80px}
+ .kb-nav{max-height:210px}
  .kb-heading{font-size:23px}
  .kb-summary{font-size:14px;padding:13px 15px}
  .kb-two-cols{grid-template-columns:minmax(0,1fr)}
@@ -153,7 +164,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 let QUESTIONS=[];
-let KNOWLEDGE=null,knowledgeTopics=[],selectedTopic=null,knowledgeQuery='',currentView='practice';
+let KNOWLEDGE=null,knowledgeTopics=[],selectedTopic=null,knowledgeQuery='',currentView='practice',knowledgeExpanded=new Set(['foundation']);
 const KEY='gongkao_logic_errorbook_v1';
 const APP_SCHEMA_VERSION=3;
 // 部署到固定网址前，可以在这里填写 Supabase 公共配置。绝不能填写 secret/service_role key！
@@ -338,10 +349,20 @@ async function getLegacyImage(id){
 function record(id){return state[id]||(state[id]={selected:'',submitted:false,revealed:false,wrong:false,review:false,note:'',attempts:0})}
 
 function knowledgeTopic(id){return knowledgeTopics.find(item=>item.id===id)}
+function knowledgeSectionForTopic(id){return KNOWLEDGE?.sections.find(section=>section.topics.some(topic=>topic.id===id))}
+function expandKnowledgeSectionForTopic(id){
+ const section=knowledgeSectionForTopic(id);
+ if(section)knowledgeExpanded=new Set([section.id]);
+}
 function linkedTopics(questionId){return knowledgeTopics.filter(topic=>(topic.questionIds||[]).includes(questionId))}
 function knowledgeMatches(topic,section){
  const term=knowledgeQuery.trim().toLocaleLowerCase();
- return !term||[topic.title,topic.summary,section.title,...(topic.recognize||[]),...(topic.patterns||[]),...(topic.pitfalls||[])].some(s=>String(s||'').toLocaleLowerCase().includes(term));
+ return !term||[
+ topic.title,topic.summary,section.title,section.chapter,
+ ...(topic.recognize||[]),...(topic.patterns||[]),...(topic.strengthen||[]),
+ ...(topic.weaken||[]),...(topic.pitfalls||[]),
+ ...(topic.examples||[]).flatMap(example=>[example.title,example.body])
+ ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
 function listHtml(items){
  return items?.length?'<ul class="kb-list">'+items.map(item=>'<li>'+safe(item)+'</li>').join('')+'</ul>':'';
@@ -358,21 +379,35 @@ function renderKnowledge(){
  const allVisible=groups.flatMap(group=>group.topics);
  if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
  $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
- let lastChapter='';
- let navHtml='';
+ const searching=Boolean(knowledgeQuery.trim());
+ let lastChapter='',navHtml='';
  for(const {section,topics} of groups){
   if(lastChapter!==section.chapter){
    navHtml+='<div class="kb-chapter">'+safe(section.chapter)+'</div>';
    lastChapter=section.chapter;
   }
-  navHtml+='<div class="kb-group">'+safe(section.title)+'</div>';
-  for(const topic of topics){
-   navHtml+='<button type="button" class="kb-nav-item '+(selectedTopic===topic.id?'current':'')+'" data-knowledge-topic="'+safe(topic.id)+'" title="'+safe(topic.title)+'" aria-current="'+(selectedTopic===topic.id?'true':'false')+'"><span>'+safe(topic.title)+'</span></button>';
+  const expanded=searching||knowledgeExpanded.has(section.id);
+  if(searching){
+   navHtml+='<div class="kb-group kb-group-search"><span class="kb-group-title">'+safe(section.title)+'</span><span class="kb-group-count">'+topics.length+' 项</span></div>';
+  }else{
+   navHtml+='<button type="button" class="kb-group" data-knowledge-section="'+safe(section.id)+'" aria-expanded="'+expanded+'" title="'+safe(section.title)+'"><span class="kb-group-chevron" aria-hidden="true">›</span><span class="kb-group-title">'+safe(section.title)+'</span><span class="kb-group-count">'+section.topics.length+' 项</span></button>';
+  }
+  if(expanded){
+   navHtml+='<div class="kb-topic-list">';
+   for(const topic of topics){
+    navHtml+='<button type="button" class="kb-nav-item '+(selectedTopic===topic.id?'current':'')+'" data-knowledge-topic="'+safe(topic.id)+'" title="'+safe(topic.title)+'" aria-current="'+(selectedTopic===topic.id?'true':'false')+'"><span>'+safe(topic.title)+'</span></button>';
+   }
+   navHtml+='</div>';
   }
  }
  const nav=$('knowledgeNav'),scroll=nav.scrollTop;
  nav.innerHTML=navHtml||'<div class="kb-nav-empty">没有找到知识点，试试其他关键词。</div>';
  nav.scrollTop=scroll;
+ nav.querySelectorAll('[data-knowledge-section]').forEach(button=>button.onclick=()=>{
+  const id=button.dataset.knowledgeSection;
+  knowledgeExpanded=knowledgeExpanded.has(id)?new Set():new Set([id]);
+  renderKnowledge();
+ });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
  const topic=knowledgeTopic(selectedTopic);
  if(!topic){$('knowledgeCard').innerHTML='<div class="kb-load-state">没有符合条件的知识点。请清空搜索词后重试。</div>';return}
@@ -420,6 +455,7 @@ function openKnowledge(id){
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
+ expandKnowledgeSectionForTopic(id);
  switchView('knowledge');
  window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -435,7 +471,12 @@ function restoreHashView(){
  const route=decodeURIComponent(location.hash.slice(1)).match(/^(knowledge|practice)(?:\/(.+))?$/);
  if(!route)return;
  if(route[1]==='knowledge'){
-  if(knowledgeTopic(route[2]))selectedTopic=route[2];
+  if(knowledgeTopic(route[2])){
+   selectedTopic=route[2];
+   expandKnowledgeSectionForTopic(selectedTopic);
+   knowledgeQuery='';
+   $('knowledgeSearch').value='';
+  }
   switchView('knowledge',false);
  }else{
   if(QUESTIONS.some(q=>q.id===route[2]))active=route[2];
@@ -460,6 +501,7 @@ async function loadKnowledge(){
   KNOWLEDGE=book;
   knowledgeTopics=book.sections.flatMap(section=>section.topics);
   if(!selectedTopic)selectedTopic=knowledgeTopics[0].id;
+  expandKnowledgeSectionForTopic(selectedTopic);
   renderKnowledge();
  }catch(error){
   console.warn('知识库加载失败',error);
@@ -470,7 +512,11 @@ async function loadKnowledge(){
 }
 $('tabKnowledge').onclick=()=>switchView('knowledge');
 $('tabPractice').onclick=()=>switchView('practice');
-$('knowledgeSearch').oninput=e=>{knowledgeQuery=e.target.value;renderKnowledge()};
+$('knowledgeSearch').oninput=e=>{
+ knowledgeQuery=e.target.value;
+ if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
+ renderKnowledge();
+};
 window.addEventListener('hashchange',restoreHashView);
 
 function filtered(){

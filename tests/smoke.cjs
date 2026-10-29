@@ -21,6 +21,10 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForSelector('.nav-item', { timeout: 15000 });
+  // Plain root always defaults to practice; explicit topic links may open knowledge.
+  assert.equal(await page.locator('#practiceView').isVisible(),true);
+  assert.equal(await page.locator('#knowledgeView').isVisible(),false);
+  assert.equal(await page.locator('#tabPractice').getAttribute('aria-selected'),'true');
 
   assert.equal(await page.title(), '逻辑判断 · 知识体系与云同步错题本');
   const expectedQuestions = Number(await page.locator('#questionCount').innerText());
@@ -64,10 +68,29 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const book=await knowledgeResponse.json();
   const totalTopics=book.sections.reduce((n,s)=>n+s.topics.length,0);
   assert.ok(totalTopics>=15,'Knowledge library should contain substantive topics');
-  assert.equal(await page.locator('[data-knowledge-topic]').count(),totalTopics);
+  const initialTopics=book.sections[0].topics.length;
+  assert.equal(await page.locator('[data-knowledge-section]').count(),book.sections.length);
+  assert.equal(await page.locator('[data-knowledge-topic]').count(),initialTopics,
+    'Only current chapter should be expanded initially');
+  assert.equal(await page.locator('[data-knowledge-section="foundation"]').getAttribute('aria-expanded'),'true');
+  assert.equal(await page.locator('[data-knowledge-section="effect"]').getAttribute('aria-expanded'),'false');
+  const knowledgeNavMetrics=await page.locator('#knowledgeNav').evaluate(el=>({
+   maxHeight:parseFloat(getComputedStyle(el).maxHeight),
+   overflowY:getComputedStyle(el).overflowY
+  }));
+  assert.ok(knowledgeNavMetrics.maxHeight<=420,'Knowledge nav should have bounded height');
+  assert.equal(knowledgeNavMetrics.overflowY,'auto');
+  await page.locator('[data-knowledge-section="effect"]').click();
+  assert.equal(await page.locator('[data-knowledge-section="effect"]').getAttribute('aria-expanded'),'true');
+  assert.equal(await page.locator('[data-knowledge-section="foundation"]').getAttribute('aria-expanded'),'false');
+  assert.equal(await page.locator('[data-knowledge-topic]').count(),
+    book.sections.find(s=>s.id==='effect').topics.length);
   await page.locator('#knowledgeSearch').fill('规范性前提');
   assert.ok((await page.locator('[data-knowledge-topic]').count())>0);
+  assert.equal(await page.locator('[data-knowledge-section]').count(),0,
+    'Searching should show matching topics directly rather than collapsed groups');
   await page.locator('#knowledgeSearch').fill('');
+  await page.locator('[data-knowledge-section="effect"]').click();
   await page.locator('[data-knowledge-topic="alternative-causes"]').click();
   assert.match(await page.locator('#knowledgeCard').innerText(),/他因分析/);
   await page.locator('#knowledgeCard [data-open-question="unknown-peach-bagging-small-fruit"]').click();
@@ -78,6 +101,11 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#knowledgeView').isVisible(),true);
   assert.match(await page.locator('#knowledgeCard h2').innerText(),/他因分析/);
   assert.match(page.url(),/#knowledge\/alternative-causes$/);
+  // Explicit deep link to a topic reopens its collapsed section.
+  await page.goto(new URL('#knowledge/experiment-comparability',url).href, {waitUntil:'domcontentloaded'});
+  await page.waitForSelector('[data-knowledge-topic="experiment-comparability"]');
+  assert.equal(await page.locator('#knowledgeView').isVisible(),true);
+  assert.equal(await page.locator('[data-knowledge-section="correlation"]').getAttribute('aria-expanded'),'true');
   await page.locator('#tabPractice').click();
   await page.locator('[data-id="2008-yumi"]').click();
 
@@ -142,6 +170,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#tabKnowledge').click();
   assert.equal(await page.locator('#knowledgeView').isVisible(),true);
   assert.equal(await page.locator('#knowledgeCard h2').isVisible(),true);
+  const mobileKbNavMax=await page.locator('#knowledgeNav').evaluate(el=>parseFloat(getComputedStyle(el).maxHeight));
+  assert.ok(mobileKbNavMax<=220,'Mobile knowledge nav must remain compact');
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.maincard').isVisible(), true);
   assert.equal(await page.locator('.choice').first().isVisible(), true);
