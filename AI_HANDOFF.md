@@ -88,3 +88,11 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 安全：GitHub 仓库可能是公开的，禁止提交密码、service_role、secret、真实 token、私人笔记；公开 Supabase Project URL/publishable key 并不是管理员凭据，不要替换成 secret。保持云端 `question_progress` 的 `(user_id,question_id)` 进度对应。
 
 **这份接力文档的目的不是让新 AI 每次询问背景，而是让它用真实文件和当前指示直接继续学习、入库和工程工作。**
+
+
+## 新增重点题与学习辨析
+
+题目 `unknown-black-carbon-neurocognition` 已录入 `questions.json`，答案D、类别「相关性推因果」，并设 `important:true`。正式知识条目 `susceptibility-selection-bias`。难点：A只是儿童与老人群体整体的易感性，不是选择偏差；组间基线差异通常首先分析潜在混杂；严格的选择偏差关注入组、抽样或失访引入的系统扭曲。D用男孩与女孩的不同研究发现有限削弱宽泛因果结论，但“未发现显著相关性”不能当成“无作用”。详情见 `STUDY_FRAMEWORK.md` 最新专题。
+
+`important:true` 是公开的“重点题”标记，网站可按“只看重点题”筛选；与每个账号的 `review` 个人待复习标记和 Supabase 答题记录完全独立。**禁止为了标记重点而自动改用户个人进度**。
+
