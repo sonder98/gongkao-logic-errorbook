@@ -522,6 +522,7 @@ $('knowledgeSearch').oninput=e=>{
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
  renderKnowledge();
+ if(currentView==='knowledge'&&selectedTopic)updateViewHash();
 };
 window.addEventListener('hashchange',restoreHashView);
 

@@ -89,6 +89,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     book.sections.find(s=>s.id==='effect').topics.length);
   await page.locator('#knowledgeSearch').fill('规范性前提');
   assert.ok((await page.locator('[data-knowledge-topic]').count())>0);
+  assert.match(page.url(),/#knowledge\//,'Search results should retain a shareable knowledge link');
   assert.equal(await page.locator('[data-knowledge-section]').count(),0,
     'Searching should show matching topics directly rather than collapsed groups');
   await page.locator('#knowledgeSearch').fill('');
