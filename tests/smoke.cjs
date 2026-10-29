@@ -26,6 +26,27 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const expectedQuestions = Number(await page.locator('#questionCount').innerText());
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
+  // Compact navigation should remain bounded as the catalog grows.
+  const navMetrics=await page.locator('#questionList').evaluate(element=>({
+    maxHeight:parseFloat(getComputedStyle(element).maxHeight),
+    direction:getComputedStyle(element).flexDirection,
+    overflow:getComputedStyle(element).overflowY
+  }));
+  assert.equal(navMetrics.direction,'column');
+  assert.ok(navMetrics.maxHeight<=400);
+  assert.equal(navMetrics.overflow,'auto');
+  assert.equal(await page.locator('#navCount').innerText(),expectedQuestions+' / '+expectedQuestions+' 题');
+  await page.locator('#questionSearch').fill('蟠桃');
+  assert.equal(await page.locator('.nav-item').count(),1);
+  assert.equal(await page.locator('.nav-item').getAttribute('data-id'),'unknown-peach-bagging-small-fruit');
+  await page.locator('#questionSearch').fill('根本没有这个词');
+  assert.equal(await page.locator('.nav-item').count(),0);
+  assert.match(await page.locator('#card').innerText(),/没有符合条件/);
+  await page.locator('#questionSearch').fill('');
+  assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
+  assert.equal(await page.locator('#questionSearch').inputValue(),'');
+  assert.equal(await page.locator('.nav-title').first().getAttribute('title'),null);
+
   const jsonResponse=await page.request.get(new URL('questions.json',url).href);
   assert.equal(jsonResponse.status(),200,'questions.json HTTP 200');
   const catalog=await jsonResponse.json();
