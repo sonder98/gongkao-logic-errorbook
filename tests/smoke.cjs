@@ -22,7 +22,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
   await page.waitForSelector('.nav-item', { timeout: 15000 });
 
-  assert.equal(await page.title(), '逻辑判断 · 云同步错题本 V2');
+  assert.equal(await page.title(), '逻辑判断 · 知识体系与云同步错题本');
   const expectedQuestions = Number(await page.locator('#questionCount').innerText());
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
@@ -53,6 +53,31 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(catalog.length,expectedQuestions);
   assert.equal(new Set(catalog.map(q=>q.id)).size,expectedQuestions);
   assert.equal(catalog.filter(q=>q.image.startsWith('legacy:')).length,6);
+
+
+  // Knowledge tab: searchable navigation, structured notes, and both-way links.
+  await page.locator('#tabKnowledge').click();
+  assert.equal(await page.locator('#knowledgeView').isVisible(),true);
+  assert.equal(await page.locator('#practiceView').isVisible(),false);
+  const knowledgeResponse=await page.request.get(new URL('knowledge.json',url).href);
+  assert.equal(knowledgeResponse.status(),200);
+  const book=await knowledgeResponse.json();
+  const totalTopics=book.sections.reduce((n,s)=>n+s.topics.length,0);
+  assert.ok(totalTopics>=15,'Knowledge library should contain substantive topics');
+  assert.equal(await page.locator('[data-knowledge-topic]').count(),totalTopics);
+  await page.locator('#knowledgeSearch').fill('规范性前提');
+  assert.ok((await page.locator('[data-knowledge-topic]').count())>0);
+  await page.locator('#knowledgeSearch').fill('');
+  await page.locator('[data-knowledge-topic="alternative-causes"]').click();
+  assert.match(await page.locator('#knowledgeCard').innerText(),/他因分析/);
+  await page.locator('#knowledgeCard [data-open-question="unknown-peach-bagging-small-fruit"]').click();
+  assert.equal(await page.locator('#practiceView').isVisible(),true);
+  assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),'unknown-peach-bagging-small-fruit');
+  await page.locator('#card [data-open-topic="alternative-causes"]').click();
+  assert.equal(await page.locator('#knowledgeView').isVisible(),true);
+  assert.match(await page.locator('#knowledgeCard h2').innerText(),/他因分析/);
+  await page.locator('#tabPractice').click();
+  await page.locator('[data-id="2008-yumi"]').click();
 
   assert.equal(await page.locator('.choice').count(), 5);
 
@@ -112,6 +137,10 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.doesNotMatch(authStatus, /未配置 Supabase|连接配置异常/);
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('#tabKnowledge').click();
+  assert.equal(await page.locator('#knowledgeView').isVisible(),true);
+  assert.equal(await page.locator('#knowledgeCard h2').isVisible(),true);
+  await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.maincard').isVisible(), true);
   assert.equal(await page.locator('.choice').first().isVisible(), true);
   const mobileLayout = await page.evaluate(() => ({

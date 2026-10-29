@@ -136,3 +136,14 @@
    └─ 公考逻辑判断_云同步错题本_V2_原版.html
 ```
 
+
+
+## 知识体系与错题练习
+
+网站顶部提供两个入口：**知识体系**与**错题练习**。知识体系采用纯静态的 `knowledge.json`，已按「论证基础 → 题型与方法（由因推果、由果推因、相关性推因果、两句式推理）→ 选项陷阱」整理。每个知识点独立维护，加强与削弱放在同一个方法下，方便持续补充。
+
+- 知识正文仅维护 `knowledge.json`；`LOGIC_KNOWLEDGE_BASE.md` 仍作内部讨论归档，不在页面直接展示。
+- `knowledge.json` 中各 `sections[].topics[]` 必须有稳定唯一的 `id`、`title`、`summary`；可选字段包括 `recognize`、`patterns`、`strengthen`、`weaken`、`pitfalls`（字符串数组）、`examples`（标题与正文数组）、`questionIds`（题目 ID 数组）。
+- 为现有知识点增补内容时保持 `id` 不变；`questionIds` 必须对应 `questions.json` 中真实存在的 ID。知识页和答题页自动生成双向跳转链接。
+- 知识库无需注册账号即可阅读；答题记录、笔记和待复习状态仍由原有 Supabase / 本地逻辑保存，旧数据不迁移。
+- 快速检查：`node tests/validate-knowledge.cjs`、`node tests/validate-questions.cjs`；浏览器测试：`node tests/smoke.cjs`（需要 Playwright 环境）。
