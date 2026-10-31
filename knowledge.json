@@ -27,7 +27,8 @@
             "选项只重复结论或解释无关事实，通常不能有效补足论证。"
           ],
           "questionIds": [
-            "2024-hebei-diet-cognition"
+            "2024-hebei-diet-cognition",
+            "unknown-sushi-suxun-laoquan-avoidance"
           ]
         },
         {
@@ -135,7 +136,8 @@
             "2025-guangdong-sanzhiyifu-adhd-intervention",
             "2025-fish",
             "unknown-detergent-formaldehyde-content-risk",
-            "unknown-wine-resveratrol-overall-health"
+            "unknown-wine-resveratrol-overall-health",
+            "unknown-aging-fingerprint-forensic-use"
           ]
         }
       ]
@@ -198,10 +200,21 @@
             {
               "title": "规范性前提：发展经济",
               "body": "事实：收入提高有助于满意度提高。政策建议：政府应该发展经济。缺失：提高满意度是政府的重要任务（原题C）。"
+            },
+            {
+              "title": "苏轼、苏洵称老泉：补齐关键联系（答案C）",
+              "body": "论据已证明苏轼自号老泉，结论却断定苏洵称老泉是误传。C以宋代避讳及苏轼遵守避讳的实例，补充父子不大可能共用称号的理由；A只是重复证明苏轼确实有此号。C是相对加强，不能把名讳习惯直接等同别号绝不重合。"
+            },
+            {
+              "title": "老化指纹的识别可用性（答案D）",
+              "body": "“指纹纹路随年龄变化”不必然推出“不应再用于侦破”。D称变化普遍有规律，可能保留匹配依据；C说其他指纹指标也重要，仍需证明这些指标在老化后可稳定识别；B引入DNA替代方案不能证明指纹仍可用。"
             }
           ],
           "questionIds": [
-            "unknown-breath-identity-authentication-variability"
+            "unknown-breath-identity-authentication-variability",
+            "unknown-community-commerce-express-delivery",
+            "unknown-sushi-suxun-laoquan-avoidance",
+            "unknown-aging-fingerprint-forensic-use"
           ]
         },
         {
@@ -420,11 +433,16 @@
             {
               "title": "葡萄酒题A：成分增加不代表达到有效剂量",
               "body": "白藜芦醇在发酵中含量增加，并未直接证明喝葡萄酒能获得足以产生所述生理效果的剂量。A提出量化门槛，但未说明实际饮用与门槛的差距，故削弱力度不如直接质疑总体健康结果的B。"
+            },
+            {
+              "title": "社区商业与快递业：影响范围是否足够（答案B）",
+              "body": "社区商业发展未必能大范围替代快递消费。B说明社区商业以汽车保养、托管等服务为主，社区购物占比很小，直接压缩可能替代快递需求的范围；A仅说设有快递驿站，无法保证快递业务量不减。沿用“量的范围/程度不足以推出整体后果”的既有判断。"
             }
           ],
           "questionIds": [
             "unknown-detergent-formaldehyde-content-risk",
-            "unknown-wine-resveratrol-overall-health"
+            "unknown-wine-resveratrol-overall-health",
+            "unknown-community-commerce-express-delivery"
           ]
         }
       ]
@@ -734,7 +752,9 @@
             "unknown-graduate-city-preference-comparison",
             "unknown-ski-neurostimulation-overall-benefit",
             "unknown-spectator-race-performance-benefit",
-            "unknown-detergent-formaldehyde-content-risk"
+            "unknown-detergent-formaldehyde-content-risk",
+            "unknown-community-commerce-express-delivery",
+            "unknown-aging-fingerprint-forensic-use"
           ]
         },
         {
@@ -765,12 +785,14 @@
           ],
           "pitfalls": [
             "判断“没有削弱”题时，先确认选项有没有碰到结论的核心要件。",
-            "同一个措施可能不根治，但仍对症状、功能或生活质量有帮助。"
+            "同一个措施可能不根治，但仍对症状、功能或生活质量有帮助。",
+            "苏轼与苏洵称号题：A只继续证实苏轼用“老泉山人”这一既知事实，没有排除苏洵也使用“老泉”的可能；应优先寻找填补断点的证据。"
           ],
           "questionIds": [
             "2025-fish",
             "2024-hebei-diet-cognition",
-            "2025-guangdong-sanzhiyifu-adhd-intervention"
+            "2025-guangdong-sanzhiyifu-adhd-intervention",
+            "unknown-sushi-suxun-laoquan-avoidance"
           ]
         }
       ]
