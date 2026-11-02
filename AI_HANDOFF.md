@@ -41,7 +41,7 @@
 | `LOGIC_KNOWLEDGE_BASE.md` | **历史归档**，不再作为正式规范 |
 | `legacy/` | 原页面和六张旧题原图，保持不变 |
 
-**最新内容快照（2026-11-02）：33道题、6个章节、30个知识点。** 每次接手应以 `questions.json` / `knowledge.json` 的实际数据为准，数字只用于交接核对；不要因题量变化改 HTML 固定数字。
+**最新内容快照（2026-11-02）：34道题、6个章节、31个知识点。** 每次接手应以 `questions.json` / `knowledge.json` 的实际数据为准，数字只用于交接核对；不要因题量变化改 HTML 固定数字。
 
 题库每条现有字段：
 `id,year,exam,title,category,type,difficulty,stem,ask,options,answer,structure,reason,trap,rule,image`。
@@ -145,3 +145,11 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 新题 `unknown-dog-anxiety-magnesium-causal-reversal`（狗行为焦虑症、血镁偏高、口服因菲他命），参考答案**D**，标记 `important:true`，关联 `causal-reversal`、必要假设等已有条目。D在命题语境下排除“疾病导致镁升高”的反向因果路径；但严格说它并未证明“高镁导致焦虑”，且不一定是形式逻辑必要条件。答题解释保留这层边界，不要把练习题当成真实兽医治疗建议。
 
 接手原则不变：用户说“更新”默认同时更新题库与知识笔记；优先复用分类，结构确有明确指示才拆分。GitHub验证真实文件和Actions结果后再声称已上线。
+
+## 十、前提条件专门问法：潮汕土楼题（2026-11-02）
+
+用户正在学习新的专门问法：「**要得到上述结论，需要补充的前提是**」。这不是泛泛地讨论形式逻辑必要条件；本阶段尤其关注：若题干说“某行为/建筑/制度是为了应对X而产生”，就要确认**行动所针对的现实情形X确实存在**，而不是必须证明行动后来成功解决了X。`knowledge.json` 新增「由因推果」下 `cause-prerequisite-conditions` 独立知识点，并同步更新 `STUDY_FRAMEWORK.md` 第16节。
+
+新收录 `unknown-chaoshan-tulou-defense-prerequisite`：潮汕土楼因聚族集体防卫而建，参考答案**B**（明清有山贼海盗侵扰）；主要迷惑项**A**（土楼后来成功保护家族）属于行动最终效果，**即使防御未成功仍可能为了防御而建**。C土楼文化迁入、D当地军事封闭围寨传统均不是最直接的现实防卫需求。B不构成严格的唯一必要历史事实，尤其注意始建元代与明清侵扰的时间并不完全同一。录入 `important:true`，原题完整保存，年份/考试未知不杜撰。
+
+不要将此题误放到「两句式推理」；也不要与“规范性前提：某主体应该追求目标”混淆。题目方法可以交叉关联已有 `build-remove-link` 与 `identify`、选项陷阱 `match-target`，但无需新建额外陷阱名称。以后说“更新”仍默认同步错题本和知识笔记，并检查关联、稳定ID和实际部署状态。
