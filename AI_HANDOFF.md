@@ -41,7 +41,7 @@
 | `LOGIC_KNOWLEDGE_BASE.md` | **历史归档**，不再作为正式规范 |
 | `legacy/` | 原页面和六张旧题原图，保持不变 |
 
-建立本说明时，已入库 **8 道题**、有 **6 个知识目录 / 20 个知识点**；这是当时的快照，后来请以两个 JSON 实际数量为准。不要因增加新题或知识点而更新 HTML 中的固定题量。
+**最新内容快照（2026-11-02）：30道题、6个章节、29个知识点。** 每次接手应以 `questions.json` / `knowledge.json` 的实际数据为准，数字只用于交接核对；不要因题量变化改 HTML 固定数字。
 
 题库每条现有字段：
 `id,year,exam,title,category,type,difficulty,stem,ask,options,answer,structure,reason,trap,rule,image`。
@@ -96,3 +96,33 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 
 `important:true` 是公开的“重点题”标记，网站可按“只看重点题”筛选；与每个账号的 `review` 个人待复习标记和 Supabase 答题记录完全独立。**禁止为了标记重点而自动改用户个人进度**。
 
+
+## 七、最新学习状态与接手操作清单（2026-11-02）
+
+### 默认工作方式（特别重要）
+
+1. 用户说**“更新”“同步”**时，默认同时处理两个交付：**错题本 `questions.json`**（最近讨论而尚未入库的题）＋**知识笔记 `knowledge.json`**（新方法、已有陷阱补充及 topic→questionIds）。确有方法变化时同步 `STUDY_FRAMEWORK.md`；流程/接力变化再改 `AI_HANDOFF.md` 或 `AGENTS.md`。不必每轮机械改所有文件。
+2. **先核对 GitHub 真实数据再动笔**，确定题目是否已经存在，保持稳定 ID、原文完整、参考答案及迷惑项比较。除用户明确授权“收录/更新/同步”外，普通解题讨论不要擅自修改题库。未知年份/考试填「未知」，不为了找出处而搜索；新题 `image:""`。
+3. **优先归入现有知识体系**，尤其选项陷阱目前只有3个既定条目：`match-target`（结论指向、对象指标程度）、`modal-wording`（程度词与真实证据）、`irrelevant-repeat`（话题偏离、重复结论与效果偷换）。不要为每道题另立规则；确有新的平行方法时才新增独立 topic。学习笔记是面向考生的内容，不能混入代理交接指令。
+4. **严格区分“题目答案”“选项证据力度”“参考答案争议”**。已入库 `unknown-western-democracy-rights-absolutism-dispute` 目前截图答案A，但C有合理的举例加强路径：论据/结论如何划分会影响排序。尊重用户对此争议的辨析，不可机械认为举例必弱。用户明确纠正“菌群与骨密度”题参考答案为B（非D），D说效果后续回落不能直接否定最初增强。
+5. 尽量只做**必需文件的增量编辑**、一个批量提交和一次核验。提交成功≠Pages上线；要分别核验 GitHub 最新 SHA、文件引用完整性、Actions/Pages状态。如运行不到 `node tests/validate-questions.cjs` / `node tests/validate-knowledge.cjs` / 浏览器烟测，应如实说明未运行，不能假装已经测试。
+
+### 当前“由因推果”已讨论的五种平行方法（以 STUDY_FRAMEWORK.md 和 knowledge.json 为详尽准则）
+
+1. `build-remove-link`：建立／去除联系（支持补机制，削弱断环节；含规范性前提）。
+2. `introduce-other-factors-*`：引入他因，下设“直接说利弊、两者相比、利弊相权、做了也白做、量变不等于质变”五个子项；加强与削弱在同一子项讲，不按方向重复分类。
+3. `cause-antecedent-consequent-patterns`：前真后假／前假后真／前假后假。必须先把A、B写成完整命题并检查结论强弱、时间及比较指标；普通概率结论不能被一个有A无B者严格推翻。
+4. `cause-direct-examples`：直接举例子。通常是有限支持，举出有A有B不自动证明因果；观察数据缺少非A对照时需谨慎。
+5. `cause-deny-conclusion-premise`：**否定结论／论据（本轮新增）**。直接反证结论或事实论据，与允许论据为真却质疑推理的“去除联系”明确区分。
+
+### 最近新增的两道重点题（答案与干扰项必须保留）
+
+- `unknown-mosquito-blood-type-bite-ranking`（蚊子血型排序，答案D）：D去除“血型→招蚊”的联系，未否定原样本比例。A、C只涉及部分对象，但并非因此无效；提出局部混杂≠已经推翻某一比较关系。重点关联 `build-remove-link`、`introduce-other-factors-compare`、`correlation-vs-cause`、`match-target`，与新方法仅做辨析对照。
+- `unknown-grape-seed-free-radicals-aging`（葡萄籽与自由基，答案C）：C针对“年龄越大自由基越多”提出相反年龄组浓度数据，属于否定论据。A的肝损伤针对安全/总体健康，未直接否定“抗氧化防衰老”的具体功效。C也不是完整否定“自由基氧化损伤”或葡萄籽的任何作用。主要归入 `cause-deny-conclusion-premise`，同时关联现有利弊相权与结论指向。
+
+### 交接时的检查清单
+
+- 先读 `AGENTS.md`、`STUDY_FRAMEWORK.md`、`knowledge.json`、`questions.json`，本文件只提供快速入口；权威以现行 JSON 为准。
+- 查找最近讨论的未入库题目，按稳定ID去重；原有 28 道题保留不动，本轮新增 2 道。
+- 网站链接 `https://sonder98.github.io/gongkao-logic-errorbook/`；`#practice/<id>` 题目、`#knowledge/<topic-id>` 知识；GitHub `main` 通过 Pages 发布，等待 Actions 成功才能称已上线。
+- 进度/笔记在 Supabase，勿触碰私有进度或提交任何凭据；重点题 `important:true` 仅公共标记。

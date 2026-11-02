@@ -93,11 +93,13 @@
           ],
           "pitfalls": [
             "“有A有B、无A无B”不是证明因果的万能公式。",
-            "随机对照实验的证据价值与普通观察性群体比较不同，不能一概而论。"
+            "随机对照实验的证据价值与普通观察性群体比较不同，不能一概而论。",
+            "不同血型人群在某次抽样中被蚊子叮咬的比例不同，不必然证明血型造成差异；户外暴露、防护措施及样本构成可能影响观察比例。"
           ],
           "questionIds": [
             "2008-yumi",
-            "fruit"
+            "fruit",
+            "unknown-mosquito-blood-type-bite-ranking"
           ]
         },
         {
@@ -131,7 +133,8 @@
             "“治疗未根治”不等于“治疗完全无效”。",
             "一个因素也会影响B，不一定排除A同样影响B。",
             "“含有”并不证明实际接触达到有害程度；“未超标”也未必足以证明所有情境绝对无害。应按阈值、暴露条件和结论强度匹配证据。",
-            "“动物实验有效但尚未完成人体试验”说明人体功效证据不足，并不等于已证明对人体无效；葡萄酒题D属于这种证据外推限制。"
+            "“动物实验有效但尚未完成人体试验”说明人体功效证据不足，并不等于已证明对人体无效；葡萄酒题D属于这种证据外推限制。",
+            "否定某条关键论据不等于已经证明全部结论必然错误；也要避免将“不同年龄组自由基浓度相似”直接等同“既往氧化损伤相同”。"
           ],
           "questionIds": [
             "2025-guangdong-sanzhiyifu-adhd-intervention",
@@ -140,7 +143,8 @@
             "unknown-wine-resveratrol-overall-health",
             "unknown-aging-fingerprint-forensic-use",
             "unknown-adolescent-language-mental-health-risk",
-            "unknown-gut-microbiota-bone-density-conditions"
+            "unknown-gut-microbiota-bone-density-conditions",
+            "unknown-grape-seed-free-radicals-aging"
           ]
         }
       ]
@@ -211,6 +215,10 @@
             {
               "title": "老化指纹的识别可用性（答案D）",
               "body": "“指纹纹路随年龄变化”不必然推出“不应再用于侦破”。D称变化普遍有规律，可能保留匹配依据；C说其他指纹指标也重要，仍需证明这些指标在老化后可稳定识别；B引入DNA替代方案不能证明指纹仍可用。"
+            },
+            {
+              "title": "蚊子血型排序：观察事实与因果联系（答案D）",
+              "body": "D没有否定各血型被叮咬比例不同的样本观察，而是说明蚊子选择目标的因素与血型无差异，削弱从观察差异推断血型本身招蚊的联系。"
             }
           ],
           "questionIds": [
@@ -219,7 +227,8 @@
             "unknown-sushi-suxun-laoquan-avoidance",
             "unknown-aging-fingerprint-forensic-use",
             "unknown-neolithic-farming-height-change",
-            "unknown-western-democracy-rights-absolutism-dispute"
+            "unknown-western-democracy-rights-absolutism-dispute",
+            "unknown-mosquito-blood-type-bite-ranking"
           ]
         },
         {
@@ -308,16 +317,22 @@
           "pitfalls": [
             "多对象比较时的“漏项”：三种城市都在竞争，只说三四线不如二线，未证明二线优于一线；只说一线房价高同样未处理三四线。",
             "不要把“首选”误读成“只要比其中一个好就够了”。",
-            "近似重述结论的选项有时最符合命题的相对最优选择，但不是强实证支持；注意证据新增程度。"
+            "近似重述结论的选项有时最符合命题的相对最优选择，但不是强实证支持；注意证据新增程度。",
+            "血型排序题：A只说明AB组防护意识强、C只说明O组户外蚊子多，都有潜在削弱意义；削弱完整排序只需证实其中一个关键比较关系被颠倒，但两项未进一步证明控制后排序逆转，不能仅因涉及部分血型便排除。"
           ],
           "examples": [
             {
               "title": "大学生就业首选二线城市（答案B）",
               "body": "受访者择业地点：二线60%、一线30%、三四线10%。B以生活成本、发展机会的综合考量说明二线更受青睐；C只说三四线发展机会有限，漏掉一线这个竞争者；D只提一线房价，漏掉三四线。"
+            },
+            {
+              "title": "四种血型的叮咬排序（答案D）",
+              "body": "观察比例O＞B＞A＞AB。A/C只涉及部分血型但可提供混杂解释；关键不是涉及多少组，而是能否证明排序有误。D针对叮咬选择机制及不同血型无差异，削弱范围更广。"
             }
           ],
           "questionIds": [
-            "unknown-graduate-city-preference-comparison"
+            "unknown-graduate-city-preference-comparison",
+            "unknown-mosquito-blood-type-bite-ranking"
           ]
         },
         {
@@ -352,7 +367,8 @@
             "观众题D：无观众也能破纪录，不否定观众可能进一步改善成绩；“破纪录”只是阈值，未给出两种状态下的效果差。",
             "观众题C：超常发挥可能受伤，未证明这是观众导致的额外伤害，也未直接推翻当场成绩提升；但若结论是长期总体健康收益，则评估口径不同。",
             "如果题干声称“必须有A才能有B”或“A完全无副作用”，分别证明“无A也有B”或任一确定副作用会具有不同的削弱力度，不能机械套用普通效果题。",
-            "局部成分在动物实验中有益，不等于含该成分的整种酒精饮料对人体整体有益；不要将白藜芦醇的局部效果偷换成葡萄酒的总体健康收益。"
+            "局部成分在动物实验中有益，不等于含该成分的整种酒精饮料对人体整体有益；不要将白藜芦醇的局部效果偷换成葡萄酒的总体健康收益。",
+            "葡萄籽题A说提取物可能伤肝，对安全性或总体健康决策相关，但题干是“能够抗氧化防衰老”的功效判断，不能仅以有副作用断言功效不存在。"
           ],
           "examples": [
             {
@@ -371,7 +387,8 @@
           "questionIds": [
             "unknown-ski-neurostimulation-overall-benefit",
             "unknown-spectator-race-performance-benefit",
-            "unknown-wine-resveratrol-overall-health"
+            "unknown-wine-resveratrol-overall-health",
+            "unknown-grape-seed-free-radicals-aging"
           ]
         },
         {
@@ -552,6 +569,49 @@
             "unknown-hunger-anger-correlation-example",
             "unknown-western-democracy-rights-absolutism-dispute"
           ]
+        },
+        {
+          "id": "cause-deny-conclusion-premise",
+          "title": "否定结论／论据",
+          "summary": "由因推果的削弱方式：一类是以新事实直接反驳结论，另一类是证实原有事实论据不成立或不足可信。必须与“去除联系”区分：后者可以承认论据和结论各自相关事实，却质疑从前者推出后者的逻辑。",
+          "recognize": [
+            "先区分题干中的已知事实A、最终结论B以及A→B的推理联系；再问选项究竟否定了哪一个。",
+            "否定论据：提供与原事实判断相冲突的可靠材料；否定结论：提供与最终结论相冲突的证据。",
+            "去除联系：承认原论据可能完全真实，但指出其并不足以支持结论、作用机制不成立或关键条件缺失。"
+          ],
+          "patterns": [
+            "否定论据：题干“年龄越大自由基越多”，选项“不同年龄组自由基浓度相近”，使论证的某项基础受到质疑；但浓度与累积损伤不同，不能外推过度。",
+            "否定结论：若A被称作能显著改善B，选项提供可比且可靠的数据证实B未改善，则可直接动摇结论；仅口头重述“B不成立”缺少证据支持。",
+            "去除联系：血型题四组被蚊叮咬比例可以仍然真实，但蚊子识别依据与血型无差异，使血型导致叮咬差异的推理受到质疑，不是直接否定调查比例。"
+          ],
+          "strengthen": [
+            "本方法的核心定位为削弱；加强可从核实原始论据和结论、检验论据到结论的有效联系入手，但不应机械称为“否定结论／论据”的反向用法。"
+          ],
+          "weaken": [
+            "用可信反证推翻题干一项关键论据，削弱以此为基础的论证；即便如此，结论也可能由其他论据成立，需比较论据的重要程度。",
+            "直接提供可靠事实与结论矛盾，通常削弱更直接，但证据的样本、时间、对象、强弱仍需和原结论匹配。"
+          ],
+          "pitfalls": [
+            "否定论据不等于证明结论一定错误；另一条因果路径仍可能让结论成立。",
+            "不能把“去除论据与结论之间的联系”归为“否定论据”。蚊子血型题D并未说42%、28%、22%、8%的调查比例是假的。",
+            "与结论相反的一句话若无证据，未必比提供可比数据更有力。",
+            "葡萄籽题C直接质疑年龄与自由基浓度的原论据，却不能将“浓度相同”扩大成“自由基氧化损伤总量一定相同”。",
+            "葡萄籽题A提出伤肝副作用，可能影响整体推广决策，但没有直接否定抗氧化或延缓衰老的具体功效。"
+          ],
+          "examples": [
+            {
+              "title": "葡萄籽抗衰老：直接否定事实基础（答案C）",
+              "body": "题干声称年龄越大体内自由基越多，C指出不同年龄组的自由基浓度相近，直接冲突，属于否定论据；有些逻辑环节仍需谨慎，因为浓度不直接等于累积损伤。"
+            },
+            {
+              "title": "蚊子叮咬与血型排序：去除联系而非否定论据（答案D）",
+              "body": "D指出蚊子依据二氧化碳、热量、挥发物选择对象，不同血型在这些因素无差异。原调查比例仍可能真实，却不能直接推断血型本身更容易招蚊子。"
+            }
+          ],
+          "questionIds": [
+            "unknown-grape-seed-free-radicals-aging",
+            "unknown-mosquito-blood-type-bite-ranking"
+          ]
         }
       ]
     },
@@ -703,13 +763,15 @@
           "pitfalls": [
             "组间起点不同不自动证明措施无效，只是使简单的末次比较不足以支持归因。",
             "改善可能来自自然发育、原有差异或其他处理，不能随意当作干预效果。",
-            "群体易感性≠组间基线差异≠严格的选择偏差；不同暴露组原有条件可能构成混杂，是否属于选择偏差还要看纳入与失访机制。"
+            "群体易感性≠组间基线差异≠严格的选择偏差；不同暴露组原有条件可能构成混杂，是否属于选择偏差还要看纳入与失访机制。",
+            "血型调查每组50人并不意味着组间外界暴露相同；AB型防蚊意识、O型户外作业可能解释部分观察差异，但仍须观察是否足以改变原有排名。"
           ],
           "questionIds": [
             "2008-yumi",
             "fruit",
             "2025-guangdong-sanzhiyifu-adhd-intervention",
-            "unknown-black-carbon-neurocognition"
+            "unknown-black-carbon-neurocognition",
+            "unknown-mosquito-blood-type-bite-ranking"
           ]
         },
         {
@@ -859,7 +921,9 @@
             "光刺激题A/B/D：患病比例、预防可能性不等于对已患病者的症状治疗效果。必须保持前后件的对象、时点和指标一致。",
             "菌群题D：骨密度“再次降低”并不能否认先前骨密度增强，除非题干另有持续有效的承诺。",
             "农业身高题C只谈工业革命后劳动条件和营养改善导致身高增加，与“农业兴起→当时身高下降”的原因对象及历史时段都不匹配，不能只看见身高增加就当作前假后假。",
-            "争议题先核对学者究竟论证“制度缺陷的实际表现”还是“制度缺陷导致衰败”；同一个A/C选项的力度排序可能随结论界定而变化。"
+            "争议题先核对学者究竟论证“制度缺陷的实际表现”还是“制度缺陷导致衰败”；同一个A/C选项的力度排序可能随结论界定而变化。",
+            "血型题：要区分原始观察排名与“血型本身更招蚊”的因果解释；削弱任何一个比较关系即可破坏完整排名，但提出局部混杂不必然证明排名被推翻。",
+            "葡萄籽题：肝脏副作用与抗氧化防衰老功效是不同评价指标，若结论没主张整体安全或值得推广，就不能单凭有副作用直接否定其具体功效。"
           ],
           "questionIds": [
             "fruit",
@@ -877,7 +941,9 @@
             "unknown-alzheimer-light-stimulation-treatment",
             "unknown-neolithic-farming-height-change",
             "unknown-hunger-anger-correlation-example",
-            "unknown-western-democracy-rights-absolutism-dispute"
+            "unknown-western-democracy-rights-absolutism-dispute",
+            "unknown-mosquito-blood-type-bite-ranking",
+            "unknown-grape-seed-free-radicals-aging"
           ],
           "examples": [
             {
@@ -908,13 +974,15 @@
             "不要机械删除带“可能”“未必”“不一定”的选项。",
             "桃园套袋题中C只说保留果实“不一定”优质；D则提供实际存在的营养不足，更能解释小果比例。",
             "语言能力题C（表面前真后假）虽然可按命题思路质疑预测指标，但没有证明语言迟缓者成年患病风险并未升高，不能把未患病个例当成对概率主张的严格反例。",
-            "菌群题B否定“只要改善菌群就能增强骨密度”的充分性；D的晚期回落没有直接否定最初增强。"
+            "菌群题B否定“只要改善菌群就能增强骨密度”的充分性；D的晚期回落没有直接否定最初增强。",
+            "葡萄籽题C是与题干既有年龄—自由基说法冲突的数据式陈述；A只指出另一种潜在副作用。比较的是与具体功效论证的关联及原论据是否被反证，而非见到“有害”就选。"
           ],
           "questionIds": [
             "unknown-peach-bagging-small-fruit",
             "unknown-spectator-race-performance-benefit",
             "unknown-adolescent-language-mental-health-risk",
-            "unknown-gut-microbiota-bone-density-conditions"
+            "unknown-gut-microbiota-bone-density-conditions",
+            "unknown-grape-seed-free-radicals-aging"
           ],
           "examples": [
             {
