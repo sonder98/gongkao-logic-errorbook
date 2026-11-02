@@ -217,7 +217,9 @@
             "unknown-breath-identity-authentication-variability",
             "unknown-community-commerce-express-delivery",
             "unknown-sushi-suxun-laoquan-avoidance",
-            "unknown-aging-fingerprint-forensic-use"
+            "unknown-aging-fingerprint-forensic-use",
+            "unknown-neolithic-farming-height-change",
+            "unknown-western-democracy-rights-absolutism-dispute"
           ]
         },
         {
@@ -495,13 +497,60 @@
             {
               "title": "阿尔茨海默症光刺激（答案C）",
               "body": "停止刺激后已患病小鼠症状加重，为刺激改善症状提供补充支持；D说未受刺激小鼠患病率较低，偷换了治疗效果与患病率。"
+            },
+            {
+              "title": "欧洲农业兴起与身高变化（答案D）",
+              "body": "A＝转向农业种植，B＝当时平均身高下降；D提供狩猎采集（非A）时期平均身高较高（非B）的可比方向，并提示肉食比例。C谈工业革命后另一原因使身高上升，不能代替农业的因果作用。"
             }
           ],
           "questionIds": [
             "unknown-adolescent-language-mental-health-risk",
             "unknown-gut-microbiota-bone-density-conditions",
             "unknown-music-reward-circuit-pleasure-intensity",
-            "unknown-alzheimer-light-stimulation-treatment"
+            "unknown-alzheimer-light-stimulation-treatment",
+            "unknown-neolithic-farming-height-change"
+          ]
+        },
+        {
+          "id": "cause-direct-examples",
+          "title": "直接举例子",
+          "summary": "由因推果的加强方法之一：给出具体对象或一组实例，呈现原因A与结果B共同出现，作为对一般性因果论点的补充。孤立事例通常支持有限，不应把“有A有B”直接当成因果证明。",
+          "recognize": [
+            "选项举出某个人、群体、地区或特定事件，证明题干所说的原因A与结果B曾同时出现或先后出现。",
+            "没有控制条件、可比对照或机制证据时，单个例子只是观察性佐证，不自动证明A导致B。"
+          ],
+          "patterns": [
+            "加强方向：A→B的结论，可用有A有B的具体事实或统计比例作补充，但仅有同现无法排除混杂因素和因果倒置。",
+            "证据力度并非由“举例子”这一写法决定：受控试验、可比对照、具代表性的统计可以强于空泛机制；反之零散个案通常较弱。",
+            "与建立联系、前假后假等方法平行归类但可交叉：如果事例还说明机制或有有效对照，就不只是普通孤立举例。"
+          ],
+          "strengthen": [
+            "举例显示采用A后观察到B，可作为有限的实例性支持；需检验例子的代表性、对照和因果指向。",
+            "饥饿题C：饥饿状态下47%易恼、44%愤怒，给出具体事实比例，但没有非饥饿状态对照，仍不能严格证明诱导作用。",
+            "西方民主争议题C：美国两党相互否决、公共利益受损的例子能够体现部分所述问题；但其相对A的力度取决于论点究竟侧重制度缺陷存在，还是缺陷导致衰败。"
+          ],
+          "weaken": [
+            "若题干是‘所有A必然B’一类全称结论，有A无B的真实反例可削弱；这属于已学前真后假，不要因为形式是举例便混为普通举例加强。",
+            "若结论只是概率性促进，个别反例不能直接否定整体效果。"
+          ],
+          "pitfalls": [
+            "不要把补充具体数据等同于完成因果论证：饥饿时47%易恼，不代表不饥饿时易恼比例一定更低。",
+            "不要机械认为‘举例子一定比一般性因果叙述弱’；应先找准结论核心，再比较事例是否真正切中原因、结果与论证断点。",
+            "例子与结论中的结果词相同，却可能更换了实际原因对象；其他原因也会引起B，并不能直接支持题干说的A→B。"
+          ],
+          "examples": [
+            {
+              "title": "饥饿与愤怒（答案C）",
+              "body": "调查比例属于补充例证，但未给出非饥饿状态的对照比例；B概括相关性与题干已有表述接近，C较具体却并不形成严格因果证明。"
+            },
+            {
+              "title": "西方民主与权利绝对化（争议：A/C）",
+              "body": "参考答案按截图A录入，A论证权利绝对化的负面影响；C举美国党派利益冲突的例子，可支持权利绝对化与社会责任不足等具体描述。不同读法下A/C排序有争议，不能只根据‘举例’决定强弱。"
+            }
+          ],
+          "questionIds": [
+            "unknown-hunger-anger-correlation-example",
+            "unknown-western-democracy-rights-absolutism-dispute"
           ]
         }
       ]
@@ -599,7 +648,8 @@
             "2008-yumi",
             "fruit",
             "unknown-black-carbon-neurocognition",
-            "unknown-elderly-women-weight-loss-health"
+            "unknown-elderly-women-weight-loss-health",
+            "unknown-hunger-anger-correlation-example"
           ]
         },
         {
@@ -807,7 +857,9 @@
             "判断安全风险时应区分产品中某种物质的存在、含量检测、正常使用造成的真实暴露，以及实际健康风险，不能互相偷换。",
             "音乐奖赏回路题C：奖赏回路“有活动”不等于活动“足够强”；题干讨论的是活性强弱对愉悦程度的影响，选项不能只凭存在现象判断真假。",
             "光刺激题A/B/D：患病比例、预防可能性不等于对已患病者的症状治疗效果。必须保持前后件的对象、时点和指标一致。",
-            "菌群题D：骨密度“再次降低”并不能否认先前骨密度增强，除非题干另有持续有效的承诺。"
+            "菌群题D：骨密度“再次降低”并不能否认先前骨密度增强，除非题干另有持续有效的承诺。",
+            "农业身高题C只谈工业革命后劳动条件和营养改善导致身高增加，与“农业兴起→当时身高下降”的原因对象及历史时段都不匹配，不能只看见身高增加就当作前假后假。",
+            "争议题先核对学者究竟论证“制度缺陷的实际表现”还是“制度缺陷导致衰败”；同一个A/C选项的力度排序可能随结论界定而变化。"
           ],
           "questionIds": [
             "fruit",
@@ -822,7 +874,10 @@
             "unknown-aging-fingerprint-forensic-use",
             "unknown-gut-microbiota-bone-density-conditions",
             "unknown-music-reward-circuit-pleasure-intensity",
-            "unknown-alzheimer-light-stimulation-treatment"
+            "unknown-alzheimer-light-stimulation-treatment",
+            "unknown-neolithic-farming-height-change",
+            "unknown-hunger-anger-correlation-example",
+            "unknown-western-democracy-rights-absolutism-dispute"
           ],
           "examples": [
             {
@@ -881,14 +936,23 @@
             "判断“没有削弱”题时，先确认选项有没有碰到结论的核心要件。",
             "同一个措施可能不根治，但仍对症状、功能或生活质量有帮助。",
             "苏轼与苏洵称号题：A只继续证实苏轼用“老泉山人”这一既知事实，没有排除苏洵也使用“老泉”的可能；应优先寻找填补断点的证据。",
-            "相邻却不同的效果不等价：治疗可以帮助已患病者改善症状，即使它不能防止新发病例，也不能因此说治疗无效。"
+            "相邻却不同的效果不等价：治疗可以帮助已患病者改善症状，即使它不能防止新发病例，也不能因此说治疗无效。",
+            "饥饿题B的相关性表述与研究已有发现接近，D几乎复述“饥饿导致饿怒”；与C新增比例数据比较时，要看新增证据以及因果推断力度，而不是机械认为数字必然更强。"
           ],
           "questionIds": [
             "2025-fish",
             "2024-hebei-diet-cognition",
             "2025-guangdong-sanzhiyifu-adhd-intervention",
             "unknown-sushi-suxun-laoquan-avoidance",
-            "unknown-alzheimer-light-stimulation-treatment"
+            "unknown-alzheimer-light-stimulation-treatment",
+            "unknown-hunger-anger-correlation-example",
+            "unknown-western-democracy-rights-absolutism-dispute"
+          ],
+          "examples": [
+            {
+              "title": "饥饿与饿怒：补充数据 vs 重述关系",
+              "body": "B说饥饿与更强的愤怒/易恼有关，接近研究已有关联结论；C给出47%易恼、44%愤怒的具体比例，但缺少未饥饿对照。D几乎重述结论。"
+            }
           ]
         }
       ]
