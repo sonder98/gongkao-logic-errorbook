@@ -41,7 +41,7 @@
 | `LOGIC_KNOWLEDGE_BASE.md` | **历史归档**，不再作为正式规范 |
 | `legacy/` | 原页面和六张旧题原图，保持不变 |
 
-**最新内容快照（2026-11-02）：34道题、6个章节、31个知识点。** 每次接手应以 `questions.json` / `knowledge.json` 的实际数据为准，数字只用于交接核对；不要因题量变化改 HTML 固定数字。
+**最新内容快照（2026-11-02）：39道题、6个章节、31个知识点。** 每次接手应以 `questions.json` / `knowledge.json` 的实际数据为准，数字只用于交接核对；不要因题量变化改 HTML 固定数字。
 
 题库每条现有字段：
 `id,year,exam,title,category,type,difficulty,stem,ask,options,answer,structure,reason,trap,rule,image`。
@@ -153,3 +153,15 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 新收录 `unknown-chaoshan-tulou-defense-prerequisite`：潮汕土楼因聚族集体防卫而建，参考答案**B**（明清有山贼海盗侵扰）；主要迷惑项**A**（土楼后来成功保护家族）属于行动最终效果，**即使防御未成功仍可能为了防御而建**。C土楼文化迁入、D当地军事封闭围寨传统均不是最直接的现实防卫需求。B不构成严格的唯一必要历史事实，尤其注意始建元代与明清侵扰的时间并不完全同一。录入 `important:true`，原题完整保存，年份/考试未知不杜撰。
 
 不要将此题误放到「两句式推理」；也不要与“规范性前提：某主体应该追求目标”混淆。题目方法可以交叉关联已有 `build-remove-link` 与 `identify`、选项陷阱 `match-target`，但无需新建额外陷阱名称。以后说“更新”仍默认同步错题本和知识笔记，并检查关联、稳定ID和实际部署状态。
+
+## 十一、最近五道题与跨题型比较辨析（2026-11-02）
+
+用户明确决定**不新增独立的“比较型问题”知识点**，比较关系继续归入现有的 `introduce-other-factors-compare`、`experiment-comparability`、`controls-evidence` 与 `match-target`，按实际论证方法和选项陷阱交叉关联；不为任何单题新增口诀。最近一轮用户说“更新”，默认同时收录 **5道新题及知识笔记**，不修改旧题和已有 topic ID。
+
+- `2022-henan-adolescent-risk-cardiovascular-intervention`：2022河南，答案**D**，前假后假可表现为**风险因素减少、患病风险减少**的程度型干预支持；A仅早期肥胖，C只知患者中早期不良习惯比例，缺对照。D说的是整体患病风险而非心血管病单项，需如实保留限制。
+- `unknown-ecigarette-smoking-intention-relative-probability-disputed`：电子烟与传统烟尝试倾向，**B/C争议**。用户要求忽略截图绿色标记、独立分析；截图标C，前一轮独立推理选择B，入库暂记**B**但在题目 `type/reason/trap` 中完整保留C的参考路径与没有对照的不足，不要对用户说答案已经没有争议。重点是**单组绝对概率不等于比较概率**、意向不等于行为、B“有可能”的证据力度限制。
+- `2022-guangdong-medical-ethics-priority-vs-method`：2022广东医学教育，答案**D**。用户提出C“医德教育主要依靠学校”是在连接重要性与学校培养，**确实有支持作用**；但结论是医德培养**更应**优先于专业理论，D患者相对更看重道德素养更直接满足比较理由。论据为事实性，结论为规范性，勿说反。
+- `unknown-norway-hyperemesis-maternal-genes-family-environment`：挪威妊娠剧吐母女风险，答案**A**。现实共享的母女生活环境比D泛泛提到全国吸烟趋势更能解释**母女风险差异**；他因必须解释此研究观察到的具体关系，不能只解释患病一般成因。
+- `unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past`：日照减少、维生素D与现代缺钙风险，答案**B**。现代人含钙食物来源增多可能抵消吸收效率下降；C只比较现代患骨质疏松者与现代其他人，却未回应题干“现代 vs 过去”的跨时代比较。用户明确赞同B/C辨析。此题尤其保留B/C对照而不增加类别。
+
+本轮对应正式考生笔记在 `knowledge.json` 已有条目中补充示例和陷阱；理论分类未变，故不额外改 `STUDY_FRAMEWORK.md`。原始截图未储存，题目保存完整文本、选项、参考与争议说明。未来更新以实际 `questions.json` 数量为准；AI_HANDOFF.md 数字仅是编辑时快照。

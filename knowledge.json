@@ -64,7 +64,8 @@
             "补上“应该追求B”能加强行动建议，却不意味着A是唯一、最优或必然要采用的手段。",
             "这类题在本套应试体系里归入“由因推果 → 建立／去除联系 → 规范性前提”，不额外扩充两句式的公式。",
             "行动建议不直接证明事实：例如“如果医生建议减重以改善健康，那么应遵医嘱”，在应试语境可能暗示减重有益，但不能推断医生意见必然正确或医生一定提出过该建议。",
-            "不要把所有出现“前提”的题都当规范性前提：土楼题需要补充历史上真实存在防卫威胁；《红楼梦》与政府发展经济题则是从措施有利于目标跳到某主体“应该采取”，需要补充应该追求该目标的规范性依据。"
+            "不要把所有出现“前提”的题都当规范性前提：土楼题需要补充历史上真实存在防卫威胁；《红楼梦》与政府发展经济题则是从措施有利于目标跳到某主体“应该采取”，需要补充应该追求该目标的规范性依据。",
+            "2022广东医德题：论据“缺乏医德会影响社会适应与医患关系”是事实性判断，结论“医学培养更应注重医德”是规范性兼比较性判断。C补培养途径，D补相对优先级理由。"
           ],
           "examples": [
             {
@@ -81,7 +82,8 @@
             }
           ],
           "questionIds": [
-            "unknown-elderly-women-weight-loss-health"
+            "unknown-elderly-women-weight-loss-health",
+            "2022-guangdong-medical-ethics-priority-vs-method"
           ]
         },
         {
@@ -148,7 +150,8 @@
             "unknown-aging-fingerprint-forensic-use",
             "unknown-adolescent-language-mental-health-risk",
             "unknown-gut-microbiota-bone-density-conditions",
-            "unknown-grape-seed-free-radicals-aging"
+            "unknown-grape-seed-free-radicals-aging",
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed"
           ]
         }
       ]
@@ -173,7 +176,9 @@
             "若结论强到“A是唯一原因”，另一个原因C才可能直接挑战“唯一”。"
           ],
           "questionIds": [
-            "2025-fish"
+            "2025-fish",
+            "2022-henan-adolescent-risk-cardiovascular-intervention",
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
           ]
         },
         {
@@ -234,7 +239,8 @@
             "unknown-neolithic-farming-height-change",
             "unknown-western-democracy-rights-absolutism-dispute",
             "unknown-mosquito-blood-type-bite-ranking",
-            "unknown-chaoshan-tulou-defense-prerequisite"
+            "unknown-chaoshan-tulou-defense-prerequisite",
+            "2022-guangdong-medical-ethics-priority-vs-method"
           ]
         },
         {
@@ -272,7 +278,8 @@
             "不要将“支持结果B会发生”直接等同于“支持A造成B”。若C完全独立于A，只能说明C→B，并不能直接证明A→B。",
             "也不能因为独立C→B就一律选削弱：预测型A→B与已发生B的原因归属判断，评价他因的方向不同。",
             "云匣子题的B只谈飞行安全的成本效益，D只谈飞行管理的帮助，与“空难事故分析更便捷”的结果不一致；C讨论查清事故真相的难度，也不等于数据获取环节不会更便利。",
-            "呼吸题的B没有直接说身份验证失败，却可能影响“同一人能够稳定重复识别”这一关键条件。C指出现有16通道准确率不稳定，同样有削弱作用；不能建立“间接影响一定比直接准确率证据更强”的绝对规则。"
+            "呼吸题的B没有直接说身份验证失败，却可能影响“同一人能够稳定重复识别”这一关键条件。C指出现有16通道准确率不稳定，同样有削弱作用；不能建立“间接影响一定比直接准确率证据更强”的绝对规则。",
+            "现代人日照减少→维生素D/钙吸收效率可能降低，不必然导致实际钙吸收总量更低；B增加含钙食物来源可能抵消吸收率下降，须区分摄入量、吸收比例、最终吸收量。"
           ],
           "examples": [
             {
@@ -295,7 +302,8 @@
           "questionIds": [
             "unknown-algorithm-filter-bubble-bias",
             "unknown-cloud-flight-recorder-reliability",
-            "unknown-breath-identity-authentication-variability"
+            "unknown-breath-identity-authentication-variability",
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
           ]
         },
         {
@@ -324,7 +332,8 @@
             "多对象比较时的“漏项”：三种城市都在竞争，只说三四线不如二线，未证明二线优于一线；只说一线房价高同样未处理三四线。",
             "不要把“首选”误读成“只要比其中一个好就够了”。",
             "近似重述结论的选项有时最符合命题的相对最优选择，但不是强实证支持；注意证据新增程度。",
-            "血型排序题：A只说明AB组防护意识强、C只说明O组户外蚊子多，都有潜在削弱意义；削弱完整排序只需证实其中一个关键比较关系被颠倒，但两项未进一步证明控制后排序逆转，不能仅因涉及部分血型便排除。"
+            "血型排序题：A只说明AB组防护意识强、C只说明O组户外蚊子多，都有潜在削弱意义；削弱完整排序只需证实其中一个关键比较关系被颠倒，但两项未进一步证明控制后排序逆转，不能仅因涉及部分血型便排除。",
+            "医德教育题“更应注重医德”含比较：选项只证明“学校主要能培养医德”不等于证明“比起专业理论，更应优先重视医德”；选项D从患者重视程度提供比较依据。"
           ],
           "examples": [
             {
@@ -338,7 +347,8 @@
           ],
           "questionIds": [
             "unknown-graduate-city-preference-comparison",
-            "unknown-mosquito-blood-type-bite-ranking"
+            "unknown-mosquito-blood-type-bite-ranking",
+            "2022-guangdong-medical-ethics-priority-vs-method"
           ]
         },
         {
@@ -486,7 +496,8 @@
             "前真后假：有A无B，可反驳“只要A必然B”的充分条件主张；若结论仅说A提升B概率，个别A而无B者并不足以直接推翻。",
             "前假后真：无A却有B，可反驳“A是B的必要条件/唯一来源”；对“A也能促进B”，另一条途径获得B并不排斥A的作用。",
             "前假后假：无A且无B，或A变弱B也变弱，可在可比条件下作为支持证据；需避免共同原因、样本差异、疾病自然进展等混杂。",
-            "辨析时再看时间：A实施后B短暂出现、后来消失，不等于A实施时B从未发生；还要核对A在所述时点是否保持成立。"
+            "辨析时再看时间：A实施后B短暂出现、后来消失，不等于A实施时B从未发生；还要核对A在所述时点是否保持成立。",
+            "程度式前假后假：减少风险因素A，未来患病风险B也下降，不必要求A、B完全归零。若通过干预改变A且B随之变化，通常比单纯发现A、B共现更有力，但仍需确认目标结果和对照。"
           ],
           "strengthen": [
             "前假后假提供对照：音乐奖赏回路活动微弱者往往缺少音乐快感，方向与刺激/抑制实验一致。",
@@ -529,6 +540,10 @@
             {
               "title": "丛冢雉题A：有A无B的类比，仍需可比条件",
               "body": "其他动物蛋溶菌酶素含量与丛冢雉相近，但感染率更高。它可以削弱“单凭该成分即可解释差异”，但不能证明该酶在丛冢雉蛋上没有作用，需考虑活性、作用条件。"
+            },
+            {
+              "title": "2022河南：青少年风险因素与成年疾病（答案D）",
+              "body": "题干风险因素偏高→成年心血管疾病风险升高，D说早期干预习惯与健康指标→整体患病风险降低，可类比程度上的前假后假。注意D的“整体患病风险”不专指心血管疾病，属于相对最优支持。"
             }
           ],
           "questionIds": [
@@ -537,7 +552,9 @@
             "unknown-music-reward-circuit-pleasure-intensity",
             "unknown-alzheimer-light-stimulation-treatment",
             "unknown-neolithic-farming-height-change",
-            "unknown-megapode-egg-infection-lysozyme"
+            "unknown-megapode-egg-infection-lysozyme",
+            "2022-henan-adolescent-risk-cardiovascular-intervention",
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
           ]
         },
         {
@@ -575,11 +592,16 @@
             {
               "title": "西方民主与权利绝对化（争议：A/C）",
               "body": "参考答案按截图A录入，A论证权利绝对化的负面影响；C举美国党派利益冲突的例子，可支持权利绝对化与社会责任不足等具体描述。不同读法下A/C排序有争议，不能只根据‘举例’决定强弱。"
+            },
+            {
+              "title": "2022河南：直接举例A与干预对照D",
+              "body": "A只讲早期肥胖与成年心血管病同现；C仅讲患者回溯早期习惯，缺少基线对照；D干预早年健康风险因素后患病风险降低，在支持因果方面更有针对性。"
             }
           ],
           "questionIds": [
             "unknown-hunger-anger-correlation-example",
-            "unknown-western-democracy-rights-absolutism-dispute"
+            "unknown-western-democracy-rights-absolutism-dispute",
+            "2022-henan-adolescent-risk-cardiovascular-intervention"
           ]
         },
         {
@@ -697,7 +719,8 @@
           "questionIds": [
             "2022-dingcan",
             "unknown-peach-bagging-small-fruit",
-            "unknown-megapode-egg-infection-lysozyme"
+            "unknown-megapode-egg-infection-lysozyme",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment"
           ]
         },
         {
@@ -728,7 +751,8 @@
             "由因推果题中“C也能引起B”通常不能直接削弱A也能引起B；区别在于是否对已发生的B作实际归因。",
             "本案无关他因陷阱：仅说生活习惯不良、情绪状态不佳也会损害健康，没有说明这些因素在体重减轻组中实际存在且能解释组间健康差异，不能有效削弱减重A→健康受损B。",
             "“有他因”必须看效果方向，不能把更容易感染的薄壳当成造成较低感染率的竞争原因；D不仅不削弱，还可有限排除“更厚蛋壳保护”这种解释。",
-            "所谓“排除他因加强”不要求排除所有理论可能，但排除少数竞争因素也不足以证实唯一原因；A与C可能同时有作用。"
+            "所谓“排除他因加强”不要求排除所有理论可能，但排除少数竞争因素也不足以证实唯一原因；A与C可能同时有作用。",
+            "挪威母女妊娠剧吐题：他因要解释母女风险为何相关。A给出母女实际相似的环境与饮食；D仅说挪威女性吸烟上升、吸烟与该病有关，未连接母女特有风险差异，不构成同等有力的竞争归因。"
           ],
           "examples": [
             {
@@ -742,13 +766,18 @@
             {
               "title": "丛冢雉蛋感染率（选非D）：四个选项各有所指",
               "body": "已发生结果B是丛冢雉蛋感染率低（9%），研究者归因于溶菌酶素。A：其他动物蛋溶菌酶素含量也相当，却有更高感染率，类比“前真后假”，削弱相对解释力；B：实际抗菌碳酸钙层，C：实际减少细菌附着的气味，都是竞争他因削弱；D：蛋壳反而更薄、更易感染，与低感染率方向相反，不能削弱，并可弱排除厚壳优势这一他因。"
+            },
+            {
+              "title": "挪威母女妊娠剧吐（答案A）：要解释具体的母女差异",
+              "body": "A提供母女共享环境与饮食，构成针对母女症状聚集的非遗传竞争解释。D只说挪威全人群吸烟率上升及吸烟可能致病，没有说明母女症状相关为何产生，力度较弱。"
             }
           ],
           "questionIds": [
             "unknown-peach-bagging-small-fruit",
             "2022-dingcan",
             "unknown-elderly-women-weight-loss-health",
-            "unknown-megapode-egg-infection-lysozyme"
+            "unknown-megapode-egg-infection-lysozyme",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment"
           ]
         }
       ]
@@ -783,7 +812,8 @@
             "fruit",
             "unknown-black-carbon-neurocognition",
             "unknown-elderly-women-weight-loss-health",
-            "unknown-hunger-anger-correlation-example"
+            "unknown-hunger-anger-correlation-example",
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed"
           ]
         },
         {
@@ -847,10 +877,12 @@
           "pitfalls": [
             "仅说某因素“也可能影响健康”等，不代表它在本次样本中真实存在，更不代表它能同时解释A与B。",
             "观察到A、B同现，不等于证明C是共同原因，必须有与相关关系相符的实际证据。",
-            "基线差异/混杂与严格的共同原因并非完全同义；水果题的重点仍是原有习惯与两地效果比较口径不一致。"
+            "基线差异/混杂与严格的共同原因并非完全同义；水果题的重点仍是原有习惯与两地效果比较口径不一致。",
+            "妊娠剧吐题：家庭共享环境/饮食可产生看似遗传的母女症状聚集；这一线索仍需证据证实对妊娠剧吐确有作用。父系胎儿相关基因解释被排除，也不等于母系遗传是唯一可能来源。"
           ],
           "questionIds": [
-            "fruit"
+            "fruit",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment"
           ]
         },
         {
@@ -885,7 +917,9 @@
             "fruit",
             "2025-guangdong-sanzhiyifu-adhd-intervention",
             "unknown-black-carbon-neurocognition",
-            "unknown-mosquito-blood-type-bite-ranking"
+            "unknown-mosquito-blood-type-bite-ranking",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment",
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
           ]
         },
         {
@@ -935,11 +969,14 @@
           ],
           "pitfalls": [
             "“无A无B”不是A→B的逆否；逆否应是非B→非A。",
-            "没有合理的可比性时，对照仍可能只是另一组相关现象。"
+            "没有合理的可比性时，对照仍可能只是另一组相关现象。",
+            "2022河南题C只给出“成年心血管病患者中多数人青少年有不良习惯”（P(早年习惯|成年患病)），缺少未患病对照，不自动推出“有早年不良习惯者成年更容易患病”（P(成年患病|早年习惯)）。"
           ],
           "questionIds": [
             "2008-yumi",
-            "2025-guangdong-sanzhiyifu-adhd-intervention"
+            "2025-guangdong-sanzhiyifu-adhd-intervention",
+            "2022-henan-adolescent-risk-cardiovascular-intervention",
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed"
           ]
         }
       ]
@@ -1044,7 +1081,10 @@
             "海山题：没有长期完全物理隔离不等于没有独特群落；采样不足才直接触及“高度特有动物群”是否被可靠观察到。",
             "丛冢雉题：需要解释感染率为什么低，而不是任意解释感染会发生。蛋壳更薄、易侵入与结果方向相反，不是竞争性他因削弱。",
             "犬行为焦虑症题：降低血液中某个高于正常值的指标，与实际缓解导致该指标异常的疾病不是同一结果，不能偷换治疗目标。",
-            "土楼题A：证明土楼成功抵御侵扰，强调行动完成后的效果；题干的结论是在解释行动产生的动机，不能把“有防卫需要”偷换成“防卫最终成功”。"
+            "土楼题A：证明土楼成功抵御侵扰，强调行动完成后的效果；题干的结论是在解释行动产生的动机，不能把“有防卫需要”偷换成“防卫最终成功”。",
+            "电子烟题：结论要求“吸电子烟者比不吸者更可能尝试传统香烟”，C只给出吸电子烟者60%的单组绝对比例，不能直接证明组间相对优势。截图标C，讨论中的推理倾向B，保留争议。",
+            "医德题：C仅说明学校思想道德教育是培养医德的主要途径；D提供患者相较于专业水平更加看重医德这一比较依据，更针对结论“更应注重”的优先级。C有一定支持，不是无关项。",
+            "维生素D题：结论比较现代与过去更易缺钙，C却比较现代骨质疏松患者与现代其他人日照是否相同，比较对象错位；两组现代人的日照都可能低于过去。"
           ],
           "questionIds": [
             "fruit",
@@ -1068,7 +1108,12 @@
             "unknown-seamount-endemic-fauna-sampling",
             "unknown-megapode-egg-infection-lysozyme",
             "unknown-dog-anxiety-magnesium-causal-reversal",
-            "unknown-chaoshan-tulou-defense-prerequisite"
+            "unknown-chaoshan-tulou-defense-prerequisite",
+            "2022-henan-adolescent-risk-cardiovascular-intervention",
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed",
+            "2022-guangdong-medical-ethics-priority-vs-method",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment",
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
           ],
           "examples": [
             {
@@ -1082,6 +1127,18 @@
             {
               "title": "时点：肠道菌群题（答案B）",
               "body": "D说移植后骨密度增强又下降，讨论效果持续性；题干只主张改善菌群能增强骨密度，不能直接把后来下降视为从未增强。"
+            },
+            {
+              "title": "维生素D与骨质疏松（答案B）：跨时代比较不能用现代人内部比较替代",
+              "body": "题干比较现代人与过去的疾病风险，C只说现代骨质疏松患者与其他现代人的日照时长无差别；两组现代人可能都比过去少晒太阳。B提出含钙食物比过去丰富，可部分抵消吸收率下降。"
+            },
+            {
+              "title": "医学生医德培养（答案D）：培养途径不等于相对优先级",
+              "body": "C证明主要通过学校教育能提升职业素养，有一定支持；但结论说“更应注重”，D从患者比专业水平更看重医德给出更直接的比较理由。"
+            },
+            {
+              "title": "电子烟与传统烟尝试（B/C争议）",
+              "body": "截图标C，讨论中推理倾向B。B明说电子烟接触可能提高传统烟尝试概率但用词较弱；C只有吸电子烟者60%的单组比例，无不吸电子烟者对照，无法直接得出“更可能”。结论测的是未来尝试意向，非真实行为。"
             }
           ]
         },
@@ -1102,7 +1159,8 @@
             "菌群题B否定“只要改善菌群就能增强骨密度”的充分性；D的晚期回落没有直接否定最初增强。",
             "葡萄籽题C是与题干既有年龄—自由基说法冲突的数据式陈述；A只指出另一种潜在副作用。比较的是与具体功效论证的关联及原论据是否被反证，而非见到“有害”就选。",
             "海山题：采样不足削弱高度特有性的证据可靠性；但“相同生物来源”不等于“种类组成完全相同”，不能夸大成全盘否定。",
-            "丛冢雉题：A项溶菌酶素含量相似不等于抗菌活性、位置、条件完全一致，因此只能有限削弱原原因的比较解释力。"
+            "丛冢雉题：A项溶菌酶素含量相似不等于抗菌活性、位置、条件完全一致，因此只能有限削弱原原因的比较解释力。",
+            "电子烟题：B“有可能提高”直接涉及概率增加但力度弱且暴露量与研究群体不完全对应；C“60%一定会尝试”是较具体的意向数据，却无非电子烟者对照。不能机械认为数字大或措辞肯定就更支持相对概率结论。"
           ],
           "questionIds": [
             "unknown-peach-bagging-small-fruit",
@@ -1111,7 +1169,10 @@
             "unknown-gut-microbiota-bone-density-conditions",
             "unknown-grape-seed-free-radicals-aging",
             "unknown-seamount-endemic-fauna-sampling",
-            "unknown-megapode-egg-infection-lysozyme"
+            "unknown-megapode-egg-infection-lysozyme",
+            "2022-henan-adolescent-risk-cardiovascular-intervention",
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed",
+            "unknown-norway-hyperemesis-maternal-genes-family-environment"
           ],
           "examples": [
             {
