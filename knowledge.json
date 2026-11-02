@@ -29,7 +29,8 @@
           "questionIds": [
             "2024-hebei-diet-cognition",
             "unknown-sushi-suxun-laoquan-avoidance",
-            "unknown-chaoshan-tulou-defense-prerequisite"
+            "unknown-chaoshan-tulou-defense-prerequisite",
+            "2015-guokao-tv-price-quality-market-share"
           ]
         },
         {
@@ -39,7 +40,9 @@
           "patterns": [
             "结构视角：一句式——论据主要是事实，关键推断出现在结论；两句式——论据与结论各有相对完整的推断，需要补充二者之间的联系。",
             "方向视角：由因推果——从原因或手段推测结果；由果推因——从已经观察到的结果追查实际原因。",
-            "复习安排：两句式因形式相对固定，单独集中讲；相关性推因果则是可与前两轴交叉的材料识别题型。"
+            "复习安排：两句式因形式相对固定，单独集中讲；相关性推因果则是可与前两轴交叉的材料识别题型。",
+            "区分三种箭头：论据→结论表示论证路径；因A→果B表示可能的因果关系；形式逻辑A→B才表示充分条件。不能混写。",
+            "先固定A＝原因、B＝结果，再标已知和待证明：由因推果是已知A推B；由果推因是已观察B、把B归因于A。因果箭头都可保持A→B，论证推进方向不同。"
           ],
           "pitfalls": [
             "不要按句号数量区分一句式和两句式。",
@@ -83,7 +86,9 @@
           ],
           "questionIds": [
             "unknown-elderly-women-weight-loss-health",
-            "2022-guangdong-medical-ethics-priority-vs-method"
+            "2022-guangdong-medical-ethics-priority-vs-method",
+            "unknown-civilian-gun-sales-restriction-deterrence",
+            "2018-liankao-global-warming-food-security-compensation"
           ]
         },
         {
@@ -119,10 +124,12 @@
           ],
           "pitfalls": [
             "在实验题中，“没有A也没有B”可能提供经验性对照证据，但并不是A→B的合法逆否命题。",
-            "“运动有助于健康”不是“只要运动就必然健康”的充分条件命题。"
+            "“运动有助于健康”不是“只要运动就必然健康”的充分条件命题。",
+            "只有题干确实提出‘如果A必然B’或‘只有A才B’等条件判断时，才将前真后假/前假后真用作严格反例；概率因果及评价性‘谈理智没有意义’不能强行转化。"
           ],
           "questionIds": [
-            "medical"
+            "medical",
+            "unknown-adolescent-prefrontal-rationality-training"
           ]
         },
         {
@@ -151,7 +158,8 @@
             "unknown-adolescent-language-mental-health-risk",
             "unknown-gut-microbiota-bone-density-conditions",
             "unknown-grape-seed-free-radicals-aging",
-            "unknown-ecigarette-smoking-intention-relative-probability-disputed"
+            "unknown-ecigarette-smoking-intention-relative-probability-disputed",
+            "unknown-adolescent-prefrontal-rationality-training"
           ]
         }
       ]
@@ -229,6 +237,10 @@
             {
               "title": "蚊子血型排序：观察事实与因果联系（答案D）",
               "body": "D没有否定各血型被叮咬比例不同的样本观察，而是说明蚊子选择目标的因素与血型无差异，削弱从观察差异推断血型本身招蚊的联系。"
+            },
+            {
+              "title": "青少年前额叶与理智（答案C）",
+              "body": "尚未完全发育不等于25岁前谈理智没有意义；训练有助促进成熟，针对绝对结论。D成熟中年人也可能冲动并不回应青少年是否值得培养理性。"
             }
           ],
           "questionIds": [
@@ -240,7 +252,13 @@
             "unknown-western-democracy-rights-absolutism-dispute",
             "unknown-mosquito-blood-type-bite-ranking",
             "unknown-chaoshan-tulou-defense-prerequisite",
-            "2022-guangdong-medical-ethics-priority-vs-method"
+            "2022-guangdong-medical-ethics-priority-vs-method",
+            "2015-guokao-tv-price-quality-market-share",
+            "unknown-civilian-gun-sales-restriction-deterrence",
+            "unknown-southwest-shale-gas-commercial-extraction-prerequisite",
+            "unknown-adolescent-prefrontal-rationality-training",
+            "2020-guangdong-waste-sorting-fine-motivation",
+            "2020-guangdong-pe-class-exercise-time-assumption"
           ]
         },
         {
@@ -404,7 +422,8 @@
             "unknown-ski-neurostimulation-overall-benefit",
             "unknown-spectator-race-performance-benefit",
             "unknown-wine-resveratrol-overall-health",
-            "unknown-grape-seed-free-radicals-aging"
+            "unknown-grape-seed-free-radicals-aging",
+            "2018-liankao-global-warming-food-security-compensation"
           ]
         },
         {
@@ -497,7 +516,8 @@
             "前假后真：无A却有B，可反驳“A是B的必要条件/唯一来源”；对“A也能促进B”，另一条途径获得B并不排斥A的作用。",
             "前假后假：无A且无B，或A变弱B也变弱，可在可比条件下作为支持证据；需避免共同原因、样本差异、疾病自然进展等混杂。",
             "辨析时再看时间：A实施后B短暂出现、后来消失，不等于A实施时B从未发生；还要核对A在所述时点是否保持成立。",
-            "程度式前假后假：减少风险因素A，未来患病风险B也下降，不必要求A、B完全归零。若通过干预改变A且B随之变化，通常比单纯发现A、B共现更有力，但仍需确认目标结果和对照。"
+            "程度式前假后假：减少风险因素A，未来患病风险B也下降，不必要求A、B完全归零。若通过干预改变A且B随之变化，通常比单纯发现A、B共现更有力，但仍需确认目标结果和对照。",
+            "使用前先写完整A、B的对象、时点、指标和程度，再判是严格充分/必要还是普通概率因果。前假后真削弱‘A是B必要/唯一条件’，但不自动削弱‘A有助于B’。"
           ],
           "strengthen": [
             "前假后假提供对照：音乐奖赏回路活动微弱者往往缺少音乐快感，方向与刺激/抑制实验一致。",
@@ -666,7 +686,11 @@
           "patterns": [
             "典型结构：情形X真实存在 → 可能产生应对X的需求 → 采取措施M；选项可补充X当时确实存在。",
             "前提不等于成功：即使M最后没能解决X，也不影响当初可能为了应对X而采取M。",
-            "前提不等于充分证成：证实存在X只让动机解释有现实依据，仍未单独证明M确实是出于X；一般应按备选项比较，不能声称一种具体威胁是唯一可能来源。"
+            "前提不等于充分证成：证实存在X只让动机解释有现实依据，仍未单独证明M确实是出于X；一般应按备选项比较，不能声称一种具体威胁是唯一可能来源。",
+            "资源或措施向效果的转化：发现天然气→实际可采→供给；增加体育课→学生实际锻炼→身体素质提高。补中间的实施条件，不是仅强调最终收益。",
+            "已有资源是否持续可用：以现有消防车够用为由拒绝添置，需要考虑车辆近期能否继续服役；不必保证未来多年外部条件不变。",
+            "行为激励：罚款→避免受罚的动机→主动垃圾分类；不必让每个人都100%受到处罚。",
+            "必要前提不等于有利的补强：其他作物若少量增产，也可能不足抵消主粮减产，‘其他作物一概没有增产’就不是不可缺少的前提。"
           ],
           "strengthen": [
             "提供措施动机所指向的现实背景/实际需求，通常比仅描述措施实施后的效果更贴近前提问法。",
@@ -680,16 +704,35 @@
             "A与B都可能加强时，优先判断哪个更接近“结论成立所需的最低必要条件”，不是哪个描述的成功效果更强。",
             "行动原因、行动本身、行动效果是不同环节；“当时有战乱”在前，“建土楼防御”在中，“成功抵御战乱”在后。",
             "现实前提与规范性前提不同：此处需要的是真实的防卫需求，而非“某主体应该追求某目标”的价值前提。",
-            "严格必要性要谨慎：潮汕历史上受到山贼、海盗侵扰最贴题，但不能证明没有这两种侵扰就绝不可能存在其他防卫需要。"
+            "严格必要性要谨慎：潮汕历史上受到山贼、海盗侵扰最贴题，但不能证明没有这两种侵扰就绝不可能存在其他防卫需要。",
+            "注意相对最优与严格必要不同：页岩气B‘凡是都能开采’过强；消防车C‘至少一辆不报废’较弱、不能独立确保整个车队充足。",
+            "体育课D重复‘锻炼有益’，页岩气D补‘天然气促进发展’，两者都没有补齐资源/手段实际产生效果的转化环节。"
           ],
           "examples": [
             {
               "title": "潮汕土楼起源（答案B）",
               "body": "题干声称土楼产生于乱世、源于先民聚族集体防卫需要；B提供历史上山贼海盗侵扰这一真实背景。A说土楼建好后成功保护家族，属于后续成效，即使没有成功也可能为了防卫而建造；C传播土楼文化与D当地围寨传统，均不如B直接满足现实防卫需求的前提。"
+            },
+            {
+              "title": "页岩气与体育课（答案B／A）",
+              "body": "发现页岩气≠能够开采供气；体育课增加课时≠学生实际锻炼。选项优先补资源/措施向效果的落实环节，而不是重复效果。"
+            },
+            {
+              "title": "粮食安全：其他作物增产（选非答案C）",
+              "body": "即使其他作物增产，也可能远不足以抵消玉米小麦减产；排除所有补偿能支持但未必必要。"
+            },
+            {
+              "title": "消防车与垃圾罚款（答案C／A）",
+              "body": "现有消防车够用要考虑近期继续服役；罚款促使分类要考虑避免受罚的动机，二者是不同位置的行动条件。"
             }
           ],
           "questionIds": [
-            "unknown-chaoshan-tulou-defense-prerequisite"
+            "unknown-chaoshan-tulou-defense-prerequisite",
+            "unknown-southwest-shale-gas-commercial-extraction-prerequisite",
+            "2018-liankao-global-warming-food-security-compensation",
+            "unknown-hongye-fire-truck-replacement-prerequisite",
+            "2020-guangdong-waste-sorting-fine-motivation",
+            "2020-guangdong-pe-class-exercise-time-assumption"
           ]
         }
       ]
@@ -770,6 +813,10 @@
             {
               "title": "挪威母女妊娠剧吐（答案A）：要解释具体的母女差异",
               "body": "A提供母女共享环境与饮食，构成针对母女症状聚集的非遗传竞争解释。D只说挪威全人群吸烟率上升及吸烟可能致病，没有说明母女症状相关为何产生，力度较弱。"
+            },
+            {
+              "title": "2015四川：肥胖社会传染（答案C）",
+              "body": "亲友影响饮食习惯与亲友改变体重接受标准是竞争性解释，均可解释亲友肥胖相关；仅说一般社会压力能致胖，不足以解释亲友关联。A提出择友效应也有一定质疑，但不如C直接检验研究者具体机制。"
             }
           ],
           "questionIds": [
@@ -777,7 +824,8 @@
             "2022-dingcan",
             "unknown-elderly-women-weight-loss-health",
             "unknown-megapode-egg-infection-lysozyme",
-            "unknown-norway-hyperemesis-maternal-genes-family-environment"
+            "unknown-norway-hyperemesis-maternal-genes-family-environment",
+            "2015-sichuan-obesity-social-contagion-habits"
           ]
         }
       ]
@@ -1084,7 +1132,8 @@
             "土楼题A：证明土楼成功抵御侵扰，强调行动完成后的效果；题干的结论是在解释行动产生的动机，不能把“有防卫需要”偷换成“防卫最终成功”。",
             "电子烟题：结论要求“吸电子烟者比不吸者更可能尝试传统香烟”，C只给出吸电子烟者60%的单组绝对比例，不能直接证明组间相对优势。截图标C，讨论中的推理倾向B，保留争议。",
             "医德题：C仅说明学校思想道德教育是培养医德的主要途径；D提供患者相较于专业水平更加看重医德这一比较依据，更针对结论“更应注重”的优先级。C有一定支持，不是无关项。",
-            "维生素D题：结论比较现代与过去更易缺钙，C却比较现代骨质疏松患者与现代其他人日照是否相同，比较对象错位；两组现代人的日照都可能低于过去。"
+            "维生素D题：结论比较现代与过去更易缺钙，C却比较现代骨质疏松患者与现代其他人日照是否相同，比较对象错位；两组现代人的日照都可能低于过去。",
+            "青少年前额叶题D谈的是中年人成熟后不一定理智，题干却问25岁前谈理智是否有意义；对象与需要回答的问题均不同。主体不同是警示，不是机械判无关的充分理由。"
           ],
           "questionIds": [
             "fruit",
@@ -1113,7 +1162,11 @@
             "unknown-ecigarette-smoking-intention-relative-probability-disputed",
             "2022-guangdong-medical-ethics-priority-vs-method",
             "unknown-norway-hyperemesis-maternal-genes-family-environment",
-            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past",
+            "2015-guokao-tv-price-quality-market-share",
+            "unknown-civilian-gun-sales-restriction-deterrence",
+            "2015-sichuan-obesity-social-contagion-habits",
+            "unknown-adolescent-prefrontal-rationality-training"
           ],
           "examples": [
             {
@@ -1160,7 +1213,8 @@
             "葡萄籽题C是与题干既有年龄—自由基说法冲突的数据式陈述；A只指出另一种潜在副作用。比较的是与具体功效论证的关联及原论据是否被反证，而非见到“有害”就选。",
             "海山题：采样不足削弱高度特有性的证据可靠性；但“相同生物来源”不等于“种类组成完全相同”，不能夸大成全盘否定。",
             "丛冢雉题：A项溶菌酶素含量相似不等于抗菌活性、位置、条件完全一致，因此只能有限削弱原原因的比较解释力。",
-            "电子烟题：B“有可能提高”直接涉及概率增加但力度弱且暴露量与研究群体不完全对应；C“60%一定会尝试”是较具体的意向数据，却无非电子烟者对照。不能机械认为数字大或措辞肯定就更支持相对概率结论。"
+            "电子烟题：B“有可能提高”直接涉及概率增加但力度弱且暴露量与研究群体不完全对应；C“60%一定会尝试”是较具体的意向数据，却无非电子烟者对照。不能机械认为数字大或措辞肯定就更支持相对概率结论。",
+            "‘凡是、都能、每一个、唯一’往往超出实现目标所需的最低条件；排除潜在补偿因素能增强论证，但未必是必要前提。"
           ],
           "questionIds": [
             "unknown-peach-bagging-small-fruit",
@@ -1172,7 +1226,11 @@
             "unknown-megapode-egg-infection-lysozyme",
             "2022-henan-adolescent-risk-cardiovascular-intervention",
             "unknown-ecigarette-smoking-intention-relative-probability-disputed",
-            "unknown-norway-hyperemesis-maternal-genes-family-environment"
+            "unknown-norway-hyperemesis-maternal-genes-family-environment",
+            "unknown-southwest-shale-gas-commercial-extraction-prerequisite",
+            "2018-liankao-global-warming-food-security-compensation",
+            "unknown-hongye-fire-truck-replacement-prerequisite",
+            "2020-guangdong-waste-sorting-fine-motivation"
           ],
           "examples": [
             {
@@ -1195,7 +1253,8 @@
             "同一个措施可能不根治，但仍对症状、功能或生活质量有帮助。",
             "苏轼与苏洵称号题：A只继续证实苏轼用“老泉山人”这一既知事实，没有排除苏洵也使用“老泉”的可能；应优先寻找填补断点的证据。",
             "相邻却不同的效果不等价：治疗可以帮助已患病者改善症状，即使它不能防止新发病例，也不能因此说治疗无效。",
-            "饥饿题B的相关性表述与研究已有发现接近，D几乎复述“饥饿导致饿怒”；与C新增比例数据比较时，要看新增证据以及因果推断力度，而不是机械认为数字必然更强。"
+            "饥饿题B的相关性表述与研究已有发现接近，D几乎复述“饥饿导致饿怒”；与C新增比例数据比较时，要看新增证据以及因果推断力度，而不是机械认为数字必然更强。",
+            "体育课题D重复了已知‘体育锻炼有利于身体素质’，没有补上‘增加课时能够带来实际锻炼’的关键步骤。"
           ],
           "questionIds": [
             "2025-fish",
@@ -1204,7 +1263,8 @@
             "unknown-sushi-suxun-laoquan-avoidance",
             "unknown-alzheimer-light-stimulation-treatment",
             "unknown-hunger-anger-correlation-example",
-            "unknown-western-democracy-rights-absolutism-dispute"
+            "unknown-western-democracy-rights-absolutism-dispute",
+            "2020-guangdong-pe-class-exercise-time-assumption"
           ],
           "examples": [
             {
