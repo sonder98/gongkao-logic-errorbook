@@ -179,3 +179,8 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 翻译推理目前有两个 topic：`formal-translation-basics`（题型识别、问法、箭头翻译）和 `formal-translation-quantifiers`（所有／有些四种命题的关系）。后者按 A=所有S是P、E=所有S不是P、I=有些S是P、O=有些S不是P 分析：A↔非O、E↔非I 为矛盾；在 S 非空时 A/E 必有一假、I/O 必有一真，A→I、E→O；有些S是P可换位为有些P是S，有些S不是P不能反向换位。关键严谨性：普通公考默认论域中的 S 类非空，但在现代谓词逻辑空类下所有→有些不成立，A/E可双真而I/O可双假。
 
 其余三个章节目前为空，待用户按课程继续讲解。原论证逻辑题库和知识库完全不动。 `formal-questions.json` 仍为空，不能凭空录入截图中的示意命题作为真题。
+
+
+## 十四、翻译推理新增模态命题（2026-11-03）
+
+`formal-knowledge.json` 的翻译推理章现有三个 topic：`formal-translation-basics`、`formal-translation-quantifiers`、`formal-translation-modality`。模态四命题为 A=必然P、E=不可能P、I=可能P、O=可能非P；其对应关系与“所有S是P、所有S不是P、有些S是P、有些S不是P”相同。对角线矛盾；上方必有一假、下方必有一真；A→I、E→O。重点辨析“不必然P”=“可能非P”，并非“不可能P”。默认有至少一种可能情形，比较时保持P及时间条件一致。此轮只有知识与教学规则更新，形式逻辑题库仍为空，不添加自造题目。
