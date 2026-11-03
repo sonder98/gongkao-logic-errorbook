@@ -27,6 +27,7 @@ const formalIds=new Set(formalQuestions.map(q=>q.id));
 assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、真假推理","四、综合推理"]);
 assert.ok(formalBook.sections[0].topics.some(topic=>topic.id==='formal-translation-quantifiers'),'missing collection inference topic');
 assert.ok(!formalBook.sections.some(section=>section.id==='formal-set'),'collection inference must be inside translation');
+assert.ok(formalBook.sections.find(section=>section.id==='formal-contradiction').topics.some(topic=>topic.id==='formal-contradiction-two-patterns'),'missing contradiction inference rules');
 for(const topicId of ['formal-translation-basics','formal-translation-quantifiers','formal-translation-modality','formal-translation-nested-negation']){
  const topic=formalBook.sections[0].topics.find(t=>t.id===topicId);
  assert.ok(topic,'missing translation topic: '+topicId);

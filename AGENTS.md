@@ -63,3 +63,8 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 目前翻译推理中将“所有／有些”与“必然／可能”两个体系放在一起讲解，用中文括号从外到内逐层转换；用户明确表示不希望看到数学模态符号。
 - 新题 ID 分别为 `formal-2013-jilin-not-all-people-like-you`、`formal-2015-fujian-disaster-unless-disagreement`，其考点关联 `formal-translation-nested-negation`。
 - 2015 福建题 D 能由 A 推出，但不能等价代表完整原话。参考答案 A；题目“符合”问法有歧义，不能在解析里断言 D 推不出或错误。
+
+## 矛盾推理新阶段（2026-11-03）
+
+- 用户已进入矛盾推理：题干以纯逻辑条件为主，没有明确事实真；选项是事实真。第一种A→B、A→非B，推非A；第二种A→B、非A→B，推B。第二种从A或非A的穷尽情况得出必然B，并非直接得到B与非B矛盾。
+- 正式知识条目为 `formal-contradiction-two-patterns`；尚未提供该题型的真题，不能自造入库。
