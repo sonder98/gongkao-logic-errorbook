@@ -281,3 +281,9 @@
 - **前提条件：资源/措施→实际转化→效果**。页岩气 `unknown-southwest-shale-gas-commercial-extraction-prerequisite`（B）需资源可开采；体育课 `2020-guangdong-pe-class-exercise-time-assumption`（A）需学生实际锻炼；消防车 `unknown-hongye-fire-truck-replacement-prerequisite`（C）需现有车辆继续可用；垃圾分类 `2020-guangdong-waste-sorting-fine-motivation`（A）需避免罚款的行为动机。
 - **必要前提≠任何加强条件**。粮食题 `2018-liankao-global-warming-food-security-compensation`（选非C）中，其他作物即使有所增产，也未必能抵消玉米、小麦减产；没有必要排除全部增产。考题部分选项表达过强或不够充分，须说明其是相对最优，而不是形式逻辑上无可争议的唯一必要条件。
 - 辅助题：2015国考电视机客观提质降价却份额下滑 `2015-guokao-tv-price-quality-market-share`（C，感知质量机制）；2015四川肥胖社会传染 `2015-sichuan-obesity-social-contagion-habits`（C，亲友生活习惯竞争解释）；民用枪支限制 `unknown-civilian-gun-sales-restriction-deterrence`（B，处罚威慑不足突出源头预防必要性，但不直接证明限制销售实际有效）。
+
+## 18. 形式逻辑五大题型（2026-11-03）
+
+按课程顺序固定为：翻译推理、矛盾推理、集合推理、真假推理、综合推理。独立于此前论证逻辑。翻译推理是基本功，材料以形式逻辑条件句为主，先翻译为箭头等逻辑符号，再根据已知条件判断必然为真的结论。常见问法为“根据材料，以下哪项为真？”“若X为真，以下哪项为真？”；条件蕴含箭头不可与经验因果混同。
+
+`formal-knowledge.json` 现有五章，第一章 `formal-translation-basics` 为已讨论的入门知识点，其余四章 `topics:[]` 待续；不预先扩展未讲解的规则。新题应归入 `formal-questions.json`。

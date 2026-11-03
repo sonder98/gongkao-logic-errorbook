@@ -171,3 +171,7 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 网站顶部改为两组共四个 Tab。旧 `questions.json`、`knowledge.json` 属于「论证逻辑」，原有 48 题与 31 个知识点不迁移、不改 ID；新的「形式逻辑」独立使用 `formal-questions.json`（初始空数组）、`formal-knowledge.json`（初始空章节），后续随着用户学习形成规则和题目后再逐步填充。原有练习页与知识页组件复用，模块切换仅改变内容源；Supabase 进度仍按唯一 question_id 保存，不变更表结构。
 
 旧链接 `#knowledge/<id>` 和 `#practice/<id>` 继续对应论证逻辑；新链接 `#formal/knowledge[/<id>]` 和 `#formal/practice[/<id>]` 对应形式逻辑。根网址仍默认论证逻辑错题练习。两套知识点和题目不能交叉引用；形式逻辑新 ID 一律以 `formal-` 开头。注意后续「更新/同步」时根据题目所属模块写入相应 JSON，不再默认全部写进旧题库。
+
+## 十三、形式逻辑目录（2026-11-03）
+
+五大题型固定为：一、翻译推理；二、矛盾推理；三、集合推理；四、真假推理；五、综合推理。翻译推理是基本功，材料需要翻译成箭头，典型问法是“根据材料，以下哪项为真？”“若X为真，以下哪项为真？”。`formal-knowledge.json` 已建立五章，第一章 `formal-translation-basics` 有入门规则，其余章为空目录。形式逻辑题库仍为空，不自动补题。前端知识导航已支持形式逻辑空章节，论证逻辑维持原状。

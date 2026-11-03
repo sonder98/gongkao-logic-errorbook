@@ -1,6 +1,56 @@
 {
   "title": "形式逻辑 · 知识体系",
-  "version": "1.0",
-  "description": "形式逻辑专属知识笔记。学习过程中按章节持续补充，不与论证逻辑混用。",
-  "sections": []
+  "version": "1.1",
+  "description": "形式逻辑分为翻译推理、矛盾推理、集合推理、真假推理、综合推理五大题型。",
+  "sections": [
+    {
+      "id": "formal-translation",
+      "chapter": "形式逻辑",
+      "title": "一、翻译推理",
+      "topics": [
+        {
+          "id": "formal-translation-basics",
+          "title": "翻译推理：题型识别与基本步骤",
+          "summary": "翻译推理是形式逻辑的基本功：材料主要由形式逻辑条件句组成，先将文字中的条件关系翻译成箭头等逻辑表达式，再判断哪个结论在已知条件下必然成立。",
+          "recognize": [
+            "材料里主要是可以翻译成箭头等符号的形式逻辑条件句。",
+            "常见问法：“根据材料，以下哪项为真？”“若X为真，以下哪项为真？”"
+          ],
+          "patterns": [
+            "识别条件句，统一符号表示相同命题。",
+            "准确翻译条件关系，结合题干新增前提进行推导。",
+            "选择被给定条件必然推出的选项，而非仅仅可能成立的选项。"
+          ],
+          "pitfalls": [
+            "形式逻辑的条件箭头与论证逻辑的经验性因果箭头不是同一个概念。"
+          ],
+          "questionIds": []
+        }
+      ]
+    },
+    {
+      "id": "formal-contradiction",
+      "chapter": "形式逻辑",
+      "title": "二、矛盾推理",
+      "topics": []
+    },
+    {
+      "id": "formal-set",
+      "chapter": "形式逻辑",
+      "title": "三、集合推理",
+      "topics": []
+    },
+    {
+      "id": "formal-truth",
+      "chapter": "形式逻辑",
+      "title": "四、真假推理",
+      "topics": []
+    },
+    {
+      "id": "formal-comprehensive",
+      "chapter": "形式逻辑",
+      "title": "五、综合推理",
+      "topics": []
+    }
+  ]
 }

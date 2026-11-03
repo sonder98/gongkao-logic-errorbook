@@ -398,11 +398,14 @@ function renderKnowledge(){
   $('knowledgeCount').textContent='—';
   return;
  }
- const groups=KNOWLEDGE.sections.map(section=>({section,topics:section.topics.filter(topic=>knowledgeMatches(topic,section))})).filter(group=>group.topics.length);
- const allVisible=groups.flatMap(group=>group.topics);
- if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
- $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
  const searching=Boolean(knowledgeQuery.trim());
+ const groups=KNOWLEDGE.sections.map(section=>({section,topics:section.topics.filter(topic=>knowledgeMatches(topic,section))}))
+  .filter(g=>g.topics.length||(!searching&&currentModule==='formal'&&!g.section.topics.length));
+ const allVisible=groups.flatMap(g=>g.topics);
+ const emptyExpanded=!searching&&currentModule==='formal'&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
+ if(emptyExpanded)selectedTopic=null;
+ else if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
+ $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
  let lastChapter='',navHtml='';
  for(const {section,topics} of groups){
   if(lastChapter!==section.chapter){
@@ -433,13 +436,18 @@ function renderKnowledge(){
   if(opening){
    const group=KNOWLEDGE.sections.find(section=>section.id===id);
    if(group?.topics.length)selectedTopic=group.topics[0].id;
+   else if(currentModule==='formal')selectedTopic=null;
   }
   renderKnowledge();
   if(opening&&currentView==='knowledge')updateViewHash();
  });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
  const topic=knowledgeTopic(selectedTopic);
- if(!topic){$('knowledgeCard').innerHTML='<div class="kb-load-state">'+(knowledgeTopics.length?'没有符合条件的知识点。请清空搜索词后重试。':'形式逻辑知识体系正在建立。后续学习的规则会逐步整理在这里。')+'</div>';return}
+ if(!topic){
+  const emptySection=currentModule==='formal'&&!searching&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
+  $('knowledgeCard').innerHTML='<div class="kb-load-state">'+(emptySection?safe(emptySection.title)+'：本章尚未开始整理，后续学习时逐步补充。':'没有符合条件的知识点，请调整搜索词。')+'</div>';
+  return;
+ }
  const group=KNOWLEDGE.sections.find(section=>section.topics.some(item=>item.id===topic.id));
  const methods=(topic.strengthen?.length||topic.weaken?.length)?'<div class="kb-two-cols">'+
   (topic.strengthen?.length?'<section class="kb-method"><h3>＋ 加强方向</h3>'+listHtml(topic.strengthen)+'</section>':'')+
@@ -585,7 +593,7 @@ async function loadFormalData(){
  }
  const topicIds=new Set(knowledgeTopics.map(topic=>topic.id));
  for(const section of book.sections){
-  if(!section.id||!section.chapter||!section.title||!Array.isArray(section.topics)||!section.topics.length)throw new Error('形式逻辑章节格式错误');
+  if(!section.id||!section.chapter||!section.title||!Array.isArray(section.topics))throw new Error('形式逻辑章节格式错误');
   for(const topic of section.topics){
    if(!topic.id?.startsWith('formal-')||topicIds.has(topic.id)||!topic.title||!topic.summary||
     (topic.questionIds||[]).some(id=>!questions.some(q=>q.id===id)))throw new Error('形式逻辑知识点格式错误');

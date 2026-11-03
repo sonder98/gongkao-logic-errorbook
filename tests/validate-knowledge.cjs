@@ -24,8 +24,9 @@ const formalBook=JSON.parse(fs.readFileSync(path.join(root,'formal-knowledge.jso
 const formalQuestions=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formalBook.sections),'formal knowledge sections must be an array');
 const formalIds=new Set(formalQuestions.map(q=>q.id));
+assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、集合推理","四、真假推理","五、综合推理"]);
 for(const section of formalBook.sections){
- assert.ok(section.id&&section.chapter&&section.title&&Array.isArray(section.topics)&&section.topics.length);
+ assert.ok(section.id&&section.chapter&&section.title&&Array.isArray(section.topics));
  for(const topic of section.topics){
   assert.ok(topic.id.startsWith('formal-')&&topic.title&&topic.summary);
   assert.ok(!ids.has(topic.id),'knowledge ID conflict: '+topic.id);
