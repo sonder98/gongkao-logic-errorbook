@@ -165,3 +165,9 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 - `unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past`：日照减少、维生素D与现代缺钙风险，答案**B**。现代人含钙食物来源增多可能抵消吸收效率下降；C只比较现代患骨质疏松者与现代其他人，却未回应题干“现代 vs 过去”的跨时代比较。用户明确赞同B/C辨析。此题尤其保留B/C对照而不增加类别。
 
 本轮对应正式考生笔记在 `knowledge.json` 已有条目中补充示例和陷阱；理论分类未变，故不额外改 `STUDY_FRAMEWORK.md`。原始截图未储存，题目保存完整文本、选项、参考与争议说明。未来更新以实际 `questions.json` 数量为准；AI_HANDOFF.md 数字仅是编辑时快照。
+
+## 十二、论证逻辑 / 形式逻辑模块拆分（2026-11-03）
+
+网站顶部改为两组共四个 Tab。旧 `questions.json`、`knowledge.json` 属于「论证逻辑」，原有 48 题与 31 个知识点不迁移、不改 ID；新的「形式逻辑」独立使用 `formal-questions.json`（初始空数组）、`formal-knowledge.json`（初始空章节），后续随着用户学习形成规则和题目后再逐步填充。原有练习页与知识页组件复用，模块切换仅改变内容源；Supabase 进度仍按唯一 question_id 保存，不变更表结构。
+
+旧链接 `#knowledge/<id>` 和 `#practice/<id>` 继续对应论证逻辑；新链接 `#formal/knowledge[/<id>]` 和 `#formal/practice[/<id>]` 对应形式逻辑。根网址仍默认论证逻辑错题练习。两套知识点和题目不能交叉引用；形式逻辑新 ID 一律以 `formal-` 开头。注意后续「更新/同步」时根据题目所属模块写入相应 JSON，不再默认全部写进旧题库。

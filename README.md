@@ -4,7 +4,7 @@
 
 **新 AI / 新对话请从 [AI_HANDOFF.md](AI_HANDOFF.md) 开始**，再读 [STUDY_FRAMEWORK.md](STUDY_FRAMEWORK.md)、[AGENTS.md](AGENTS.md)。旧知识库仅历史归档。
 
-一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前收录 8 道逻辑判断题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
+一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前论证逻辑收录 48 道题、形式逻辑题库尚未开始收录，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
 
 ## 当前状态
 
@@ -57,7 +57,10 @@
 ## 题库结构与快速入库
 
 - `index.html`：页面、答题和 Supabase 同步代码，不再内嵌题目或原图。
-- `questions.json`：**唯一题库数据文件**；今后新增题目只追加 JSON 对象，保留全部历史 ID，不再上传图片。
+- `questions.json`：**论证逻辑**题库数据文件，原有 48 道题及稳定 ID 不变。
+- `formal-questions.json`：**形式逻辑**独立题库；新题使用 `formal-` 前缀的唯一 ID，不保存截图。
+- `formal-knowledge.json`：形式逻辑的独立知识章节；当前为空，后续随课程补充。
+- 今后新增题目只向对应模块追加 JSON 对象，不再上传图片。
 - `legacy/questions-with-original-images-20261028.html`：迁移前原版页面的 Git Blob 归档，保存原有6张题图，只有查看旧题原图时才会下载。
 - 旧题 `image: "legacy:<id>"`；新题 `image: ""`。不要把原图 Base64 再写回 `questions.json`。
 - `node tests/validate-questions.cjs`：快速校验 JSON、旧题 ID 与历史原图；不依赖第三方包。
@@ -109,7 +112,7 @@
 
 详见 `TESTING.md`。至少完成：
 
-- 全部 8 道题逐字核对；
+- 全部已入库题目逐字核对；
 - 本地保存与 JSON 恢复；
 - 两账号 RLS；
 - 两设备同步与冲突；
@@ -123,8 +126,10 @@
 ```text
 .
 ├─ index.html
-├─ questions.json
-├─ knowledge.json
+├─ questions.json                 # 论证逻辑题库
+├─ knowledge.json                 # 论证逻辑知识库
+├─ formal-questions.json          # 形式逻辑题库
+├─ formal-knowledge.json          # 形式逻辑知识库
 ├─ AGENTS.md
 ├─ AI_HANDOFF.md
 ├─ STUDY_FRAMEWORK.md
@@ -157,7 +162,7 @@
 
 ## 知识体系与错题练习
 
-网站顶部提供两个入口：**知识体系**与**错题练习**。**根网址默认打开错题练习**；仅在显式 `#knowledge/<topic-id>` 深链时直接打开对应知识。左侧知识目录按章节折叠（默认仅展开当前章节）、限高纵向滚动（桌面400px、移动端210px），搜索自动展开匹配结果。知识体系采用纯静态的 `knowledge.json`，已按「论证基础 → 题型与方法（由因推果、由果推因、相关性推因果、两句式推理）→ 选项陷阱」整理。每个知识点独立维护，加强与削弱放在同一个方法下，方便持续补充。
+网站顶部现有**两组模块、四个 Tab**：「论证逻辑 → 知识体系 / 错题练习」和「形式逻辑 → 知识体系 / 错题练习」。**根网址默认打开论证逻辑·错题练习**；旧深链 `#knowledge/<topic-id>`、`#practice/<question-id>` 保持兼容。形式逻辑使用 `#formal/knowledge[/<topic-id>]` 和 `#formal/practice[/<question-id>]`。左侧知识目录按章节折叠（默认仅展开当前章节）、限高纵向滚动（桌面400px、移动端210px），搜索自动展开匹配结果。知识体系采用纯静态的 `knowledge.json`，已按「论证基础 → 题型与方法（由因推果、由果推因、相关性推因果、两句式推理）→ 选项陷阱」整理。每个知识点独立维护，加强与削弱放在同一个方法下，方便持续补充。
 
 - 知识正文仅维护 `knowledge.json`；`LOGIC_KNOWLEDGE_BASE.md` 仍作内部讨论归档，不在页面直接展示。
 - `knowledge.json` 中各 `sections[].topics[]` 必须有稳定唯一的 `id`、`title`、`summary`；可选字段包括 `recognize`、`patterns`、`strengthen`、`weaken`、`pitfalls`（字符串数组）、`examples`（标题与正文数组）、`questionIds`（题目 ID 数组）。

@@ -110,12 +110,30 @@
  .kb-two-cols{grid-template-columns:minmax(0,1fr)}
  .kb-related-link{flex-wrap:wrap}
 }
+/* Independent logic modules, two tabs per module */
+.site-tabs{display:flex;flex-wrap:wrap;align-items:stretch;gap:12px}
+.module-group{display:flex;align-items:center;gap:5px;min-width:0;padding:6px;background:#eaf1f0;border:1px solid #dbe6e4;border-radius:15px}
+.module-label{padding:0 11px;white-space:nowrap;color:#344e56;font-weight:850;font-size:13px}
+.module-group .site-tab{margin:0;border-radius:10px;padding:10px 15px;font-size:13px;box-shadow:none;white-space:nowrap}
+@media(max-width:800px){
+ .site-tabs{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+ .module-group{display:grid;grid-template-columns:auto minmax(0,1fr) minmax(0,1fr);gap:5px;width:100%}
+ .module-label{padding:0 8px;font-size:12px}
+ .module-group .site-tab{min-width:0;padding:10px 5px;font-size:12px}
+}
 </style></head><body>
 <header><div class="eyebrow">LOGIC STUDY / 体系复习 · 错题实战</div><h1>逻辑判断 · 学习与错题本</h1><p><span id="questionCount">…</span> 道原题完整收录｜知识体系持续更新｜答题与笔记支持云端同步</p></header>
-<nav class="site-tabs" role="tablist" aria-label="学习模式">
- <button type="button" class="site-tab" id="tabKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
- <button type="button" class="site-tab" id="tabPractice" role="tab" aria-selected="true" aria-controls="practiceView">✍️ 错题练习</button>
- <span class="site-tagline">先学方法，再用真题检验</span>
+<nav class="site-tabs" role="tablist" aria-label="选择逻辑模块与学习模式">
+ <div class="module-group" aria-label="论证逻辑">
+  <strong class="module-label">论证逻辑</strong>
+  <button type="button" class="site-tab" id="tabKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
+  <button type="button" class="site-tab" id="tabPractice" role="tab" aria-selected="true" aria-controls="practiceView">✍️ 错题练习</button>
+ </div>
+ <div class="module-group" aria-label="形式逻辑">
+  <strong class="module-label">形式逻辑</strong>
+  <button type="button" class="site-tab" id="tabFormalKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
+  <button type="button" class="site-tab" id="tabFormalPractice" role="tab" aria-selected="false" aria-controls="practiceView">✍️ 错题练习</button>
+ </div>
 </nav>
 <div class="shell" id="practiceView" role="tabpanel" aria-labelledby="tabPractice"><aside><section class="auth-panel" id="authPanel" aria-busy="false">
 <h3>☁ 云端账号与同步</h3>
@@ -164,7 +182,12 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 let QUESTIONS=[];
+let ARGUMENT_QUESTIONS=[],FORMAL_QUESTIONS=[],ARGUMENT_KNOWLEDGE=null,FORMAL_KNOWLEDGE=null,currentModule='argument';
 let KNOWLEDGE=null,knowledgeTopics=[],selectedTopic=null,knowledgeQuery='',currentView='practice',knowledgeExpanded=new Set(['foundation']);
+const moduleStates={
+ argument:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(['foundation']),lastNavActive:null},
+ formal:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(),lastNavActive:null}
+};
 const KEY='gongkao_logic_errorbook_v1';
 const APP_SCHEMA_VERSION=3;
 // 部署到固定网址前，可以在这里填写 Supabase 公共配置。绝不能填写 secret/service_role key！
@@ -416,7 +439,7 @@ function renderKnowledge(){
  });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
  const topic=knowledgeTopic(selectedTopic);
- if(!topic){$('knowledgeCard').innerHTML='<div class="kb-load-state">没有符合条件的知识点。请清空搜索词后重试。</div>';return}
+ if(!topic){$('knowledgeCard').innerHTML='<div class="kb-load-state">'+(knowledgeTopics.length?'没有符合条件的知识点。请清空搜索词后重试。':'形式逻辑知识体系正在建立。后续学习的规则会逐步整理在这里。')+'</div>';return}
  const group=KNOWLEDGE.sections.find(section=>section.topics.some(item=>item.id===topic.id));
  const methods=(topic.strengthen?.length||topic.weaken?.length)?'<div class="kb-two-cols">'+
   (topic.strengthen?.length?'<section class="kb-method"><h3>＋ 加强方向</h3>'+listHtml(topic.strengthen)+'</section>':'')+
@@ -443,16 +466,41 @@ function renderKnowledge(){
   else if(rect.bottom>area.bottom)nav.scrollTop+=rect.bottom-area.bottom+4;
  }
 }
+function activateModule(next){
+ if(next===currentModule)return;
+ moduleStates[currentModule]={
+  active,selectedTopic,category,wrongOnly,importantOnly,searchTerm,knowledgeQuery,
+  knowledgeExpanded:new Set(knowledgeExpanded),lastNavActive
+ };
+ currentModule=next;
+ QUESTIONS=next==='formal'?FORMAL_QUESTIONS:ARGUMENT_QUESTIONS;
+ KNOWLEDGE=next==='formal'?FORMAL_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
+ knowledgeTopics=KNOWLEDGE?.sections.flatMap(section=>section.topics)||[];
+ const saved=moduleStates[next];
+ active=saved.active&&QUESTIONS.some(q=>q.id===saved.active)?saved.active:QUESTIONS[0]?.id||null;
+ selectedTopic=saved.selectedTopic&&knowledgeTopics.some(t=>t.id===saved.selectedTopic)?saved.selectedTopic:knowledgeTopics[0]?.id||null;
+ category=saved.category;wrongOnly=saved.wrongOnly;importantOnly=saved.importantOnly;
+ searchTerm=saved.searchTerm;knowledgeQuery=saved.knowledgeQuery;
+ knowledgeExpanded=new Set(saved.knowledgeExpanded);lastNavActive=saved.lastNavActive;
+ if(selectedTopic&&!knowledgeExpanded.size)expandKnowledgeSectionForTopic(selectedTopic);
+ $('questionSearch').value=searchTerm;
+ $('knowledgeSearch').value=knowledgeQuery;
+}
 function updateViewHash(){
  const id=currentView==='knowledge'?selectedTopic:active;
- if(id)history.replaceState(null,'','#'+currentView+'/'+encodeURIComponent(id));
+ const prefix=currentModule==='formal'?'formal/':'';
+ history.replaceState(null,'','#'+prefix+currentView+(id?'/'+encodeURIComponent(id):''));
 }
 function switchView(view,updateHash=true){
  currentView=view==='knowledge'?'knowledge':'practice';
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
- $('tabKnowledge').setAttribute('aria-selected',String(currentView==='knowledge'));
- $('tabPractice').setAttribute('aria-selected',String(currentView==='practice'));
+ const selected=currentModule==='formal'?'Formal':'';
+ for(const key of ['Knowledge','Practice','FormalKnowledge','FormalPractice']){
+  $('tab'+key).setAttribute('aria-selected',String(key===selected+(currentView==='knowledge'?'Knowledge':'Practice')));
+ }
+ $('knowledgeView').setAttribute('aria-labelledby','tab'+selected+'Knowledge');
+ $('practiceView').setAttribute('aria-labelledby','tab'+selected+'Practice');
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
 }
@@ -474,18 +522,19 @@ function openPractice(id){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function restoreHashView(){
- const route=decodeURIComponent(location.hash.slice(1)).match(/^(knowledge|practice)(?:\/(.+))?$/);
+ const route=decodeURIComponent(location.hash.slice(1)).match(/^(?:(formal)\/)?(knowledge|practice)(?:\/(.+))?$/);
  if(!route)return;
- if(route[1]==='knowledge'){
-  if(knowledgeTopic(route[2])){
-   selectedTopic=route[2];
+ activateModule(route[1]==='formal'?'formal':'argument');
+ if(route[2]==='knowledge'){
+  if(knowledgeTopic(route[3])){
+   selectedTopic=route[3];
    expandKnowledgeSectionForTopic(selectedTopic);
    knowledgeQuery='';
    $('knowledgeSearch').value='';
   }
   switchView('knowledge',false);
  }else{
-  if(QUESTIONS.some(q=>q.id===route[2]))active=route[2];
+  if(QUESTIONS.some(q=>q.id===route[3]))active=route[3];
   switchView('practice',false);
  }
 }
@@ -505,6 +554,7 @@ async function loadKnowledge(){
    }
   }
   KNOWLEDGE=book;
+  ARGUMENT_KNOWLEDGE=book;
   knowledgeTopics=book.sections.flatMap(section=>section.topics);
   if(!selectedTopic)selectedTopic=knowledgeTopics[0].id;
   expandKnowledgeSectionForTopic(selectedTopic);
@@ -516,8 +566,40 @@ async function loadKnowledge(){
   $('knowledgeCard').innerHTML='<div class="kb-load-state">知识体系暂时无法加载，请刷新页面重试。错题练习不受影响。</div>';
  }
 }
-$('tabKnowledge').onclick=()=>switchView('knowledge');
-$('tabPractice').onclick=()=>switchView('practice');
+async function loadFormalData(){
+ const [questionsResponse,knowledgeResponse]=await Promise.all([
+  fetch('formal-questions.json',{cache:'no-cache'}),
+  fetch('formal-knowledge.json',{cache:'no-cache'})
+ ]);
+ if(!questionsResponse.ok||!knowledgeResponse.ok)throw new Error('形式逻辑资源加载失败');
+ const [questions,book]=await Promise.all([questionsResponse.json(),knowledgeResponse.json()]);
+ if(!Array.isArray(questions)||!book||!Array.isArray(book.sections))throw new Error('形式逻辑数据格式错误');
+ const questionIds=new Set(ARGUMENT_QUESTIONS.map(q=>q.id));
+ const required=['id','year','exam','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','rule','image'];
+ for(const q of questions){
+  if(!q||!q.id?.startsWith('formal-')||questionIds.has(q.id)||required.some(key=>typeof q[key]!=='string')||
+   !Array.isArray(q.options)||q.options.length<2||q.options.length>5||
+   !q.options.every(opt=>typeof opt==='string'&&opt.trim())||
+   !'ABCDE'.slice(0,q.options.length).includes(q.answer)||q.image!=='')throw new Error('形式逻辑题目格式错误或 ID 重复');
+  questionIds.add(q.id);
+ }
+ const topicIds=new Set(knowledgeTopics.map(topic=>topic.id));
+ for(const section of book.sections){
+  if(!section.id||!section.chapter||!section.title||!Array.isArray(section.topics)||!section.topics.length)throw new Error('形式逻辑章节格式错误');
+  for(const topic of section.topics){
+   if(!topic.id?.startsWith('formal-')||topicIds.has(topic.id)||!topic.title||!topic.summary||
+    (topic.questionIds||[]).some(id=>!questions.some(q=>q.id===id)))throw new Error('形式逻辑知识点格式错误');
+   topicIds.add(topic.id);
+  }
+ }
+ FORMAL_QUESTIONS=questions;
+ FORMAL_KNOWLEDGE=book;
+ $('questionCount').textContent=ARGUMENT_QUESTIONS.length+questions.length;
+}
+$('tabKnowledge').onclick=()=>{activateModule('argument');switchView('knowledge')};
+$('tabPractice').onclick=()=>{activateModule('argument');switchView('practice')};
+$('tabFormalKnowledge').onclick=()=>{activateModule('formal');switchView('knowledge')};
+$('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
@@ -549,7 +631,7 @@ list.innerHTML=f.length?f.map((q,i)=>{
  const statusName=r.submitted?(r.selected===q.answer?'已答对':'已答错'):(r.review?'待复习':'未完成');
  const pin=q.important===true?'<span class="nav-pin" aria-hidden="true">★</span>':'';
  return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
-}).join(''):'<div class="empty">未找到匹配的题目，请调整搜索或筛选条件</div>';
+}).join(''):'<div class="empty">'+(!QUESTIONS.length?'形式逻辑题库尚未收录题目，后续课程的练习题会独立出现在这里。':'未找到匹配的题目，请调整搜索或筛选条件')+'</div>';
 list.scrollTop=oldScroll;
 list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
 if(activeChanged){
@@ -563,7 +645,7 @@ if(activeChanged){
 lastNavActive=active;
 const answered=QUESTIONS.filter(q=>record(q.id).submitted).length,correct=QUESTIONS.filter(q=>record(q.id).submitted&&record(q.id).selected===q.answer).length,need=QUESTIONS.filter(q=>record(q.id).review||record(q.id).wrong).length;
 $('stats').innerHTML=`<div><div class="num">${answered}<small> / ${QUESTIONS.length}</small></div><small>已完成</small></div><div><div class="num">${correct}</div><small>答对题数</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
-if(!f.length){$('card').innerHTML='<div class="empty">没有符合条件的题目，请调整搜索词或筛选条件。</div>';return}
+if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?'形式逻辑错题练习尚未开始收录，完成知识点学习后可逐步添加真题。':'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';return}
 const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active);
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
@@ -646,7 +728,7 @@ $('reset').onclick=async()=>{
    pending.clear();cloudMeta={};localStorage.removeItem(pendingKey());localStorage.removeItem(metaKey());
  }
   state={};persistUserState();
- category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0].id;render();
+ category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0]?.id||null;render();
  setStatus(user?'已清空当前账号的云端记录':'已清空本地记录','good');
 };
 document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
@@ -661,10 +743,12 @@ async function boot(){
   seen.add(q.id);
  }
  QUESTIONS=data;
+ ARGUMENT_QUESTIONS=data;
  active=data[0].id;
  $('questionCount').textContent=data.length;
  render();
  await loadKnowledge();
+ await loadFormalData();
  restoreHashView();
  await setupCloud();
 }

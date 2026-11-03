@@ -49,3 +49,11 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 
 新收录重点题 `unknown-black-carbon-neurocognition`，答案D；正式知识条目为 `susceptibility-selection-bias`。解题时务必区分群体共同易感性、组间可比性/混杂、严格意义上的样本选择偏差；不要把女孩“未显著”解释成已经证明无影响。最新详细口径见 `STUDY_FRAMEWORK.md`。
 
+
+## 形式逻辑模块（2026-11-03）
+
+- 网站顶部是两个模块、各自两个 Tab：论证逻辑·知识体系/错题练习，形式逻辑·知识体系/错题练习。
+- 原有 `questions.json`、`knowledge.json` 全部属于论证逻辑，禁止因模块改名迁移历史 ID、答题记录或知识链接；旧 `#knowledge/<id>`、`#practice/<id>` 继续指向论证逻辑。
+- 形式逻辑独立使用 `formal-questions.json`、`formal-knowledge.json`，新 ID 使用 `formal-` 前缀；其 URL 为 `#formal/knowledge[/<id>]`、`#formal/practice[/<id>]`。
+- 新模块暂时为空，不要未经学习讨论就填充未经确认的课程分类或自造真题。后续形式逻辑内容优先更新本模块的 JSON，不混入论证逻辑。
+- 同一账号的个人进度仍以全局唯一的 question_id 存在现有 Supabase 表中，不修改 schema。

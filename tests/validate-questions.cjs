@@ -26,4 +26,16 @@ for(const item of q.filter(x=>x.image)){
  const old=oldQuestions.find(x=>x.id===item.id);
  assert.ok(old && old.image.startsWith('data:image/'),item.id+' 历史原图缺失');
 }
-console.log('题库校验通过：'+q.length+'道，历史ID保留，历史原图可用');
+const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
+assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
+const allIds=new Set(q.map(item=>item.id));
+for(const item of formal){
+ assert.ok(item.id.startsWith('formal-')&&!allIds.has(item.id),'形式逻辑 ID 必须独立且唯一');
+ allIds.add(item.id);
+ for(const key of required)assert.equal(typeof item[key],'string',item.id+': '+key+' 字段不合法');
+ assert.ok(Array.isArray(item.options)&&item.options.length>=2&&item.options.length<=5);
+ assert.ok(item.options.every(opt=>typeof opt==='string'&&opt.trim()));
+ assert.ok('ABCDE'.slice(0,item.options.length).includes(item.answer));
+ assert.equal(item.image,'','形式逻辑新题不保留原图');
+}
+console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');

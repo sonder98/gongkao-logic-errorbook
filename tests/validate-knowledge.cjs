@@ -20,4 +20,17 @@ for(const section of book.sections){
 }
 const published=JSON.stringify(book);
 for(const banned of ['用户确认','用户要求','下次对话','AGENTS.md','Supabase','ChatGPT'])assert.ok(!published.includes(banned),'non-reader-facing content: '+banned);
-console.log('Knowledge OK:',ids.size,'topics in',book.sections.length,'sections; all question references valid');
+const formalBook=JSON.parse(fs.readFileSync(path.join(root,'formal-knowledge.json'),'utf8'));
+const formalQuestions=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
+assert.ok(Array.isArray(formalBook.sections),'formal knowledge sections must be an array');
+const formalIds=new Set(formalQuestions.map(q=>q.id));
+for(const section of formalBook.sections){
+ assert.ok(section.id&&section.chapter&&section.title&&Array.isArray(section.topics)&&section.topics.length);
+ for(const topic of section.topics){
+  assert.ok(topic.id.startsWith('formal-')&&topic.title&&topic.summary);
+  assert.ok(!ids.has(topic.id),'knowledge ID conflict: '+topic.id);
+  ids.add(topic.id);
+  for(const id of topic.questionIds||[])assert.ok(formalIds.has(id),'formal knowledge cross-module reference: '+id);
+ }
+}
+console.log('Knowledge OK:',ids.size,'topics in',book.sections.length+formalBook.sections.length,'sections; all question references valid');
