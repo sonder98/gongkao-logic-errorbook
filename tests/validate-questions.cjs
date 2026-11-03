@@ -38,4 +38,14 @@ for(const item of formal){
  assert.ok('ABCDE'.slice(0,item.options.length).includes(item.answer));
  assert.equal(item.image,'','形式逻辑新题不保留原图');
 }
+for(const [id,answer] of [
+ ['formal-2013-jilin-not-all-people-like-you','B'],
+ ['formal-2015-fujian-disaster-unless-disagreement','A']
+]){
+ const found=formal.find(item=>item.id===id);
+ assert.ok(found&&found.answer===answer,'新入库形式逻辑答案不正确：'+id);
+ assert.equal(found.options.length,4);
+ assert.equal(found.important,true);
+}
+assert.match(formal.find(item=>item.id==='formal-2015-fujian-disaster-unless-disagreement').trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');

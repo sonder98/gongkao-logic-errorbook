@@ -57,3 +57,9 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 形式逻辑独立使用 `formal-questions.json`、`formal-knowledge.json`，新 ID 使用 `formal-` 前缀；其 URL 为 `#formal/knowledge[/<id>]`、`#formal/practice[/<id>]`。
 - 形式逻辑现为四大题型：翻译推理（包含原“集合推理”的所有／有些四命题关系）、矛盾推理、真假推理、综合推理。“集合推理”不再作为单独一级章；新知识点 ID 为 `formal-translation-quantifiers`。保留原入门 topic ID，其他三章尚未开始细分。论证逻辑的数据保持原状。
 - 同一账号的个人进度仍以全局唯一的 question_id 存在现有 Supabase 表中，不修改 schema。
+
+## 形式逻辑近期讲解与录入规则
+
+- 目前翻译推理中将“所有／有些”与“必然／可能”两个体系放在一起讲解，用中文括号从外到内逐层转换；用户明确表示不希望看到数学模态符号。
+- 新题 ID 分别为 `formal-2013-jilin-not-all-people-like-you`、`formal-2015-fujian-disaster-unless-disagreement`，其考点关联 `formal-translation-nested-negation`。
+- 2015 福建题 D 能由 A 推出，但不能等价代表完整原话。参考答案 A；题目“符合”问法有歧义，不能在解析里断言 D 推不出或错误。

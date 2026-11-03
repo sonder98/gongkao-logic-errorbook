@@ -184,3 +184,9 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 ## 十四、翻译推理新增模态命题（2026-11-03）
 
 `formal-knowledge.json` 的翻译推理章现有三个 topic：`formal-translation-basics`、`formal-translation-quantifiers`、`formal-translation-modality`。模态四命题为 A=必然P、E=不可能P、I=可能P、O=可能非P；其对应关系与“所有S是P、所有S不是P、有些S是P、有些S不是P”相同。对角线矛盾；上方必有一假、下方必有一真；A→I、E→O。重点辨析“不必然P”=“可能非P”，并非“不可能P”。默认有至少一种可能情形，比较时保持P及时间条件一致。此轮只有知识与教学规则更新，形式逻辑题库仍为空，不添加自造题目。
+
+## 十五、两道翻译推理入库与新学习规则（2026-11-03）
+
+新增两题到 `formal-questions.json`（原来0题、现2题），并将其关联到翻译推理下四个既有／新增知识点。2013吉林题 `formal-2013-jilin-not-all-people-like-you` 答案B（原图62%）；2015福建事业单位题 `formal-2015-fujian-disaster-unless-disagreement` 参考答案A（原图27%）。新增知识点 `formal-translation-nested-negation`：先给整句加方括号，外层模态否定和内层量词否定依次转换；“除非A，否则B”＝“不是A→B”，否定该条件关系必须“不是A并且不是B”。用户指定解释尽量使用中文、方括号、简单箭头，不用模态方框或菱形等符号。
+
+特别注意2015福建题的D选项：A后半句“所有灾难必然可以避免”可以推出D“有些灾难必然可以避免”（默认灾难非空），并不代表D错误。参考答案A作为完整等价的原意还原；若题目仅要求可推出，A/D都成立，单选问法含歧义；也需保留“难以避免”和“无法避免”不严格同义的用词边界。题库 `trap` 和知识正文都必须保留这层辨析。原论证题和用户进度结构不动。
