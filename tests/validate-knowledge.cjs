@@ -24,7 +24,9 @@ const formalBook=JSON.parse(fs.readFileSync(path.join(root,'formal-knowledge.jso
 const formalQuestions=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formalBook.sections),'formal knowledge sections must be an array');
 const formalIds=new Set(formalQuestions.map(q=>q.id));
-assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、集合推理","四、真假推理","五、综合推理"]);
+assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、真假推理","四、综合推理"]);
+assert.ok(formalBook.sections[0].topics.some(topic=>topic.id==='formal-translation-quantifiers'),'missing collection inference topic');
+assert.ok(!formalBook.sections.some(section=>section.id==='formal-set'),'collection inference must be inside translation');
 for(const section of formalBook.sections){
  assert.ok(section.id&&section.chapter&&section.title&&Array.isArray(section.topics));
  for(const topic of section.topics){
