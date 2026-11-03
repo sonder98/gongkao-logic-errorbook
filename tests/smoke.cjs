@@ -133,6 +133,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.deepEqual(await formalQuestionResponse.json(),[]);
   assert.deepEqual((await formalKnowledgeResponse.json()).sections,[]);
   await page.locator('#tabFormalPractice').click();
+  await page.locator('#reset').click();
   assert.equal(await page.locator('#practiceView').isVisible(),true);
   assert.equal(await page.locator('#tabFormalPractice').getAttribute('aria-selected'),'true');
   assert.equal(await page.locator('.nav-item').count(),0);

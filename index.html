@@ -165,7 +165,7 @@
 <p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
 <button class="outline" id="exportBackup" type="button">导出 JSON 备份</button>
 <label class="switch" style="display:block;margin-top:8px">导入 JSON 备份 <input id="importBackup" type="file" accept=".json,application/json" style="max-width:100%;margin-top:6px"></label>
-<button class="outline" id="reset" type="button">清空答题记录</button></aside>
+<button class="outline" id="reset" type="button">清空本模块答题记录</button></aside>
 <main><div class="stats" id="stats"></div><article class="maincard" id="card"></article><div class="bottom-help">快捷键：<span class="key">A</span>—<span class="key">E</span> 选项，<span class="key">Enter</span> 提交，<span class="key">←</span> / <span class="key">→</span> 切题。原题图片可按需展开。</div></main></div>
 <div class="shell knowledge-shell" id="knowledgeView" role="tabpanel" aria-labelledby="tabKnowledge" hidden>
  <aside>
@@ -720,16 +720,20 @@ $('importBackup').onchange=async e=>{
  render();if(user)await pushCloud();setStatus('已导入 '+ids.length+' 道题的记录','good');
 };
 $('reset').onclick=async()=>{
- if(!confirm(user?'确定清空此账号全部云端答题记录、复习标记及笔记吗？此操作不可撤销。':'确定清空本地全部答题记录、复习标记与个人笔记吗？'))return;
+ const moduleName=currentModule==='formal'?'形式逻辑':'论证逻辑';
+ const ids=QUESTIONS.map(q=>q.id);
+ if(!ids.length){setStatus('当前模块暂无题目记录需要清空','good');return}
+ if(!confirm(user?'确定清空此账号「'+moduleName+'」模块的云端答题记录、复习标记及笔记吗？其他模块不受影响。':'确定清空本地「'+moduleName+'」模块的答题记录、复习标记与笔记吗？其他模块不受影响。'))return;
  downloadBackup('清空前备份');
  if(user){
-  const {error}=await db.from('question_progress').delete().eq('user_id',user.id);
+  const {error}=await db.from('question_progress').delete().eq('user_id',user.id).in('question_id',ids);
   if(error){setStatus('云端删除失败，本地记录未清空：'+error.message,'bad');return}
-   pending.clear();cloudMeta={};localStorage.removeItem(pendingKey());localStorage.removeItem(metaKey());
+  ids.forEach(id=>{pending.delete(id);delete cloudMeta[id]});
  }
-  state={};persistUserState();
+ ids.forEach(id=>delete state[id]);
+ persistUserState();
  category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0]?.id||null;render();
- setStatus(user?'已清空当前账号的云端记录':'已清空本地记录','good');
+ setStatus('已清空「'+moduleName+'」模块的答题记录','good');
 };
 document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
