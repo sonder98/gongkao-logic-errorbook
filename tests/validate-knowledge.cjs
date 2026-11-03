@@ -27,7 +27,19 @@ const formalIds=new Set(formalQuestions.map(q=>q.id));
 assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、真假推理","四、综合推理"]);
 assert.ok(formalBook.sections[0].topics.some(topic=>topic.id==='formal-translation-quantifiers'),'missing collection inference topic');
 assert.ok(!formalBook.sections.some(section=>section.id==='formal-set'),'collection inference must be inside translation');
-assert.ok(formalBook.sections.find(section=>section.id==='formal-contradiction').topics.some(topic=>topic.id==='formal-contradiction-two-patterns'),'missing contradiction inference rules');
+const contradiction=formalBook.sections.find(s=>s.id==='formal-contradiction')?.topics.find(t=>t.id==='formal-contradiction-two-patterns');
+assert.ok(contradiction,'missing contradiction inference rules');
+const expectedContradictions=[
+ 'formal-unknown-recruitment-four-positions',
+ 'formal-unknown-investment-five-fields',
+ 'formal-unknown-graduates-seven-paths',
+ 'formal-unknown-secondment-choose-chen',
+ 'formal-2022-sichuan-excellent-team',
+ 'formal-2019-jiangsu-project-pair-impossible'
+];
+assert.deepEqual(contradiction.questionIds,expectedContradictions);
+assert.ok(contradiction.patterns.some(x=>x.includes('最短链')),'missing exam strategy');
+assert.ok(contradiction.patterns.some(x=>x.includes('不可能')),'missing impossibility strategy');
 for(const topicId of ['formal-translation-basics','formal-translation-quantifiers','formal-translation-modality','formal-translation-nested-negation']){
  const topic=formalBook.sections[0].topics.find(t=>t.id===topicId);
  assert.ok(topic,'missing translation topic: '+topicId);

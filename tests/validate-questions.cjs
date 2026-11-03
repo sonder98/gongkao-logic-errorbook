@@ -48,4 +48,22 @@ for(const [id,answer] of [
  assert.equal(found.important,true);
 }
 assert.match(formal.find(item=>item.id==='formal-2015-fujian-disaster-unless-disagreement').trap,/D.*可.*推出/);
+const recentlyAdded = [
+ ['formal-unknown-recruitment-four-positions','B'],
+ ['formal-unknown-investment-five-fields','C'],
+ ['formal-unknown-graduates-seven-paths','C'],
+ ['formal-unknown-secondment-choose-chen','D'],
+ ['formal-2022-sichuan-excellent-team','A'],
+ ['formal-2019-jiangsu-project-pair-impossible','D']
+];
+for(const [id,answer] of recentlyAdded){
+ const item=formal.find(q=>q.id===id);
+ assert.ok(item&&item.answer===answer,'missing or invalid contradiction problem '+id);
+ assert.equal(item.category,'矛盾推理');
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(formal.length,8,'formal catalog count');
+const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
+assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');

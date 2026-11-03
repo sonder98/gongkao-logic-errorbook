@@ -196,3 +196,15 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 当前进入形式逻辑的“二、矛盾推理”。用户的题型识别标准：题干全是逻辑关系、不直接给事实真，选项是事实真，任务是翻译条件、发现冲突并确定必然事实。两种形式：A→B、A→非B，推出必然非A；A→B、非A→B，推出必然B。第一种是相同前件推出矛盾后件，因此否定共同前件；第二种是A与非A穷尽情况且均推出B，因此B必真。严格注意第二种不是直接的B／非B矛盾，而是分类穷尽。
 
 `formal-knowledge.json` 的 `formal-contradiction` 章节已新增 `formal-contradiction-two-patterns`，对考生展示题型识别、两个结构、中文示例和陷阱。`formal-questions.json` 仍维持2题：没有新真题，不要人为录入示例为真题。教学继续使用中文、A/非A、简单箭头，不使用模态数学符号。
+
+## 十七、矛盾推理阶段收口与内容精简（2026-11-03）
+
+用户已讲解并要求同步六道矛盾推理题，入库顺序与答案：
+1. `formal-unknown-recruitment-four-positions`：招聘四岗位，**B**，乙正反→丙销售，岗位唯一排除乙出纳。
+2. `formal-unknown-investment-five-fields`：教育医药投资，**C**，人工智能投／不投矛盾，否定条件②前件。
+3. `formal-unknown-graduates-seven-paths`：七人毕业去向，**C**，先找乙就业／考研的后件冲突，③→①形成最短链，再用②确定乙丁留学。
+4. `formal-unknown-secondment-choose-chen`：五选三挂职，**D**，张选／不选两路均推出陈入选。
+5. `formal-2022-sichuan-excellent-team`：2022四川优秀考评，**A**，陈优秀则目标直接成立；陈不优秀→肖优秀。
+6. `formal-2019-jiangsu-project-pair-impossible`：2019江苏项目建设，**D**，污水处理厂→排污管道→不建垃圾处理厂。
+
+形式逻辑由2题增至8题；论证逻辑仍48题。两种基础结构和考试技巧统一收录于 `formal-contradiction-two-patterns`，保留原知识点 ID；并对形式逻辑五个知识条目整体精简，采用直接、正向的考场技巧陈述，不附加先前解法优劣的防御型反思。年份／来源不明的题标“未知”，不补造题源。保持题目原文、选项和稳定 ID；新题不存图片。旧的 2015 福建 A/D 争议仅在题目解析与必要知识边界中保留，不延伸为读者知识笔记的反复辩护。
