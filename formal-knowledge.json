@@ -1,6 +1,6 @@
 {
   "title": "形式逻辑 · 知识体系",
-  "version": "2.0",
+  "version": "2.1",
   "description": "形式逻辑四大题型；翻译推理保留核心转换，矛盾推理重在最短矛盾链与考场速解。",
   "sections": [
     {
@@ -31,24 +31,48 @@
         },
         {
           "id": "formal-translation-quantifiers",
-          "title": "所有与有些：四命题关系",
-          "summary": "将“所有／有些”统一为四种命题，判断真假和推出。",
+          "title": "所有与有些：五类集合推理模型",
+          "summary": "先用四命题关系与换位逆否翻译题干，再按全称箭头串联“有些”，或利用共同起点找到交集。",
           "recognize": [
-            "出现所有、都、有些、至少一个、没有一个等量词。"
+            "出现“所有、有些、并非所有、没有一个”；常问必然结论、不能推出或需要补什么前提。",
+            "先找全称关系的箭头，再找有些所指的实际对象；问前提时，从结论倒查缺少的集合联系。"
           ],
           "patterns": [
-            "所有S是P ⇔ 并非［有些S不是P］；所有S不是P ⇔ 并非［有些S是P］。",
-            "S非空时：所有S是P→有些S是P；所有S不是P→有些S不是P。",
-            "“有些S是P”可以换位为“有些P是S”。",
-            "否定“所有”得到“有些不”；否定“有些”得到“所有不”。"
+            "① 四命题：所有A是B ⇔ 不是［有些A不是B］；所有A不是B ⇔ 不是［有些A是B］。否定所有→有些不；否定有些→所有不。A非空时，所有A是B→有些A是B。",
+            "② 换位与逆否：有些A是B＝有些B是A；所有A是B→所有非B是非A；所有A不是B＝所有B不是A。“所有是”不能直接倒过来。",
+            "③ 全称串联：所有A是B，所有B是C → 所有A是C。可以先逆否，再沿箭头连接。",
+            "④ 所有＋有些【标准模板】：所有A是B，有些C是A → 有些C是B。“有些”确定对象，“所有”负责沿箭头传递。",
+            "⑤ 共同起点找交集：所有A是B，所有A是C，且存在A → 有些B是C。两个属性都覆盖同一批A，直接得到交集。"
           ],
           "pitfalls": [
-            "“有些”表示至少一个，也可能全部。",
-            "所有→有些的下推默认S非空。"
+            "有些A是B＋有些A是C，不能推出有些B是C；两批“有些A”可能不同。",
+            "所有A是B＋有些C是B，不能反向推出有些C是A；箭头只允许顺推。",
+            "“有些”至少一个，也可能全部；从“所有”下推到“有些”须有非空对象。"
           ],
           "questionIds": [
             "formal-2013-jilin-not-all-people-like-you",
-            "formal-2015-fujian-disaster-unless-disagreement"
+            "formal-2015-fujian-disaster-unless-disagreement",
+            "formal-unknown-party-charter-quantified-converse",
+            "formal-unknown-multilingual-employees",
+            "formal-unknown-phd-statistics-men",
+            "formal-unknown-car-over-600k-scrap",
+            "formal-unknown-textile-dormitory-premise",
+            "formal-2020-beijing-sprint-longrun-premise",
+            "formal-2023-shanghai-film-indian-nonscifi"
+          ],
+          "examples": [
+            {
+              "title": "考场速解：已给“有些”",
+              "body": "从“有些”出发，先换位为便于串联的方向，再沿全称箭头（必要时逆否）推进；得到必然事实就去匹配选项。"
+            },
+            {
+              "title": "考场速解：有共同前件",
+              "body": "把同一集合A推出的多个属性并列写出，确认存在A，即可得属性之间“有些”交集；不用强行把两个箭头接成一条。"
+            },
+            {
+              "title": "前提补充题",
+              "body": "从结论倒找缺失的全称或特称连接；通常要保证题干已经存在的那批对象都能沿全称关系传递。"
+            }
           ]
         },
         {

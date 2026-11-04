@@ -208,3 +208,11 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 6. `formal-2019-jiangsu-project-pair-impossible`：2019江苏项目建设，**D**，污水处理厂→排污管道→不建垃圾处理厂。
 
 形式逻辑由2题增至8题；论证逻辑仍48题。两种基础结构和考试技巧统一收录于 `formal-contradiction-two-patterns`，保留原知识点 ID；并对形式逻辑五个知识条目整体精简，采用直接、正向的考场技巧陈述，不附加先前解法优劣的防御型反思。年份／来源不明的题标“未知”，不补造题源。保持题目原文、选项和稳定 ID；新题不存图片。旧的 2015 福建 A/D 争议仅在题目解析与必要知识边界中保留，不延伸为读者知识笔记的反复辩护。
+
+## 十八、集合推理五模型与7题入库（2026-11-04）
+
+用户将集合推理作为翻译推理的子模块。现行五类：四命题关系、换位逆否、所有串联、**所有A是B＋有些C是A→有些C是B**（首选记忆）、**所有A是B＋所有A是C＋存在A→有些B是C**（共同起点找交集）。“有些＋有些”不能直接串联，且全称箭头不能倒推。考场优先从已知“有些”出发沿全称箭头传递；多条全称共有前件则找交集；前提题从目标倒查缺失的链接。知识条目 `formal-translation-quantifiers` 已在原位更新，不改ID，没有新增章节，写法保持精简。
+
+本轮追加7题：`formal-unknown-party-charter-quantified-converse` C；`formal-unknown-multilingual-employees` B（问“不正确”）；`formal-unknown-phd-statistics-men` B；`formal-unknown-car-over-600k-scrap` D；`formal-unknown-textile-dormitory-premise` D；`formal-2020-beijing-sprint-longrun-premise` D；`formal-2023-shanghai-film-indian-nonscifi` A。年份／地区只在截图明确时填入（2020北京、2023上海）；其余记“未知”，不可擅自补造来源。全部为 `翻译推理`，对应知识点关联保留原2题并加入7题。形式逻辑15题，论证逻辑48题。原有所有历史ID、云端进度和组件布局不变，题图不入库。
+
+用户明确偏好中文＋方括号＋简单箭头，不使用数学方框、菱形符号；读者知识体系不堆砌对过往解法的批评、自我辩护、反复纠错记录，只保留系统化知识与可迁移的考场策略。

@@ -25,7 +25,13 @@ const formalQuestions=JSON.parse(fs.readFileSync(path.join(root,'formal-question
 assert.ok(Array.isArray(formalBook.sections),'formal knowledge sections must be an array');
 const formalIds=new Set(formalQuestions.map(q=>q.id));
 assert.deepEqual(formalBook.sections.map(section=>section.title),["一、翻译推理","二、矛盾推理","三、真假推理","四、综合推理"]);
-assert.ok(formalBook.sections[0].topics.some(topic=>topic.id==='formal-translation-quantifiers'),'missing collection inference topic');
+const quantifiers=formalBook.sections[0].topics.find(topic=>topic.id==='formal-translation-quantifiers');
+assert.ok(quantifiers,'missing collection inference topic');
+assert.ok(quantifiers.title.includes('五类集合推理模型'));
+assert.ok(quantifiers.patterns.length===5,'exactly five collection inference models');
+const collectionQuestionIds=["formal-unknown-party-charter-quantified-converse","formal-unknown-multilingual-employees","formal-unknown-phd-statistics-men","formal-unknown-car-over-600k-scrap","formal-unknown-textile-dormitory-premise","formal-2020-beijing-sprint-longrun-premise","formal-2023-shanghai-film-indian-nonscifi"];
+for(const id of collectionQuestionIds)assert.ok(quantifiers.questionIds.includes(id),'collection question not linked: '+id);
+assert.equal(new Set(quantifiers.questionIds).size,quantifiers.questionIds.length,'duplicate collection topic question IDs');
 assert.ok(!formalBook.sections.some(section=>section.id==='formal-set'),'collection inference must be inside translation');
 const contradiction=formalBook.sections.find(s=>s.id==='formal-contradiction')?.topics.find(t=>t.id==='formal-contradiction-two-patterns');
 assert.ok(contradiction,'missing contradiction inference rules');

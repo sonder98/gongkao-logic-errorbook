@@ -63,7 +63,15 @@ for(const [id,answer] of recentlyAdded){
  assert.equal(item.options.length,4);
  assert.equal(item.image,'');
 }
-assert.equal(formal.length,8,'formal catalog count');
+const collectionBatch=[["formal-unknown-party-charter-quantified-converse","C"],["formal-unknown-multilingual-employees","B"],["formal-unknown-phd-statistics-men","B"],["formal-unknown-car-over-600k-scrap","D"],["formal-unknown-textile-dormitory-premise","D"],["formal-2020-beijing-sprint-longrun-premise","D"],["formal-2023-shanghai-film-indian-nonscifi","A"]];
+for(const [id,answer] of collectionBatch){
+ const item=formal.find(q=>q.id===id);
+ assert.ok(item&&item.answer===answer,'missing or incorrect collection reasoning question: '+id);
+ assert.equal(item.category,'翻译推理');
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(formal.length,15,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');
