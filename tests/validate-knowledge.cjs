@@ -33,6 +33,13 @@ const collectionQuestionIds=["formal-unknown-party-charter-quantified-converse",
 for(const id of collectionQuestionIds)assert.ok(quantifiers.questionIds.includes(id),'collection question not linked: '+id);
 assert.equal(new Set(quantifiers.questionIds).size,quantifiers.questionIds.length,'duplicate collection topic question IDs');
 assert.ok(!formalBook.sections.some(section=>section.id==='formal-set'),'collection inference must be inside translation');
+const truthSection=formalBook.sections.find(s=>s.id==='formal-truth');
+assert.deepEqual(truthSection.topics.map(t=>t.id),['formal-truth-contradictions','formal-truth-linked']);
+const newTruthQuestions=["formal-unknown-candy-four-children-two-true","formal-2019-jiangxi-speech-first-one-true","formal-unknown-four-classmates-accountant-true","formal-unknown-academic-committee-single-adopted-opinion","formal-unknown-singing-ranking-one-true"];
+assert.deepEqual([...new Set(truthSection.topics.flatMap(t=>t.questionIds))].sort(),newTruthQuestions.slice().sort(),'truth questions all linked');
+assert.ok(truthSection.topics[0].patterns.some(s=>s.includes('集合对角线')));
+assert.ok(truthSection.topics[1].patterns.some(s=>s.includes('不能同假')));
+assert.equal(formalQuestions.filter(q=>q.category==='真假推理').length,5);
 const contradiction=formalBook.sections.find(s=>s.id==='formal-contradiction')?.topics.find(t=>t.id==='formal-contradiction-two-patterns');
 assert.ok(contradiction,'missing contradiction inference rules');
 const expectedContradictions=[

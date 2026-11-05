@@ -216,3 +216,9 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 本轮追加7题：`formal-unknown-party-charter-quantified-converse` C；`formal-unknown-multilingual-employees` B（问“不正确”）；`formal-unknown-phd-statistics-men` B；`formal-unknown-car-over-600k-scrap` D；`formal-unknown-textile-dormitory-premise` D；`formal-2020-beijing-sprint-longrun-premise` D；`formal-2023-shanghai-film-indian-nonscifi` A。年份／地区只在截图明确时填入（2020北京、2023上海）；其余记“未知”，不可擅自补造来源。全部为 `翻译推理`，对应知识点关联保留原2题并加入7题。形式逻辑15题，论证逻辑48题。原有所有历史ID、云端进度和组件布局不变，题图不入库。
 
 用户明确偏好中文＋方括号＋简单箭头，不使用数学方框、菱形符号；读者知识体系不堆砌对过往解法的批评、自我辩护、反复纠错记录，只保留系统化知识与可迁移的考场策略。
+
+## 十九、真假推理入库（2026-11-05）
+
+形式逻辑第三章「真假推理」开始，正式知识点固定为两个：`formal-truth-contradictions`（找矛盾）和 `formal-truth-linked`（同真同假）。矛盾：A→B vs A且非B；A或B vs 非A且非B；“所有／有些”四命题对角线。不能同真、不能同假、同真单向推出属于后一知识点，常用关系包括“A真→A或B真”、“非A真→A→B真”、“B真→A→B真”、唯一席位的互斥、A→B与非B不能同假。只有一真，不能同假的一对占用唯一的真话名额；只有一假，不能同真的一对占用唯一假话名额。**选项给完整人选或排列时可以优先代入**，这是效率策略，不另立知识章节。
+
+本次在 `formal-questions.json` 新增5道真假推理题及关联解析：`formal-unknown-candy-four-children-two-true` A、`formal-2019-jiangxi-speech-first-one-true` C、`formal-unknown-four-classmates-accountant-true` D、`formal-unknown-academic-committee-single-adopted-opinion` D、`formal-unknown-singing-ranking-one-true` A。知识双向关联：找矛盾3题（糖果、演讲、职业）、同真同假3题（糖果、学科、歌唱）。形式逻辑现在20道题：翻译推理9、矛盾推理6、真假推理5；论证逻辑48，个人进度字段/稳定ID不改。只有演讲题有2019江西事业单位来源，其余题源未知。此阶段教学倡导直接、清晰、考场最快可用的规则，不堆历史讨论细节。

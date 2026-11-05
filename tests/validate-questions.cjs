@@ -71,7 +71,15 @@ for(const [id,answer] of collectionBatch){
  assert.equal(item.options.length,4);
  assert.equal(item.image,'');
 }
-assert.equal(formal.length,15,'formal catalog count');
+const truthBatch=[["formal-unknown-candy-four-children-two-true","A"],["formal-2019-jiangxi-speech-first-one-true","C"],["formal-unknown-four-classmates-accountant-true","D"],["formal-unknown-academic-committee-single-adopted-opinion","D"],["formal-unknown-singing-ranking-one-true","A"]];
+for(const [id,answer] of truthBatch){
+ const item=formal.find(q=>q.id===id);
+ assert.ok(item&&item.answer===answer,'missing or invalid truth reasoning question '+id);
+ assert.equal(item.category,'真假推理');
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(formal.length,20,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');
