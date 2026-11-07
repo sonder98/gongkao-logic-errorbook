@@ -1,7 +1,7 @@
 {
   "title": "形式逻辑 · 知识体系",
-  "version": "2.2",
-  "description": "形式逻辑四大题型：翻译推理、矛盾推理、真假推理、综合推理；以精简模型和考场速解为核心。",
+  "version": "3.0",
+  "description": "形式逻辑四大章节已阶段性整理：翻译推理、矛盾推理、真假推理、综合推理。综合推理按六类题型管理，当前四类已有真题与考场技巧。",
   "sections": [
     {
       "id": "formal-translation",
@@ -239,7 +239,121 @@
       "id": "formal-comprehensive",
       "chapter": "形式逻辑",
       "title": "四、综合推理",
-      "topics": []
+      "topics": [
+        {
+          "id": "formal-comprehensive-overview",
+          "title": "综合推理：六类题型与考场流程",
+          "summary": "综合推理包括入选名额（M选N）、一一对应、排队方式、分组方式、宫格推理及其他；按题型选最省时的工具，不必先复原所有安排。",
+          "recognize": [
+            "入选名额：M个人／对象中选N个；一一对应：多个对象与身份、地区、学校逐一匹配。",
+            "排队方式：顺序、先后、相邻；分组方式：同组、异组、人数容量与排期。",
+            "宫格推理及其他：按具体题干特征归类，后续结合真题补充。"
+          ],
+          "patterns": [
+            "先看问法与选项：求必然／不可能／唯一确定；选项已给完整配置时，可直接代入排除。",
+            "将条件转为可检查的约束：条件箭头、固定人数、互斥／绑定、排队位置、双排除矩阵。",
+            "优先寻找最强限制：人数超限、位置不足、恰好覆盖、唯一对应或先后相邻矛盾。",
+            "只推到唯一正确选项所需的事实，停止，不为完整解出全部安排而额外枚举。"
+          ],
+          "pitfalls": [
+            "宫格与其他目前没有单独总结的真题技巧；后续见到新结构再补充，不提前硬套现有模型。"
+          ],
+          "questionIds": [
+            "formal-unknown-seven-villages-choose-four",
+            "formal-unknown-five-skiers-four-events",
+            "formal-unknown-four-roads-paired-survey",
+            "formal-unknown-weekly-movies-cover-days",
+            "formal-unknown-professors-provinces-subjects",
+            "formal-unknown-roommates-provinces-universities",
+            "formal-unknown-four-streets-income-rank",
+            "formal-unknown-five-students-age-major-groups"
+          ]
+        },
+        {
+          "id": "formal-comprehensive-selection",
+          "title": "入选名额（M选N）：人数约束与唯一确定",
+          "summary": "用较小一边的名额限制、绑定与互斥关系制造人数矛盾，再判断新条件能否唯一确定完整方案。",
+          "recognize": [
+            "从M个对象选N个，给出条件关系、二选一、必选／不选及固定人数。"
+          ],
+          "patterns": [
+            "先算入选N与落选M－N，优先关注名额更小或约束更强的一侧。",
+            "条件链使某一侧超出人数上限→否定触发假设；某一侧人数凑满→剩余自动确定。",
+            "问“再知道谁入选可以唯一确定”时，先归纳少量合法方案，再选能排除其他方案的新信息。"
+          ],
+          "pitfalls": [
+            "“某人必然入选”和“知道某人入选能够唯一确定名单”不是一回事。"
+          ],
+          "questionIds": [
+            "formal-unknown-seven-villages-choose-four"
+          ]
+        },
+        {
+          "id": "formal-comprehensive-matching",
+          "title": "一一对应：双排除矩阵与跨身份联动",
+          "summary": "人物×每种身份分别画排除矩阵；先打×排除，再通过跨身份条件在两张表之间传递信息。",
+          "recognize": [
+            "人物、地区、专业／学校等多维身份，每一维内部是一一对应，不与分组题的多人同属性混淆。"
+          ],
+          "patterns": [
+            "一种身份画一张人物×候选项矩阵；两个身份就画两张表，不用在一个单元格中罗列所有排除项。",
+            "直接条件先打×或✓；扫行列只剩一个候选即可确定；确定后同一身份对其他人物排除。",
+            "跨身份条件例如“农业大学→江苏”，先记为连接关系；确定某人非江苏即可推出其非农业大学，回到另一张表继续排除。",
+            "若一类对象被多个条件反复提及，可优先处理它；锁定正确选项后不必填满所有格子。"
+          ],
+          "pitfalls": [
+            "“相互认识／一起下棋／三人登山”等表述若明确是不同的人，可用于排除同一人物；不确定时不要强加身份不同。"
+          ],
+          "questionIds": [
+            "formal-unknown-professors-provinces-subjects",
+            "formal-unknown-roommates-provinces-universities"
+          ]
+        },
+        {
+          "id": "formal-comprehensive-order",
+          "title": "排队方式：位置排除与相邻关系",
+          "summary": "先由条件间的位置冲突排除名次，再逆否并利用相邻／不相邻和唯一位置求解。",
+          "recognize": [
+            "排列第一至末位、具体位次、相邻／不相邻、先后关系。"
+          ],
+          "patterns": [
+            "先将“若某人排第n，则另一人排第m”与相邻关系对照；若位置冲突，排除触发的第n名。",
+            "由否定后件逆否前件，收缩另一人的候选位置，再用不相邻筛除。",
+            "不用枚举全排列；先求题目或选项涉及的关键人物的位置，确定即可停。"
+          ],
+          "pitfalls": [
+            "仅有相邻关系不能确定两者先后；要结合其他位置约束。"
+          ],
+          "questionIds": [
+            "formal-unknown-four-streets-income-rank"
+          ]
+        },
+        {
+          "id": "formal-comprehensive-grouping",
+          "title": "分组方式：容量超限、恰好覆盖与同异组",
+          "summary": "先数对象、组与可用位置，比较数量上下限；绑定或互斥条件导致超限时立刻否定假设，恰好相等时推出占满。",
+          "recognize": [
+            "多人分组、同组／异组、每项人数限制、每个位置容量、影片排期或属性分为两组。"
+          ],
+          "patterns": [
+            "容量超限：某组最多2人，条件链却迫使3人入组→否定最初触发条件。",
+            "剩余位置不足：互不重合的对象还需4个位置，却只剩3个→假设不成立。",
+            "互斥恰好覆盖：6部不能同日的相关影片、6个可用日期→剩余每天必有一部；或2人各占2个不同位置恰好覆盖4个位置。",
+            "同组绑定＋异组占位：假设一批同组者进入小组，再计算其他异组关系是否强制占用该组名额；超限则同组者归大组。",
+            "分组题若某种属性可供多人共享，不按一一对应双矩阵做；优先用人数和绑定关系直接推。"
+          ],
+          "pitfalls": [
+            "“两组人数差1”不是同组者必进大组的充分理由；真正触发排除的是人数上限被超出。",
+            "对象数＝位置数而得恰好覆盖，须先证明每个位置最多容纳该类对象1个。"
+          ],
+          "questionIds": [
+            "formal-unknown-five-skiers-four-events",
+            "formal-unknown-four-roads-paired-survey",
+            "formal-unknown-weekly-movies-cover-days",
+            "formal-unknown-five-students-age-major-groups"
+          ]
+        }
+      ]
     }
   ]
 }

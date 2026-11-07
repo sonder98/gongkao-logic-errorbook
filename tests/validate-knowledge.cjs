@@ -40,6 +40,16 @@ assert.deepEqual([...new Set(truthSection.topics.flatMap(t=>t.questionIds))].sor
 assert.ok(truthSection.topics[0].patterns.some(s=>s.includes('集合对角线')));
 assert.ok(truthSection.topics[1].patterns.some(s=>s.includes('不能同假')));
 assert.equal(formalQuestions.filter(q=>q.category==='真假推理').length,5);
+assert.equal(formalQuestions.filter(q=>q.category==='综合推理').length,8);
+const comprehensiveSection=formalBook.sections.find(s=>s.id==='formal-comprehensive');
+assert.deepEqual(comprehensiveSection.topics.map(t=>t.id),["formal-comprehensive-overview","formal-comprehensive-selection","formal-comprehensive-matching","formal-comprehensive-order","formal-comprehensive-grouping"]);
+const comprehensiveIds=["formal-unknown-seven-villages-choose-four","formal-unknown-five-skiers-four-events","formal-unknown-four-roads-paired-survey","formal-unknown-weekly-movies-cover-days","formal-unknown-professors-provinces-subjects","formal-unknown-roommates-provinces-universities","formal-unknown-four-streets-income-rank","formal-unknown-five-students-age-major-groups"];
+assert.deepEqual([...new Set(comprehensiveSection.topics.flatMap(t=>t.questionIds))].sort(),comprehensiveIds.slice().sort());
+assert.equal(comprehensiveSection.topics[0].questionIds.length,8);
+assert.equal(comprehensiveSection.topics[4].questionIds.length,4);
+assert.ok(comprehensiveSection.topics[4].patterns.some(s=>s.includes('恰好覆盖')));
+assert.ok(comprehensiveSection.topics[2].patterns.some(s=>s.includes('双')));
+assert.ok(comprehensiveSection.topics[0].summary.includes('宫格推理'));
 const contradiction=formalBook.sections.find(s=>s.id==='formal-contradiction')?.topics.find(t=>t.id==='formal-contradiction-two-patterns');
 assert.ok(contradiction,'missing contradiction inference rules');
 const expectedContradictions=[

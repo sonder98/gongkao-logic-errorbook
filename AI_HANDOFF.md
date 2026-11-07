@@ -222,3 +222,21 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 形式逻辑第三章「真假推理」开始，正式知识点固定为两个：`formal-truth-contradictions`（找矛盾）和 `formal-truth-linked`（同真同假）。矛盾：A→B vs A且非B；A或B vs 非A且非B；“所有／有些”四命题对角线。不能同真、不能同假、同真单向推出属于后一知识点，常用关系包括“A真→A或B真”、“非A真→A→B真”、“B真→A→B真”、唯一席位的互斥、A→B与非B不能同假。只有一真，不能同假的一对占用唯一的真话名额；只有一假，不能同真的一对占用唯一假话名额。**选项给完整人选或排列时可以优先代入**，这是效率策略，不另立知识章节。
 
 本次在 `formal-questions.json` 新增5道真假推理题及关联解析：`formal-unknown-candy-four-children-two-true` A、`formal-2019-jiangxi-speech-first-one-true` C、`formal-unknown-four-classmates-accountant-true` D、`formal-unknown-academic-committee-single-adopted-opinion` D、`formal-unknown-singing-ranking-one-true` A。知识双向关联：找矛盾3题（糖果、演讲、职业）、同真同假3题（糖果、学科、歌唱）。形式逻辑现在20道题：翻译推理9、矛盾推理6、真假推理5；论证逻辑48，个人进度字段/稳定ID不改。只有演讲题有2019江西事业单位来源，其余题源未知。此阶段教学倡导直接、清晰、考场最快可用的规则，不堆历史讨论细节。
+
+## 二十、形式逻辑四章阶段总结与综合推理入库（2026-11-07）
+
+形式逻辑四章节（翻译、矛盾、真假、综合）已阶段性学完。综合推理六类框架：入选名额M选N、一一对应、排队方式、分组方式、宫格推理、其他；当前只有前四类有已讨论的具体策略，宫格／其他在总览保留分类但不编造套路。综合推理章节知识点共5项：`formal-comprehensive-overview`、`formal-comprehensive-selection`、`formal-comprehensive-matching`、`formal-comprehensive-order`、`formal-comprehensive-grouping`。
+
+新增8道综合推理题（均未知年份及具体题源）：
+- `formal-unknown-seven-villages-choose-four` A（7选4；名额超限，额外甲入选才能唯一确定方案）。
+- `formal-unknown-five-skiers-four-events` D（5人分4组，单板人数超限否定石／白高山）。
+- `formal-unknown-four-roads-paired-survey` A（乙丙不能共路，位置不足／恰好覆盖）。
+- `formal-unknown-weekly-movies-cover-days` A（3部科幻3部武侠互斥，刚好覆盖剩余6天；用户第二次做未解出，重点题）。
+- `formal-unknown-professors-provinces-subjects` C（人物×省份、人物×专业）。
+- `formal-unknown-roommates-provinces-universities` D（两张4×4排除矩阵跨身份串联）。
+- `formal-unknown-four-streets-income-rank` A（条件逆否＋相邻限制）。
+- `formal-unknown-five-students-age-major-groups` D（3+2组、两人同组＋另外两人异组，小组容量超限）。
+
+形式逻辑由20增至28道：翻译9、矛盾6、真假5、综合8；论证逻辑仍48道。**用户偏好的方法**：一一对应是严格的“人物×候选身份”的打叉排除矩阵，有2种身份就画2张矩阵，不要再建议三列表格；普通2组人数题能直接通过“同组2人＋异组两人强制占位→小组超限”推出来，不强求画表。M选N看更少的名额与强约束；排队找具体位置冲突；分组关注容量超限和互斥恰好覆盖。用户尤其重视考场最短推理链和极少枚举，不堆积细碎的纠错或防御性笔记。
+
+新题新知识点均是独立稳定 `formal-` ID；原有全部题目和知识点不动；没有新题截图存储，Supabase 用户进度和历史 question_id 不迁移。后续新题按现有知识分类，若遇见宫格与其他结构再逐步完善。

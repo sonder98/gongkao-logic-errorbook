@@ -79,7 +79,15 @@ for(const [id,answer] of truthBatch){
  assert.equal(item.options.length,4);
  assert.equal(item.image,'');
 }
-assert.equal(formal.length,20,'formal catalog count');
+const comprehensiveBatch=[["formal-unknown-seven-villages-choose-four","A"],["formal-unknown-five-skiers-four-events","D"],["formal-unknown-four-roads-paired-survey","A"],["formal-unknown-weekly-movies-cover-days","A"],["formal-unknown-professors-provinces-subjects","C"],["formal-unknown-roommates-provinces-universities","D"],["formal-unknown-four-streets-income-rank","A"],["formal-unknown-five-students-age-major-groups","D"]];
+for(const [id,answer] of comprehensiveBatch){
+ const item=formal.find(q=>q.id===id);
+ assert.ok(item&&item.answer===answer,'missing or incorrect comprehensive question: '+id);
+ assert.equal(item.category,'综合推理');
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(formal.length,28,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');
