@@ -25,7 +25,7 @@ for(const id of ["unknown-hospital-three-day-registration-initial-followup","unk
  }
 }
 const causeOverview=book.sections.flatMap(s=>s.topics).find(t=>t.id==='cause-overview');
-assert.ok(causeOverview.pitfalls.some(s=>s.includes('不能仅凭')),'must keep direction-vs-other-cause caveat');
+assert.ok(causeOverview.pitfalls.some(s=>s.includes('仍可削弱')&&s.includes('一律无效')),'must keep direction-vs-other-cause caveat');
 const published=JSON.stringify(book);
 for(const banned of ['用户确认','用户要求','下次对话','AGENTS.md','Supabase','ChatGPT'])assert.ok(!published.includes(banned),'non-reader-facing content: '+banned);
 const formalBook=JSON.parse(fs.readFileSync(path.join(root,'formal-knowledge.json'),'utf8'));
