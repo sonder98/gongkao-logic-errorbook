@@ -1,0 +1,103 @@
+{
+  "title": "资料分析 · 知识体系",
+  "version": "1.0.0",
+  "description": "基础公式框架；解题规则将随真实练习逐步完善。",
+  "sections": [
+    {
+      "id": "data-growth",
+      "chapter": "一、增长分析",
+      "title": "增长与基期",
+      "topics": [
+        {
+          "id": "data-topic-growth-basics",
+          "title": "增长量、增长率与基期量",
+          "summary": "先定位现期和基期，再辨别问增长率还是增长量。以下为基础公式，速算技巧随真题补充。",
+          "recognize": [
+            "增长了多少：求增长量；增长了百分之几：求增长率。",
+            "上年、去年、同期通常表示基期；本年、今年为现期。"
+          ],
+          "patterns": [
+            "\\(\\text{增长量}=\\text{现期量}-\\text{基期量}\\)",
+            "\\(\\text{增长率}=\\frac{\\text{现期量}-\\text{基期量}}{\\text{基期量}}\\)",
+            "\\(\\text{基期量}=\\frac{\\text{现期量}}{1+\\text{增长率}}\\)"
+          ],
+          "pitfalls": [
+            "增长率的分母是基期量，不是现期量。",
+            "下降时增长率为负数；单位和统计口径必须一致。"
+          ],
+          "questionIds": []
+        }
+      ]
+    },
+    {
+      "id": "data-share",
+      "chapter": "二、比重分析",
+      "title": "比重与百分点",
+      "topics": [
+        {
+          "id": "data-topic-share-basics",
+          "title": "比重及比重变化",
+          "summary": "先分清部分量与整体量，比较比重变化时要注意百分点与百分比的区别。",
+          "recognize": [
+            "问“占……的比重”先定位分子（部分）和分母（整体）。"
+          ],
+          "patterns": [
+            "\\(\\text{比重}=\\frac{\\text{部分量}}{\\text{整体量}}\\)",
+            "\\(\\text{比重变化（百分点）}=\\text{现期比重}-\\text{基期比重}\\)"
+          ],
+          "pitfalls": [
+            "两个百分数相减得到的是百分点；不要当成相对增长率。"
+          ],
+          "questionIds": []
+        }
+      ]
+    },
+    {
+      "id": "data-average",
+      "chapter": "三、平均数",
+      "title": "平均数与倍数",
+      "topics": [
+        {
+          "id": "data-topic-average-basics",
+          "title": "平均数与倍数的基本识别",
+          "summary": "区分总量与份数，以及“是几倍”和“多几倍”的问法。",
+          "recognize": [
+            "每人、每家、单位面积等通常提示平均数；“是……的几倍”提示倍数。"
+          ],
+          "patterns": [
+            "\\(\\text{平均数}=\\frac{\\text{总量}}{\\text{份数}}\\)",
+            "\\(\\text{倍数}=\\frac{A}{B}\\)"
+          ],
+          "pitfalls": [
+            "“A 是 B 的几倍”与“A 比 B 多几倍”相差 1。"
+          ],
+          "questionIds": []
+        }
+      ]
+    },
+    {
+      "id": "data-method",
+      "chapter": "四、考场计算",
+      "title": "计算与核对",
+      "topics": [
+        {
+          "id": "data-topic-calc-basics",
+          "title": "定位、列式、估算与核对",
+          "summary": "先确定问法与对应数据，列式后结合选项差距选择精算或估算，不一律做长除法。",
+          "recognize": [
+            "核对年份、单位、统计指标与选项精度。"
+          ],
+          "patterns": [
+            "先列式，再判断选项差距；选项差距足够大时优先估算。",
+            "多步骤题保持关键中间结果，不提前过度四舍五入。"
+          ],
+          "pitfalls": [
+            "图表百分比与绝对量混用。",
+            "错位年份或单位导致结果数量级错误。"
+          ],
+          "questionIds": []
+        }
+      ]
+    }
+  ]
+}

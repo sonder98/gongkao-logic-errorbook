@@ -1,6 +1,16 @@
-# AGENTS.md — 公考逻辑判断项目的 AI 入口
+# AGENTS.md — 公考学习系统的 AI 入口
 
 本文件供 AI、Codex、代码代理读取，作用于整个仓库。**不要把本文件中的操作指导展示在学习网站。**
+
+## 新模块：资料分析（2026-11-07）
+
+资料分析正在从零开始收录，新增文件为 data-materials.json（共用材料）、data-questions.json（真题）、data-knowledge.json（知识点）、data-analysis.js（渲染）、data-analysis.css（布局）、docs/DATA_ANALYSIS.md（完整格式与工作规程）。**当前题库为空，知识库只有基础公式，不要把示例题当作原题入库。**
+
+学习侧：按“考点识别 → 定位数据 → 公式列式 → 考场速算 → 易错点”讲解；知识点优先复用现有方法，确认新规律时再补充。材料里数值、单位、统计范围和选项必须准确核对，来源未知如实标记，不凭空补数值。
+
+工程侧：题目 ID 以 data- 开头，知识 ID 以 data-topic- 开头；多个题目通过 materialId 共用一份材料，图片只允许独立放在 assets/data-analysis/ 下并使用相对路径。**禁止将原题整页截图或图片 Base64 写进 JSON / HTML**；没有新图时，只更新 JSON，不要重新提交图片。表格优先结构化、复杂图表准确性优先，必要时用 WebP；KaTeX 按需加载。新路由 #data/knowledge 和 #data/practice，旧路由与现有 Supabase 进度继续兼容。
+
+验证增加 node tests/validate-data-analysis.cjs；具体 schema 和压缩/增量要求详见 docs/DATA_ANALYSIS.md。
 
 ## 新对话首先阅读
 

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>逻辑判断 · 知识体系与云同步错题本</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23117d78'/%3E%3Cpath d='M25 52l16 16 35-38' fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>公考学习 · 知识体系与错题本</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23117d78'/%3E%3Cpath d='M25 52l16 16 35-38' fill='none' stroke='white' stroke-width='12' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
 <style>
 :root{--bg:#f5f6f7;--paper:#fff;--ink:#1b2935;--sub:#667686;--line:#e6eaed;--accent:#117d78;--mint:#e9f7f3;--red:#b34242;--rose:#fff0f0;--gold:#a46f19;--amber:#fff7e6;--shadow:0 10px 40px rgba(21,40,50,.07)}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}button,textarea{font:inherit}button{cursor:pointer}header{background:#142a34;color:white;padding:28px max(22px,calc((100vw - 1180px)/2)) 34px}header .eyebrow{color:#8dd9c9;font-size:12px;font-weight:700;letter-spacing:.18em}h1{font-size:32px;line-height:1.3;margin:8px 0}header p{color:#becdd1;margin:8px 0 0}.shell{max-width:1180px;margin:-16px auto 60px;padding:0 22px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}aside,.maincard,.stats{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}aside{padding:20px;position:sticky;top:18px}.aside-title{font-size:12px;font-weight:800;color:var(--sub);letter-spacing:.06em;margin:0 0 11px}.stats{display:flex;padding:17px 20px;gap:24px;margin-bottom:14px;box-shadow:none}.num{font-size:26px;line-height:1.1;font-weight:800}.stats small{color:var(--sub)}
 .nav-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -121,9 +121,9 @@
  .module-label{padding:0 8px;font-size:12px}
  .module-group .site-tab{min-width:0;padding:10px 5px;font-size:12px}
 }
-</style></head><body>
-<header><div class="eyebrow">LOGIC STUDY / 体系复习 · 错题实战</div><h1>逻辑判断 · 学习与错题本</h1><p><span id="questionCount">…</span> 道原题完整收录｜知识体系持续更新｜答题与笔记支持云端同步</p></header>
-<nav class="site-tabs" role="tablist" aria-label="选择逻辑模块与学习模式">
+</style><link rel="stylesheet" href="data-analysis.css"></head><body>
+<header><div class="eyebrow">CIVIL SERVICE STUDY / 知识复习 · 错题实战</div><h1>公考学习 · 知识体系与错题本</h1><p><span id="questionCount">…</span> 道原题完整收录｜知识体系持续更新｜答题与笔记支持云端同步</p></header>
+<nav class="site-tabs" role="tablist" aria-label="选择学习模块与学习模式">
  <div class="module-group" aria-label="论证逻辑">
   <strong class="module-label">论证逻辑</strong>
   <button type="button" class="site-tab" id="tabKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
@@ -133,6 +133,11 @@
   <strong class="module-label">形式逻辑</strong>
   <button type="button" class="site-tab" id="tabFormalKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
   <button type="button" class="site-tab" id="tabFormalPractice" role="tab" aria-selected="false" aria-controls="practiceView">✍️ 错题练习</button>
+ </div>
+ <div class="module-group" aria-label="资料分析">
+  <strong class="module-label">资料分析</strong>
+  <button type="button" class="site-tab" id="tabDataKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
+  <button type="button" class="site-tab" id="tabDataPractice" role="tab" aria-selected="false" aria-controls="practiceView">✍️ 错题练习</button>
  </div>
 </nav>
 <div class="shell" id="practiceView" role="tabpanel" aria-labelledby="tabPractice"><aside><section class="auth-panel" id="authPanel" aria-busy="false">
@@ -180,13 +185,15 @@
  </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="data-analysis.js"></script>
 <script>
 let QUESTIONS=[];
-let ARGUMENT_QUESTIONS=[],FORMAL_QUESTIONS=[],ARGUMENT_KNOWLEDGE=null,FORMAL_KNOWLEDGE=null,currentModule='argument';
+let ARGUMENT_QUESTIONS=[],FORMAL_QUESTIONS=[],DATA_QUESTIONS=[],DATA_MATERIALS=[],ARGUMENT_KNOWLEDGE=null,FORMAL_KNOWLEDGE=null,DATA_KNOWLEDGE=null,currentModule='argument';
 let KNOWLEDGE=null,knowledgeTopics=[],selectedTopic=null,knowledgeQuery='',currentView='practice',knowledgeExpanded=new Set(['foundation']);
 const moduleStates={
  argument:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(['foundation']),lastNavActive:null},
- formal:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(),lastNavActive:null}
+ formal:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(),lastNavActive:null},
+ data:{active:null,selectedTopic:null,category:'全部',wrongOnly:false,importantOnly:false,searchTerm:'',knowledgeQuery:'',knowledgeExpanded:new Set(),lastNavActive:null}
 };
 const KEY='gongkao_logic_errorbook_v1';
 const APP_SCHEMA_VERSION=3;
@@ -328,7 +335,7 @@ $('logoutBtn').onclick=async()=>{
 $('refreshCloud').onclick=async()=>{await pullCloud()};
 $('importLegacy').onclick=async()=>{
  if(!user)return;
- const legacy=readJSON(KEY), keys=Object.keys(legacy).filter(k=>QUESTIONS.some(q=>q.id===k));
+ const legacy=readJSON(KEY), keys=Object.keys(legacy).filter(k=>ARGUMENT_QUESTIONS.some(q=>q.id===k));
  if(!keys.length)return setStatus('当前浏览器没有找到旧版答题记录');
  if(!confirm('将旧版浏览器记录中的 '+keys.length+' 道题覆盖到当前账号云端？相同题目的云端笔记也会被覆盖。'))return;
  downloadBackup('迁移前备份');
@@ -388,7 +395,7 @@ function knowledgeMatches(topic,section){
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
 function listHtml(items){
- return items?.length?'<ul class="kb-list">'+items.map(item=>'<li>'+safe(item)+'</li>').join('')+'</ul>':'';
+ return items?.length?'<ul class="kb-list">'+items.map(item=>'<li>'+(currentModule==='data'?DataAnalysis.rich(item):safe(item))+'</li>').join('')+'</ul>':'';
 }
 function sectionHtml(title,items){
  return items?.length?'<section class="kb-article-section"><h3>'+safe(title)+'</h3>'+listHtml(items)+'</section>':'';
@@ -460,12 +467,13 @@ function renderKnowledge(){
    related.map(q=>'<button type="button" class="kb-related-link" data-open-question="'+safe(q.id)+'"><span>'+safe(q.title)+'</span><span class="kb-related-sub">'+safe(q.exam)+'　→</span></button>').join('')+
    '</div><div class="kb-footer-note">点击题目可直接进入错题练习；答题区也能返回关联知识点。</div></section>':'<section class="kb-footer"><div class="kb-footer-note">这个知识点暂时没有收录的配套真题，后续会持续补充。</div></section>';
  $('knowledgeCard').innerHTML='<div class="kb-breadcrumb">'+safe(group.chapter)+' / '+safe(group.title)+'</div>'+
-  '<h2 class="kb-heading">'+safe(topic.title)+'</h2><p class="kb-summary">'+safe(topic.summary)+'</p>'+
+  '<h2 class="kb-heading">'+safe(topic.title)+'</h2><p class="kb-summary">'+(currentModule==='data'?DataAnalysis.rich(topic.summary):safe(topic.summary))+'</p>'+
   sectionHtml('快速识别',topic.recognize)+
   sectionHtml('结构与核心规则',topic.patterns)+
   methods+
   sectionHtml('常见陷阱',topic.pitfalls)+
   examples+relatedHtml;
+ if(currentModule==='data')DataAnalysis.renderMath($('knowledgeCard'));
  $('knowledgeCard').querySelectorAll('[data-open-question]').forEach(button=>button.onclick=()=>openPractice(button.dataset.openQuestion));
  const item=Array.from(nav.querySelectorAll('[data-knowledge-topic]')).find(el=>el.dataset.knowledgeTopic===selectedTopic);
  if(item){
@@ -481,8 +489,8 @@ function activateModule(next){
   knowledgeExpanded:new Set(knowledgeExpanded),lastNavActive
  };
  currentModule=next;
- QUESTIONS=next==='formal'?FORMAL_QUESTIONS:ARGUMENT_QUESTIONS;
- KNOWLEDGE=next==='formal'?FORMAL_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
+ QUESTIONS=next==='formal'?FORMAL_QUESTIONS:next==='data'?DATA_QUESTIONS:ARGUMENT_QUESTIONS;
+ KNOWLEDGE=next==='formal'?FORMAL_KNOWLEDGE:next==='data'?DATA_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
  knowledgeTopics=KNOWLEDGE?.sections.flatMap(section=>section.topics)||[];
  const saved=moduleStates[next];
  active=saved.active&&QUESTIONS.some(q=>q.id===saved.active)?saved.active:QUESTIONS[0]?.id||null;
@@ -496,15 +504,15 @@ function activateModule(next){
 }
 function updateViewHash(){
  const id=currentView==='knowledge'?selectedTopic:active;
- const prefix=currentModule==='formal'?'formal/':'';
+ const prefix=currentModule==='formal'?'formal/':currentModule==='data'?'data/':'';
  history.replaceState(null,'','#'+prefix+currentView+(id?'/'+encodeURIComponent(id):''));
 }
 function switchView(view,updateHash=true){
  currentView=view==='knowledge'?'knowledge':'practice';
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
- const selected=currentModule==='formal'?'Formal':'';
- for(const key of ['Knowledge','Practice','FormalKnowledge','FormalPractice']){
+ const selected=currentModule==='formal'?'Formal':currentModule==='data'?'Data':'';
+ for(const key of ['Knowledge','Practice','FormalKnowledge','FormalPractice','DataKnowledge','DataPractice']){
   $('tab'+key).setAttribute('aria-selected',String(key===selected+(currentView==='knowledge'?'Knowledge':'Practice')));
  }
  $('knowledgeView').setAttribute('aria-labelledby','tab'+selected+'Knowledge');
@@ -530,9 +538,9 @@ function openPractice(id){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function restoreHashView(){
- const route=decodeURIComponent(location.hash.slice(1)).match(/^(?:(formal)\/)?(knowledge|practice)(?:\/(.+))?$/);
+ const route=decodeURIComponent(location.hash.slice(1)).match(/^(?:(formal|data)\/)?(knowledge|practice)(?:\/(.+))?$/);
  if(!route)return;
- activateModule(route[1]==='formal'?'formal':'argument');
+ activateModule(route[1]==='formal'?'formal':route[1]==='data'?'data':'argument');
  if(route[2]==='knowledge'){
   if(knowledgeTopic(route[3])){
    selectedTopic=route[3];
@@ -604,10 +612,26 @@ async function loadFormalData(){
  FORMAL_KNOWLEDGE=book;
  $('questionCount').textContent=ARGUMENT_QUESTIONS.length+questions.length;
 }
+async function loadDataAnalysis(){
+ const [mr,qr,kr]=await Promise.all([
+  fetch('data-materials.json',{cache:'no-cache'}),
+  fetch('data-questions.json',{cache:'no-cache'}),
+  fetch('data-knowledge.json',{cache:'no-cache'})
+ ]);
+ if(!mr.ok||!qr.ok||!kr.ok)throw new Error('资料分析资源加载失败');
+ const [materials,questions,book]=await Promise.all([mr.json(),qr.json(),kr.json()]);
+ DataAnalysis.validate(materials,questions,book,
+  [...ARGUMENT_QUESTIONS,...FORMAL_QUESTIONS].map(q=>q.id),
+  [...ARGUMENT_KNOWLEDGE.sections,...FORMAL_KNOWLEDGE.sections].flatMap(s=>s.topics.map(t=>t.id)));
+ DATA_MATERIALS=materials;DATA_QUESTIONS=questions;DATA_KNOWLEDGE=book;
+ $('questionCount').textContent=ARGUMENT_QUESTIONS.length+FORMAL_QUESTIONS.length+DATA_QUESTIONS.length;
+}
 $('tabKnowledge').onclick=()=>{activateModule('argument');switchView('knowledge')};
 $('tabPractice').onclick=()=>{activateModule('argument');switchView('practice')};
 $('tabFormalKnowledge').onclick=()=>{activateModule('formal');switchView('knowledge')};
 $('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practice')};
+$('tabDataKnowledge').onclick=()=>{activateModule('data');switchView('knowledge')};
+$('tabDataPractice').onclick=()=>{activateModule('data');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
@@ -639,7 +663,7 @@ list.innerHTML=f.length?f.map((q,i)=>{
  const statusName=r.submitted?(r.selected===q.answer?'已答对':'已答错'):(r.review?'待复习':'未完成');
  const pin=q.important===true?'<span class="nav-pin" aria-hidden="true">★</span>':'';
  return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
-}).join(''):'<div class="empty">'+(!QUESTIONS.length?'形式逻辑题库尚未收录题目，后续课程的练习题会独立出现在这里。':'未找到匹配的题目，请调整搜索或筛选条件')+'</div>';
+}).join(''):'<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析题库尚未收录真题，请先浏览知识体系；后续从真题材料逐步入库。':'当前模块暂无题目。'):'未找到匹配的题目，请调整搜索或筛选条件')+'</div>';
 list.scrollTop=oldScroll;
 list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
 if(activeChanged){
@@ -653,20 +677,38 @@ if(activeChanged){
 lastNavActive=active;
 const answered=QUESTIONS.filter(q=>record(q.id).submitted).length,correct=QUESTIONS.filter(q=>record(q.id).submitted&&record(q.id).selected===q.answer).length,need=QUESTIONS.filter(q=>record(q.id).review||record(q.id).wrong).length;
 $('stats').innerHTML=`<div><div class="num">${answered}<small> / ${QUESTIONS.length}</small></div><small>已完成</small></div><div><div class="num">${correct}</div><small>答对题数</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
-if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?'形式逻辑错题练习尚未开始收录，完成知识点学习后可逐步添加真题。':'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';return}
+if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析模块已准备就绪，等待录入第一组真实材料与题目。':'当前模块暂无练习题。'):'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';return}
 const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active);
+const dataMode=currentModule==='data';
+const previousMaterialScroll=$('card').querySelector('.da-material-body')?.scrollTop||0;
+const material=dataMode?DATA_MATERIALS.find(m=>m.id===q.materialId):null;
+const dataStart=dataMode?'<div class="da-layout"><div class="da-material-column">'+DataAnalysis.materialHtml(material)+'</div><div class="da-question-column">':'';
+const dataEnd=dataMode?'</div></div>':'';
+const analysisContent=dataMode?DataAnalysis.explanationHtml(q):[
+ '<p><b>逻辑结构：</b>'+safe(q.structure)+'</p>',
+ '<p><b>为什么选 '+safe(q.answer)+'：</b>'+safe(q.reason)+'</p>',
+ '<p><b>易错陷阱：</b>'+safe(q.trap)+'</p>',
+ '<p><b>一句话记忆：</b>'+safe(q.rule)+'</p>'
+].join('');
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
-$('card').innerHTML=`<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
-<h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">原始题干</p><div class="stem">${safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
+$('card').innerHTML=`${dataStart}<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
+<h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
  <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn">${(r.submitted||r.revealed)?'解析已展开':'直接查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
- ${(r.submitted||r.revealed)?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3><p><b>逻辑结构：</b>${safe(q.structure)}</p><p><b>为什么选 ${q.answer}：</b>${safe(q.reason)}</p><p><b>易错陷阱：</b>${safe(q.trap)}</p><p><b>一句话记忆：</b>${safe(q.rule)}</p><button id="retry" class="btn">重做本题</button></section>`:''}
+ ${(r.submitted||r.revealed)?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<button id="retry" class="btn">重做本题</button></section>`:''}
  ${r._syncConflict?`<section class="sync-conflict"><h3>这道题在另一台设备也被修改过</h3><p>为了避免静默覆盖，请选择保留当前本机版本，或采用云端版本。</p><div class="actions"><button id="keepLocal" class="btn primary">保留本机并覆盖云端</button><button id="useCloud" class="btn">采用云端版本</button></div></section>`:''}
  <p class="label">个人复盘笔记 <span class="muted">（自动保存在本地）</span></p><textarea id="note" class="note" maxlength="20000" placeholder="记录：我当时为什么会选错？下次怎么避免？">${safe(r.note)}</textarea>
 ${q.image?`${q.image?`<button class="outline" id="toggleImage">查看 / 隐藏原题截图</button><img class="shot" id="shot" alt="题目原始截图">`:``}`:``}
-<div class="footer-nav"><button id="prev" class="btn" ${ix===0?'disabled':''}>← 上一题</button><span class="pill">${ix+1} / ${f.length}</span><button id="next" class="btn" ${ix===f.length-1?'disabled':''}>下一题 →</button></div>`;
+<div class="footer-nav"><button id="prev" class="btn" ${ix===0?'disabled':''}>← 上一题</button><span class="pill">${ix+1} / ${f.length}</span><button id="next" class="btn" ${ix===f.length-1?'disabled':''}>下一题 →</button></div>${dataEnd}`;
+if(dataMode){
+ const body=$('card').querySelector('.da-material-body');
+ if(body)body.scrollTop=previousMaterialScroll;
+ const toggle=$('card').querySelector('[data-da-toggle]');
+ if(toggle)toggle.onclick=()=>{DataAnalysis.toggleMaterial(q.materialId);render()};
+ DataAnalysis.renderMath($('card'));
+}
 $('card').querySelectorAll('[data-open-topic]').forEach(b=>b.onclick=()=>openKnowledge(b.dataset.openTopic));
 $('card').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{r.selected=b.dataset.answer;save();render()});
  $('submit').onclick=()=>submit(q,r);$('show').onclick=()=>{r.revealed=true;save();render()};
@@ -720,7 +762,7 @@ $('importBackup').onchange=async e=>{
  try{payload=JSON.parse(await file.text())}catch(err){setStatus('不是有效 JSON 文件','bad');return}
  const items=payload.progress||payload;
  if(!items||Array.isArray(items)||typeof items!=='object'){setStatus('备份结构不正确','bad');return}
- const ids=Object.keys(items).filter(id=>QUESTIONS.some(q=>q.id===id)&&items[id]&&typeof items[id]==='object');
+ const ids=Object.keys(items).filter(id=>[...ARGUMENT_QUESTIONS,...FORMAL_QUESTIONS,...DATA_QUESTIONS].some(q=>q.id===id)&&items[id]&&typeof items[id]==='object');
  if(!ids.length)return setStatus('备份中没有当前题库的有效记录','bad');
  if(!confirm('导入 '+ids.length+' 道题的记录？相同题目的当前记录将被覆盖'+(user?'，并同步到云端':'')+'。'))return;
  ids.forEach(id=>{state[id]=normalizeImportedRecord(items[id]);if(user)pending.add(id)});
@@ -728,7 +770,7 @@ $('importBackup').onchange=async e=>{
  render();if(user)await pushCloud();setStatus('已导入 '+ids.length+' 道题的记录','good');
 };
 $('reset').onclick=async()=>{
- const moduleName=currentModule==='formal'?'形式逻辑':'论证逻辑';
+ const moduleName=currentModule==='formal'?'形式逻辑':currentModule==='data'?'资料分析':'论证逻辑';
  const ids=QUESTIONS.map(q=>q.id);
  if(!ids.length){setStatus('当前模块暂无题目记录需要清空','good');return}
  if(!confirm(user?'确定清空此账号「'+moduleName+'」模块的云端答题记录、复习标记及笔记吗？其他模块不受影响。':'确定清空本地「'+moduleName+'」模块的答题记录、复习标记与笔记吗？其他模块不受影响。'))return;
@@ -761,6 +803,7 @@ async function boot(){
  render();
  await loadKnowledge();
  await loadFormalData();
+ await loadDataAnalysis();
  restoreHashView();
  await setupCloud();
 }

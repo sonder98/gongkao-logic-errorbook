@@ -1,4 +1,8 @@
-# 公考逻辑判断 · 学习与交互错题本
+# 公考学习 · 知识体系与交互错题本
+
+**2026-11-07 新增资料分析模块：** 顶部增加“资料分析 → 知识体系 / 错题练习”。先搭建框架、后随实际学习逐步收题：data-materials.json 与 data-questions.json 当前均为空；data-knowledge.json 包含4个基础公式知识点。资料分析支持多题共用材料、JSON 统计表格、简单 SVG 图表、独立懒加载图片、LaTeX/KaTeX 公式和分步解题解析。手机端材料优先纵向排列；桌面端使用材料/题目双栏。完整数据格式见 [资料分析开发说明](docs/DATA_ANALYSIS.md)。
+
+**性能约束：** 题目/知识更新不重新上传图片。新材料表格优先结构化，必须使用图片时独立存到 assets/data-analysis/，优先 WebP，禁止 Base64。现有 Supabase 同步表和旧逻辑题原始 ID 完全复用；新题以 data- 前缀隔离。测试新增 `node tests/validate-data-analysis.cjs`，GitHub Actions 会在推送后执行三组数据校验。公式资源按需从固定版本 KaTeX CDN 加载。
 
 **网站入口：** <https://sonder98.github.io/gongkao-logic-errorbook/>（默认进入错题练习；点击顶部「知识体系」阅读笔记）。
 

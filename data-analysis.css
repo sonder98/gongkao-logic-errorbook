@@ -1,0 +1,30 @@
+/* 资料分析专属样式：不改变旧逻辑题布局 */
+.da-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:start;gap:23px}
+.da-material-column,.da-question-column{min-width:0}
+.da-material{border:1px solid #dce7e5;border-radius:12px;overflow:hidden;background:#fcfefd}
+.da-material-header{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;padding:13px;background:#f0f8f5;border-bottom:1px solid #dce7e5}
+.da-material-header h3{font-size:15px;line-height:1.45;margin:2px 0 3px}
+.da-material-header small{font-size:11px;color:#617581}
+.da-overline{font-size:11px;color:#117d78;font-weight:750}
+.da-material-header button{flex:none;border:1px solid #b8d8d1;border-radius:8px;background:white;color:#137469;padding:5px 8px;font-size:11px}
+.da-material-body{padding:13px;max-height:68vh;overflow-y:auto;overscroll-behavior:contain}
+.da-paragraph{font-size:14px;line-height:1.85;white-space:pre-line;margin:4px 0 13px}
+.da-figure{margin:10px 0 18px;max-width:100%}
+.da-figure figcaption{font-size:12px;color:#667d88;margin-top:6px;line-height:1.55}
+.da-figure img{width:100%;height:auto;display:block;object-fit:contain;border-radius:7px;border:1px solid #e2eaed}
+.da-table-scroll,.da-chart-scroll{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.da-figure table{border-collapse:collapse;width:100%;min-width:max-content;font-size:12px;line-height:1.6}
+.da-figure th,.da-figure td{border-bottom:1px solid #dde8e8;padding:8px 10px;text-align:left;white-space:nowrap}
+.da-figure th{font-weight:800;background:#edf6f3;color:#285361}
+.da-figure td{background:#fff}
+.da-chart-scroll svg{display:block;width:100%;min-width:410px;height:auto}
+.da-material-missing{padding:15px;background:#fff6ec;border-radius:9px}
+.da-explain-section{margin:12px 0;padding-top:10px;border-top:1px solid #e8eeee}
+.da-explain-section h4{font-size:13px;color:#1c746d;margin:0 0 5px}
+.da-explain-section>div{white-space:pre-line;line-height:1.8;overflow-wrap:anywhere}
+.da-rule{margin-top:13px;padding:11px 12px;border-radius:8px;background:#eef8f5;white-space:pre-line}
+.da-equation{overflow-x:auto;max-width:100%;padding:9px 0;font-size:14px}
+.da-inline-math{white-space:nowrap}
+.da-explanation .da-equation{font-size:13px}
+@media(max-width:1060px){.da-layout{grid-template-columns:minmax(0,1fr)}.da-material-body{max-height:380px}}
+@media(max-width:800px){.da-material-body{max-height:300px}.da-material-header{padding:10px}.da-figure table{font-size:12px}}

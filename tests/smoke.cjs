@@ -26,7 +26,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#knowledgeView').isVisible(),false);
   assert.equal(await page.locator('#tabPractice').getAttribute('aria-selected'),'true');
 
-  assert.equal(await page.title(), '逻辑判断 · 知识体系与云同步错题本');
+  assert.equal(await page.title(), '公考学习 · 知识体系与错题本');
   const expectedQuestions = Number((await page.locator('#navCount').innerText()).split('/')[1].trim().split(' ')[0]);
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
@@ -320,6 +320,18 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     narrowMobileLayout.viewportWidth,
     `narrow mobile page overflows horizontally: ${JSON.stringify(narrowMobileLayout)}`
   );
+
+  // Data analysis scaffold: 4 knowledge topics, empty official bank, old modules unaffected.
+  await page.locator('#tabDataKnowledge').click();
+  assert.equal(await page.locator('#tabDataKnowledge').getAttribute('aria-selected'),'true');
+  assert.match(page.url(),/#data\/knowledge/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/增长量、增长率与基期量/);
+  await page.locator('#tabDataPractice').click();
+  assert.equal(await page.locator('#tabDataPractice').getAttribute('aria-selected'),'true');
+  assert.equal(await page.locator('.nav-item').count(),0);
+  assert.match(await page.locator('#card').innerText(),/等待录入第一组真实材料/);
+  await page.locator('#tabPractice').click();
+  assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 
   await browser.close();
 
