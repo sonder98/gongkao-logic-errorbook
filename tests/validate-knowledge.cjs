@@ -48,7 +48,7 @@ assert.deepEqual([...new Set(comprehensiveSection.topics.flatMap(t=>t.questionId
 assert.equal(comprehensiveSection.topics[0].questionIds.length,8);
 assert.equal(comprehensiveSection.topics[4].questionIds.length,4);
 assert.ok(comprehensiveSection.topics[4].patterns.some(s=>s.includes('恰好覆盖')));
-assert.ok(comprehensiveSection.topics[2].patterns.some(s=>s.includes('双')));
+assert.ok(comprehensiveSection.topics[2].patterns.some(s=>s.includes('两张')),'一一对应应保留两张排除矩阵方法');
 assert.ok(comprehensiveSection.topics[0].summary.includes('宫格推理'));
 const contradiction=formalBook.sections.find(s=>s.id==='formal-contradiction')?.topics.find(t=>t.id==='formal-contradiction-two-patterns');
 assert.ok(contradiction,'missing contradiction inference rules');
