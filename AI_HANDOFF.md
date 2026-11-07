@@ -1,6 +1,6 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
-> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料，只有4条基础公式知识点；旧逻辑题保持76道（论证48、形式28）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
+> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料，只有4条基础公式知识点；旧逻辑题现为78道（论证50、形式28）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
 
 > **优先入口。** 仓库：`sonder98/gongkao-logic-errorbook`。网站：<https://sonder98.github.io/gongkao-logic-errorbook/>。本项目同时学习**论证逻辑**（加强、削弱、前提假设）与**形式逻辑**（翻译、矛盾、真假、综合），并维护考生可读的知识体系和交互错题本。本文供 AI 交接，不在网站前台展示。
 
@@ -10,9 +10,9 @@
 
 | 模块 | 题库 | 知识库 | 当前规模 |
 |---|---|---|---|
-| 论证逻辑 | `questions.json` | `knowledge.json` | **48题，31知识点** |
+| 论证逻辑 | `questions.json` | `knowledge.json` | **50题，31知识点** |
 | 形式逻辑 | `formal-questions.json` | `formal-knowledge.json` | **28题，12知识点** |
-| 合计 | 两套独立 JSON | 两套独立 JSON | **76题** |
+| 合计 | 两套独立 JSON | 两套独立 JSON | **78题** |
 
 **形式逻辑四大章节（按现有真实数据）**：
 
@@ -33,7 +33,7 @@
 - 中文讲解尽量使用“非A”、简单箭头、方括号；不写数学模态方框／菱形符号。考生知识笔记只写精简可迁移的方法，不写辩护性的旧解法复盘。
 - 新题**首先复用已有知识点**；只有真实遇到不同推理机制、并经讨论确认，才新增 topic，不能每道题建立一个新口诀。
 
-**目前状态**：题目与知识已按四章入库；最近已完成综合推理8题更新及 GitHub Pages 成功部署。新接力 AI 不得把上轮“预计动作”视为未完成任务。实时数量仍应以仓库 JSON 为准。
+**目前状态**：形式逻辑四章28题已入库；论证逻辑新增医院挂号与大蚕蛾2题（共50题），知识沿用原有31项，其中大蚕蛾为重点辨析。新接力 AI 不得把上轮“预计动作”视为未完成任务。实时数量仍应以仓库 JSON 为准。
 
 ## 一、脱离旧聊天记录如何开始
 
@@ -279,3 +279,12 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 四章阶段总结已经发布；最新有效题库和知识以仓库 JSON 为准，本节不再逐题复制原题。**截至本次交接无待补录的已讨论题**。下次出现新题时，先检查是否属于现有四章与12个 topic，再讨论最短解法；未经用户“更新／收录”指令不自动写入。若用户只要求“更新交接文档”，不增改任何题目或知识数据。
 
 当前阶段已知待扩展的是综合推理中的「宫格推理」和「其他」，以及以后新题确立的不同机制，而不是重新拆分已完成的集合／分组规则。改动文件先核对 GitHub 最新 `main`，修改后核验文件、提交 SHA 与 Pages 部署结果；没有运行完整浏览器和真实登录测试时不得宣称通过。
+
+## 二十二、论证逻辑：大蚕蛾推理方向与医院接诊担忧（2026-11-07）
+
+当前逻辑题库：论证逻辑 **50题／31知识点**，形式逻辑 **28题／12知识点**；合计 **78题**。另有正在独立开发的资料分析模块，格式见 `docs/DATA_ANALYSIS.md`。这次只调整论证逻辑题目和既有知识条目，其他模块不变。
+
+- 新题 `unknown-hospital-three-day-registration-initial-followup`，答案 **A**，归类 **由因推果**。担忧“免挂号→初诊等待延长／就诊机会被挤压”；A给出合理安排初复诊次序；B只说明科室总接诊人数没有明显变多，不能保证初诊等待和分配不受影响。知识关联 `cause-overview`、`build-remove-link`、`match-target`；非重点。
+- 新题 `unknown-atlas-moth-colorful-wings-mating-attraction`，答案 **A**、标 `important:true`、难度“难”，归类 **由因推果**。结构“绚丽翅膀→吸引异性→交配几率增加”。A昼伏夜出、无法看清翅膀，削弱视觉吸引的作用条件。B翅膀还能迷惑天敌，是另外一种**功能/效果**，不能由此否定求偶效果；C触角识别及D雌雄色泽不同均不直接切断原结论。知识关联 `cause-overview`、`build-remove-link`、`match-target`。
+- 必须区分由果推因：丛冢雉蛋感染率低已发生，再以溶菌酶素解释；同样能解释低感染率的碳酸钙层是竞争他因。**“A另有其他效果”不等于“已经发生的B另有竞争性原因”。** 由因推果也可以因C实际阻碍A→B而削弱，不可以写成“一律不能用他因削弱”。
+- 两题只存结构化文字、完整四个选项和答案，不保存截图；题目年份/考试未知。原题 ID、历史原图、Supabase 个人记录均不动。后续遇到类似题先判断结论究竟评估“功能产生的效果”还是解释“已发生现象的原因”。

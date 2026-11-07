@@ -181,12 +181,22 @@
           ],
           "pitfalls": [
             "在普通由因推果论证中，只说“C也能造成B”，往往不能削弱A→B，因为两者可以同时成立。",
-            "若结论强到“A是唯一原因”，另一个原因C才可能直接挑战“唯一”。"
+            "若结论强到“A是唯一原因”，另一个原因C才可能直接挑战“唯一”。",
+            "大蚕蛾题：结论是绚丽翅膀能吸引异性、提高交配几率，不是求偶需求导致绚丽翅膀产生。B说翅膀还能迷惑天敌，只说明A还有其他效果D，不能否定A能产生原效果B。",
+            "由因推果中，若另一因素C也能产生结果B，这不直接否定A能产生B；但C若阻断A的作用环节，或提供观察差异的替代解释，仍可削弱。不要笼统记为“由因推果有他因一律无效”。"
           ],
           "questionIds": [
             "2025-fish",
             "2022-henan-adolescent-risk-cardiovascular-intervention",
-            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past"
+            "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past",
+            "unknown-hospital-three-day-registration-initial-followup",
+            "unknown-atlas-moth-colorful-wings-mating-attraction"
+          ],
+          "examples": [
+            {
+              "title": "大蚕蛾绚丽翅膀（答案A）：由因推果不等于解释特征起源",
+              "body": "题干已知翅膀绚丽，推测它能吸引异性、提高交配概率。A说昼伏夜出、看不清翅膀，直接动摇“绚丽→视觉吸引”的联系；B只说明翅膀还可迷惑天敌，其他功能可以与求偶功能共存。不是由已发生的求偶成功反推其原因。"
+            }
           ]
         },
         {
@@ -210,7 +220,8 @@
           "weaken": [
             "指出A与B之间的关键作用环节没有成立，或存在阻止该环节发挥作用的条件。",
             "具体削弱选项的表达方式会在后续学习中继续补充；这里只先固定“建立与去除是同一方法的两面”。",
-            "去除联系不仅可以直接否认A→B，也可以指出其必要环节X容易被干扰：如个人呼吸特征可能因饮食、环境、情绪变化而难以稳定重复识别，从而质疑呼吸用于身份验证的可靠性。"
+            "去除联系不仅可以直接否认A→B，也可以指出其必要环节X容易被干扰：如个人呼吸特征可能因饮食、环境、情绪变化而难以稳定重复识别，从而质疑呼吸用于身份验证的可靠性。",
+            "大蚕蛾：昼伏夜出且无法看清同类翅膀，直接削弱绚丽翅膀通过视觉吸引异性的作用条件；另一种“迷惑天敌”功能不直接否定求偶效果。"
           ],
           "pitfalls": [
             "仅出现“重要、影响、相关”等词，并不自动说明选项补上了题目的断点。",
@@ -258,7 +269,9 @@
             "unknown-southwest-shale-gas-commercial-extraction-prerequisite",
             "unknown-adolescent-prefrontal-rationality-training",
             "2020-guangdong-waste-sorting-fine-motivation",
-            "2020-guangdong-pe-class-exercise-time-assumption"
+            "2020-guangdong-pe-class-exercise-time-assumption",
+            "unknown-hospital-three-day-registration-initial-followup",
+            "unknown-atlas-moth-colorful-wings-mating-attraction"
           ]
         },
         {
@@ -795,7 +808,8 @@
             "本案无关他因陷阱：仅说生活习惯不良、情绪状态不佳也会损害健康，没有说明这些因素在体重减轻组中实际存在且能解释组间健康差异，不能有效削弱减重A→健康受损B。",
             "“有他因”必须看效果方向，不能把更容易感染的薄壳当成造成较低感染率的竞争原因；D不仅不削弱，还可有限排除“更厚蛋壳保护”这种解释。",
             "所谓“排除他因加强”不要求排除所有理论可能，但排除少数竞争因素也不足以证实唯一原因；A与C可能同时有作用。",
-            "挪威母女妊娠剧吐题：他因要解释母女风险为何相关。A给出母女实际相似的环境与饮食；D仅说挪威女性吸烟上升、吸烟与该病有关，未连接母女特有风险差异，不构成同等有力的竞争归因。"
+            "挪威母女妊娠剧吐题：他因要解释母女风险为何相关。A给出母女实际相似的环境与饮食；D仅说挪威女性吸烟上升、吸烟与该病有关，未连接母女特有风险差异，不构成同等有力的竞争归因。",
+            "对照大蚕蛾题：丛冢雉蛋题先观察到感染率低，再竞争性解释为何低，碳酸钙层可引入他因；大蚕蛾题是从绚丽翅膀推测求偶功能，额外“迷惑天敌”是另一个效果，而不是对已发生求偶结果的替代归因。"
           ],
           "examples": [
             {
@@ -1113,7 +1127,9 @@
             "论点讨论网上订餐需求是否低，选项要区分需求水平与增长不佳，不能混为一谈。",
             "有无与程度：题干讨论奖赏回路活动强弱是否影响音乐愉悦高低，选项仅说“不喜欢流行音乐者奖赏回路也会活动”并未给出活动程度，无法反驳强弱关系。",
             "预防与治疗：题干结论是光刺激能改善已患阿尔茨海默症小鼠的症状，选项说未受刺激小鼠患病比例低，讨论的是疾病发生/预防，不是治疗效果。",
-            "时间与持续性：题干只说措施能增强骨密度，选项说先增强后又下降，不能自动当成“从未增强”，也不可擅自把短期改善改成永久疗效。"
+            "时间与持续性：题干只说措施能增强骨密度，选项说先增强后又下降，不能自动当成“从未增强”，也不可擅自把短期改善改成永久疗效。",
+            "资源总量与分配方式不能互换：医院“一次挂号管三天”的担忧是初诊患者等待和机会被挤压；B只保证科室接诊人数不明显增多，A才直接说明初复诊的接诊次序会被合理安排。",
+            "同一特征的另一效果≠否定当前讨论的效果：大蚕蛾翅膀可迷惑天敌，不等于翅膀不能吸引异性，需以论点“绚丽→求偶效果”为后件。"
           ],
           "pitfalls": [
             "换掉指标或比较对象，会让看似相关的选项无法直接支持／削弱结论。",
@@ -1166,7 +1182,9 @@
             "2015-guokao-tv-price-quality-market-share",
             "unknown-civilian-gun-sales-restriction-deterrence",
             "2015-sichuan-obesity-social-contagion-habits",
-            "unknown-adolescent-prefrontal-rationality-training"
+            "unknown-adolescent-prefrontal-rationality-training",
+            "unknown-hospital-three-day-registration-initial-followup",
+            "unknown-atlas-moth-colorful-wings-mating-attraction"
           ],
           "examples": [
             {

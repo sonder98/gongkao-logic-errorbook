@@ -26,6 +26,16 @@ for(const item of q.filter(x=>x.image)){
  const old=oldQuestions.find(x=>x.id===item.id);
  assert.ok(old && old.image.startsWith('data:image/'),item.id+' 历史原图缺失');
 }
+const newArgumentBatch=[["unknown-hospital-three-day-registration-initial-followup","A"],["unknown-atlas-moth-colorful-wings-mating-attraction","A"]];
+for(const [id,answer] of newArgumentBatch){
+ const item=q.find(x=>x.id===id);
+ assert.ok(item&&item.answer===answer,'new argument logic problem missing or incorrect: '+id);
+ assert.equal(item.category,'由因推果');
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(q.find(x=>x.id==='unknown-atlas-moth-colorful-wings-mating-attraction').important,true,'moth reasoning must be marked important');
+assert.equal(q.length,50,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
