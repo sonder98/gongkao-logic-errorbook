@@ -2,7 +2,7 @@
 .da-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);align-items:start;gap:23px}
 .da-material-column,.da-question-column{min-width:0}
 .da-material{border:1px solid #dce7e5;border-radius:12px;overflow:hidden;background:#fcfefd}
-.da-material-header{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;padding:13px;background:#f0f8f5;border-bottom:1px solid #dce7e5}
+.da-material-header{color:#1b2935;display:flex;align-items:flex-start;justify-content:space-between;gap:9px;padding:13px;background:#f0f8f5;border-bottom:1px solid #dce7e5}
 .da-material-header h3{font-size:15px;line-height:1.45;margin:2px 0 3px}
 .da-material-header small{font-size:11px;color:#617581}
 .da-overline{font-size:11px;color:#117d78;font-weight:750}
