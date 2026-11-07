@@ -1,6 +1,6 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
-> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料，只有4条基础公式知识点；旧逻辑题现为78道（论证50、形式28）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
+> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料，只有4条基础公式知识点；旧逻辑题现为79道（论证51、形式28）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
 
 > **优先入口。** 仓库：`sonder98/gongkao-logic-errorbook`。网站：<https://sonder98.github.io/gongkao-logic-errorbook/>。本项目同时学习**论证逻辑**（加强、削弱、前提假设）与**形式逻辑**（翻译、矛盾、真假、综合），并维护考生可读的知识体系和交互错题本。本文供 AI 交接，不在网站前台展示。
 
@@ -10,9 +10,9 @@
 
 | 模块 | 题库 | 知识库 | 当前规模 |
 |---|---|---|---|
-| 论证逻辑 | `questions.json` | `knowledge.json` | **50题，31知识点** |
+| 论证逻辑 | `questions.json` | `knowledge.json` | **51题，31知识点** |
 | 形式逻辑 | `formal-questions.json` | `formal-knowledge.json` | **28题，12知识点** |
-| 合计 | 两套独立 JSON | 两套独立 JSON | **78题** |
+| 合计 | 两套独立 JSON | 两套独立 JSON | **79题** |
 
 **形式逻辑四大章节（按现有真实数据）**：
 
@@ -33,7 +33,7 @@
 - 中文讲解尽量使用“非A”、简单箭头、方括号；不写数学模态方框／菱形符号。考生知识笔记只写精简可迁移的方法，不写辩护性的旧解法复盘。
 - 新题**首先复用已有知识点**；只有真实遇到不同推理机制、并经讨论确认，才新增 topic，不能每道题建立一个新口诀。
 
-**目前状态**：形式逻辑四章28题已入库；论证逻辑新增医院挂号与大蚕蛾2题（共50题），知识沿用原有31项，其中大蚕蛾为重点辨析。新接力 AI 不得把上轮“预计动作”视为未完成任务。实时数量仍应以仓库 JSON 为准。
+**目前状态**：形式逻辑四章28题已入库；论证逻辑51题，最新增加山地大猩猩HMPV感染来源选非题（答案C），沿用现有31个知识点。医院挂号、大蚕蛾题保留原有题目与重点标记。新接力 AI 不得把上轮“预计动作”视为未完成任务。实时数量仍应以仓库 JSON 为准。
 
 ## 一、脱离旧聊天记录如何开始
 
@@ -288,3 +288,9 @@ node tests/smoke.cjs       # 浏览器回归，需 Playwright 及浏览器
 - 新题 `unknown-atlas-moth-colorful-wings-mating-attraction`，答案 **A**、标 `important:true`、难度“难”，归类 **由因推果**。结构“绚丽翅膀→吸引异性→交配几率增加”。A昼伏夜出、无法看清翅膀，削弱视觉吸引的作用条件。B翅膀还能迷惑天敌，是另外一种**功能/效果**，不能由此否定求偶效果；C触角识别及D雌雄色泽不同均不直接切断原结论。知识关联 `cause-overview`、`build-remove-link`、`match-target`。
 - 必须区分由果推因：丛冢雉蛋感染率低已发生，再以溶菌酶素解释；同样能解释低感染率的碳酸钙层是竞争他因。**“A另有其他效果”不等于“已经发生的B另有竞争性原因”。** 由因推果也可以因C实际阻碍A→B而削弱，不可以写成“一律不能用他因削弱”。
 - 两题只存结构化文字、完整四个选项和答案，不保存截图；题目年份/考试未知。原题 ID、历史原图、Supabase 个人记录均不动。后续遇到类似题先判断结论究竟评估“功能产生的效果”还是解释“已发生现象的原因”。
+
+## 二十三、由果推因：大猩猩 HMPV 选非题（2026-11-07）
+
+新增 `unknown-hmpv-gorilla-human-to-animal-transmission`，归类**由果推因**、答案 **C**、考查“不能质疑”（选非）。已发生事实：一群山地大猩猩感染 HMPV；研究者推断来源为人类。A“猩猩之间也能传播”提供可能的竞争性直接感染路径，**具有有限削弱**，但仅有传播能力不等于本次真的发生，也不排除最初由人传入。B接触过大猩猩的人未检测到病毒，质疑人的感染源；D病毒株与人类株不匹配，质疑传播关联。C说此前没有其他非人动物被人感染的先例，**缺少历史先例不能否定本次是首次**，因此不能有效质疑，选C。不要把C教成“完全无关”：它讨论跨物种传播，但没有证成不可能。
+
+题目和考点已分别追加到 `questions.json`、`knowledge.json`，复用 `effect-overview`、`alternative-causes`、`match-target`，**不新建知识点、无截图、未修改旧题ID、未改个人进度结构**。当前论证逻辑51题／31知识点，形式逻辑28题／12知识点，共79题；资料分析模块独立维护。以后同类题先区分“真实存在的竞争来源”“只是存在另一传播能力”“历史上未见先例”。

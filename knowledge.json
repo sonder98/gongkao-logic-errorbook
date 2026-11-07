@@ -776,7 +776,8 @@
             "2022-dingcan",
             "unknown-peach-bagging-small-fruit",
             "unknown-megapode-egg-infection-lysozyme",
-            "unknown-norway-hyperemesis-maternal-genes-family-environment"
+            "unknown-norway-hyperemesis-maternal-genes-family-environment",
+            "unknown-hmpv-gorilla-human-to-animal-transmission"
           ]
         },
         {
@@ -809,7 +810,8 @@
             "“有他因”必须看效果方向，不能把更容易感染的薄壳当成造成较低感染率的竞争原因；D不仅不削弱，还可有限排除“更厚蛋壳保护”这种解释。",
             "所谓“排除他因加强”不要求排除所有理论可能，但排除少数竞争因素也不足以证实唯一原因；A与C可能同时有作用。",
             "挪威母女妊娠剧吐题：他因要解释母女风险为何相关。A给出母女实际相似的环境与饮食；D仅说挪威女性吸烟上升、吸烟与该病有关，未连接母女特有风险差异，不构成同等有力的竞争归因。",
-            "对照大蚕蛾题：丛冢雉蛋题先观察到感染率低，再竞争性解释为何低，碳酸钙层可引入他因；大蚕蛾题是从绚丽翅膀推测求偶功能，额外“迷惑天敌”是另一个效果，而不是对已发生求偶结果的替代归因。"
+            "对照大蚕蛾题：丛冢雉蛋题先观察到感染率低，再竞争性解释为何低，碳酸钙层可引入他因；大蚕蛾题是从绚丽翅膀推测求偶功能，额外“迷惑天敌”是另一个效果，而不是对已发生求偶结果的替代归因。",
+            "山地大猩猩HMPV题：可在同种动物间传播≠本次已发生这种传播，且可能是人先传入再发生动物间传播；历史上无其他非人动物被人传染的先例，也不足以否定本次发生。选非时选后者。"
           ],
           "examples": [
             {
@@ -831,6 +833,10 @@
             {
               "title": "2015四川：肥胖社会传染（答案C）",
               "body": "亲友影响饮食习惯与亲友改变体重接受标准是竞争性解释，均可解释亲友肥胖相关；仅说一般社会压力能致胖，不足以解释亲友关联。A提出择友效应也有一定质疑，但不如C直接检验研究者具体机制。"
+            },
+            {
+              "title": "山地大猩猩HMPV来源（选非C）：感染路径与无先例",
+              "body": "已观察到大猩猩感染HMPV，推测由人传染。A提出猩猩之间也能传播，为直接感染来源提供可能的他因，但仅证明传播能力，不能确认本次传播发生，也不排除最初由人引入。C说此前其他非人动物未见人传HMPV案例，不能推出这次跨物种传播不可能发生；选非选C。"
             }
           ],
           "questionIds": [
@@ -839,7 +845,8 @@
             "unknown-elderly-women-weight-loss-health",
             "unknown-megapode-egg-infection-lysozyme",
             "unknown-norway-hyperemesis-maternal-genes-family-environment",
-            "2015-sichuan-obesity-social-contagion-habits"
+            "2015-sichuan-obesity-social-contagion-habits",
+            "unknown-hmpv-gorilla-human-to-animal-transmission"
           ]
         }
       ]
@@ -1149,7 +1156,8 @@
             "电子烟题：结论要求“吸电子烟者比不吸者更可能尝试传统香烟”，C只给出吸电子烟者60%的单组绝对比例，不能直接证明组间相对优势。截图标C，讨论中的推理倾向B，保留争议。",
             "医德题：C仅说明学校思想道德教育是培养医德的主要途径；D提供患者相较于专业水平更加看重医德这一比较依据，更针对结论“更应注重”的优先级。C有一定支持，不是无关项。",
             "维生素D题：结论比较现代与过去更易缺钙，C却比较现代骨质疏松患者与现代其他人日照是否相同，比较对象错位；两组现代人的日照都可能低于过去。",
-            "青少年前额叶题D谈的是中年人成熟后不一定理智，题干却问25岁前谈理智是否有意义；对象与需要回答的问题均不同。主体不同是警示，不是机械判无关的充分理由。"
+            "青少年前额叶题D谈的是中年人成熟后不一定理智，题干却问25岁前谈理智是否有意义；对象与需要回答的问题均不同。主体不同是警示，不是机械判无关的充分理由。",
+            "HMPV大猩猩题：题干评估的是“这群大猩猩本次是否由人传染”，C讨论“此前其他非人动物有没有先例”，对象和时间均不同；缺乏历史先例不能直接反驳本次感染来源。"
           ],
           "questionIds": [
             "fruit",
@@ -1184,7 +1192,8 @@
             "2015-sichuan-obesity-social-contagion-habits",
             "unknown-adolescent-prefrontal-rationality-training",
             "unknown-hospital-three-day-registration-initial-followup",
-            "unknown-atlas-moth-colorful-wings-mating-attraction"
+            "unknown-atlas-moth-colorful-wings-mating-attraction",
+            "unknown-hmpv-gorilla-human-to-animal-transmission"
           ],
           "examples": [
             {

@@ -8,7 +8,7 @@
 
 **新 AI / 新对话请从 [AI_HANDOFF.md](AI_HANDOFF.md) 开始**，再读 [STUDY_FRAMEWORK.md](STUDY_FRAMEWORK.md)、[AGENTS.md](AGENTS.md)。旧知识库仅历史归档。
 
-一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前论证逻辑收录 50 道题、形式逻辑收录 28 道题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
+一个可通过 GitHub Pages 或本地 HTTP 服务使用、支持 Supabase 登录同步的错题本。目前论证逻辑收录 51 道题、形式逻辑收录 28 道题，包含完整题干、选项和解析；旧题保留已有原图，新题不再保存截图。
 
 ## 当前状态
 

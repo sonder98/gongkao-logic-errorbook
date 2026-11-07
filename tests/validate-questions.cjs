@@ -35,7 +35,11 @@ for(const [id,answer] of newArgumentBatch){
  assert.equal(item.image,'');
 }
 assert.equal(q.find(x=>x.id==='unknown-atlas-moth-colorful-wings-mating-attraction').important,true,'moth reasoning must be marked important');
-assert.equal(q.length,50,'argument catalog count');
+const gorilla=q.find(x=>x.id==='unknown-hmpv-gorilla-human-to-animal-transmission');
+assert.ok(gorilla&&gorilla.answer==='C'&&gorilla.category==='由果推因','HMPV gorilla exercise incomplete');
+assert.equal(gorilla.options.length,4);
+assert.equal(gorilla.image,'');
+assert.equal(q.length,51,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));

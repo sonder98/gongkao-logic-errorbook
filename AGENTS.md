@@ -65,7 +65,7 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 网站顶部是两个模块、各自两个 Tab：论证逻辑·知识体系/错题练习，形式逻辑·知识体系/错题练习。
 - 原有 `questions.json`、`knowledge.json` 全部属于论证逻辑，禁止因模块改名迁移历史 ID、答题记录或知识链接；旧 `#knowledge/<id>`、`#practice/<id>` 继续指向论证逻辑。
 - 形式逻辑独立使用 `formal-questions.json`、`formal-knowledge.json`，新 ID 使用 `formal-` 前缀；其 URL 为 `#formal/knowledge[/<id>]`、`#formal/practice[/<id>]`。
-- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-07，形式逻辑28题、12知识点，论证逻辑50题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
+- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-07，形式逻辑28题、12知识点，论证逻辑51题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
 - 同一账号的个人进度仍以全局唯一的 question_id 存在现有 Supabase 表中，不修改 schema。
 
 ## 形式逻辑近期讲解与录入规则
@@ -110,3 +110,8 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 论证逻辑当前 **50题、31知识点**；新录入两题：医院“一次挂号管三天”A（`unknown-hospital-three-day-registration-initial-followup`），大蚕蛾绚丽翅膀A（`unknown-atlas-moth-colorful-wings-mating-attraction`，重点题）。两题均归 `由因推果`，关联 `cause-overview`、`build-remove-link`、`match-target`，没有新增 topic。
 - 大蚕蛾题必须按结论“绚丽翅膀→吸引异性→增加交配几率”处理。B“绚丽翅膀也可以迷惑天敌”只是同一原因的另一效果，不等于已经发生的目标结果的竞争他因。A动摇求偶视觉效果的作用条件。不要误归由果推因，更不要因为“为了”一句就认定求偶需求导致翅色进化。
 - 精确定义：由因推果的“C也能带来B”通常不能直接反驳A能产生B，但C若阻断A→B也可削弱；由果推因则可以通过真实存在、解释同一已发生B的竞争原因削弱归因。此前丛冢雉蛋题即后者。禁止将此规则教成“由因推果中他因一律无法削弱”。
+
+## 大猩猩 HMPV 由果推因选非题（2026-11-07）
+
+- 新入库 `unknown-hmpv-gorilla-human-to-animal-transmission`，答案C、类型由果推因／选非；论证逻辑当前51题，形式逻辑28题，共79题。仅修改既有知识点 `effect-overview`、`alternative-causes`、`match-target` 的关联与简要辨析。
+- A猩猩间传播为有限竞争性来源，但不能证实此次传播发生或排除人类最初引入；C无其他非人动物先例，只说明历史情况，不等于本次人传猩猩不可能。不能把A说成已证实他因，也不能把C简单说成“完全无关”。
