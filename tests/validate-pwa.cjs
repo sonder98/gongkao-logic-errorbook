@@ -10,7 +10,7 @@ const sw = read('sw.js');
 
 assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/);
 assert.match(html, /name="apple-mobile-web-app-capable" content="yes"/);
-assert.match(html, /name="apple-mobile-web-app-title" content="公考错题本"/);
+assert.match(html, /name="apple-mobile-web-app-title" content="Exam"/);
 assert.match(html, /name="apple-mobile-web-app-status-bar-style" content="black-translucent"/);
 assert.match(html, /rel="apple-touch-icon" href="\.\/icons\/apple-touch-icon\.png"/);
 assert.match(html, /rel="manifest" href="\.\/manifest\.webmanifest"/);
