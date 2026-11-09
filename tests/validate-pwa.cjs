@@ -21,11 +21,11 @@ assert.equal(manifest.scope, './');
 assert.equal(manifest.display, 'standalone');
 assert.equal(manifest.lang, 'zh-CN');
 assert.ok(manifest.icons.some(icon => icon.sizes === '192x192'));
-assert.ok(manifest.icons.some(icon => icon.sizes === '512x512' && icon.purpose.includes('maskable')));
+assert.ok(manifest.icons.some(icon => icon.sizes === '512x512' && icon.type === 'image/svg+xml' && icon.purpose.includes('maskable')));
+assert.ok(read('icons/icon-512.svg').includes('width="512" height="512"'));
 
 for (const [file, expectedSize] of [
   ['icons/icon-192.png', 192],
-  ['icons/icon-512.png', 512],
   ['icons/apple-touch-icon.png', 180]
 ]) {
   const png = fs.readFileSync(path.join(root, file));
