@@ -88,7 +88,7 @@
 .kb-example{border-radius:11px;background:#f7f9fa;padding:14px 17px;margin:9px 0}
 .kb-example strong{font-size:13px;color:#28525d}
 .kb-example p{font-size:13px;line-height:1.75;color:#4b5f6b;margin:5px 0 0}
-.kb-footer{border-top:1px solid var(--line);margin-top:30px;padding-top:20px}
+.kb-footer{border-top:1px solid var(--line);margin-top:30px;padding-top:20px}.kb-footer-nav{padding-top:18px;border-top:1px solid var(--line);margin-top:20px}.kb-footer-nav .btn{min-height:44px}
 .kb-related-list{display:flex;flex-direction:column;gap:8px;margin:12px 0}
 .kb-related-link{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;width:100%;border:1px solid #e1e9ea;border-radius:11px;background:#fff;padding:12px 14px;color:var(--ink);font-size:13px}
 .kb-related-link:hover{background:#f4fafa;border-color:#93d7c9}
@@ -479,6 +479,14 @@ function renderKnowledge(){
   '</div>':'';
  const examples=topic.examples?.length?'<section class="kb-article-section"><h3>典型例子</h3>'+
   topic.examples.map(ex=>'<div class="kb-example"><strong>'+safe(ex.title)+'</strong><p>'+safe(ex.body)+'</p></div>').join('')+'</section>':'';
+ const topicIndex=knowledgeTopics.findIndex(item=>item.id===topic.id);
+ const previousTopic=knowledgeTopics[topicIndex-1]||null;
+ const nextTopic=knowledgeTopics[topicIndex+1]||null;
+ const knowledgeFooterNav='<nav class="footer-nav kb-footer-nav" aria-label="知识点顺序导航">'+
+  '<button type="button" class="btn" data-kb-prev="'+safe(previousTopic?.id||'')+'" title="'+safe(previousTopic?.title||'已经是第一节')+'" '+(previousTopic?'':'disabled')+'>← 上一节</button>'+
+  '<span class="pill" aria-label="当前知识点序号">'+(topicIndex+1)+' / '+knowledgeTopics.length+'</span>'+
+  '<button type="button" class="btn" data-kb-next="'+safe(nextTopic?.id||'')+'" title="'+safe(nextTopic?.title||'已经是最后一节')+'" '+(nextTopic?'':'disabled')+'>下一节 →</button>'+
+  '</nav>';
  const related=(topic.questionIds||[]).map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
  const relatedHtml=related.length?'<section class="kb-footer"><div class="kb-breadcrumb">配套真题 · '+related.length+' 道</div><div class="kb-related-list">'+
    related.map(q=>'<button type="button" class="kb-related-link" data-open-question="'+safe(q.id)+'"><span>'+safe(q.title)+'</span><span class="kb-related-sub">'+safe(q.exam)+'　→</span></button>').join('')+
@@ -489,9 +497,13 @@ function renderKnowledge(){
   sectionHtml('结构与核心规则',topic.patterns)+
   methods+
   sectionHtml('常见陷阱',topic.pitfalls)+
-  examples+relatedHtml;
+  examples+relatedHtml+knowledgeFooterNav;
  if(currentModule==='data')DataAnalysis.renderMath($('knowledgeCard'));
  $('knowledgeCard').querySelectorAll('[data-open-question]').forEach(button=>button.onclick=()=>openPractice(button.dataset.openQuestion));
+ const previousButton=$('knowledgeCard').querySelector('[data-kb-prev]');
+ const nextButton=$('knowledgeCard').querySelector('[data-kb-next]');
+ if(previousTopic)previousButton.onclick=()=>openKnowledge(previousTopic.id,true);
+ if(nextTopic)nextButton.onclick=()=>openKnowledge(nextTopic.id,true);
  const item=Array.from(nav.querySelectorAll('[data-knowledge-topic]')).find(el=>el.dataset.knowledgeTopic===selectedTopic);
  if(item){
   const rect=item.getBoundingClientRect(),area=nav.getBoundingClientRect();
@@ -537,14 +549,15 @@ function switchView(view,updateHash=true){
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
 }
-function openKnowledge(id){
+function openKnowledge(id,scrollToArticle=false){
  if(!knowledgeTopic(id))return;
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
  switchView('knowledge');
- window.scrollTo({top:0,behavior:'smooth'});
+ if(scrollToArticle)$('knowledgeCard').scrollIntoView({block:'start',behavior:'smooth'});
+ else window.scrollTo({top:0,behavior:'smooth'});
 }
 function openPractice(id){
  if(!QUESTIONS.some(q=>q.id===id))return;
