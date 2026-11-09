@@ -121,3 +121,13 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 
 - 新题 `unknown-tiktaalik-fish-lungs-terrestrial-advantage`，答案A，归类「由果推因／解释型加强」，题源未知。题干解释是肺对陆地生活有显著优势；A说明只有有肺的鱼才能登陆并在陆地存活，直接补强原解释。D只说明鳃供氧量对大型动物有限，没有直接证明肺对陆地生存的优势，不是“排除他因”。
 - 将“直接补充原解释的作用机制、适应优势或关键条件”纳入现有 `effect-overview`，并关联 `match-target`；不新建知识点。论证逻辑52题／31知识点，形式逻辑28题／12知识点，共80题。题目、知识与测试同步；不改旧题ID和个人进度结构。
+
+
+## iOS PWA 外壳（2026-11-09）
+
+- 网站同时作为 iOS Safari 可添加到主屏幕的 PWA 使用；实现文件为 `manifest.webmanifest`、`sw.js`、`icons/` 与 `docs/PWA_IOS.md`。
+- **题库与知识库的真源、格式和更新方式不变**：仍由各模块 Agent 直接维护原有 JSON 文件并提交 GitHub。PWA 不引入新的题库后台、构建步骤、数据转换或录入流程。
+- 页面已有的 JSON `fetch(..., { cache: 'no-cache' })` 必须保持；Service Worker 对同源页面、资源和 JSON 采用 network-first，联网优先取 GitHub Pages 最新版本，只有请求失败时才使用最近一次成功缓存。严禁将 JSON 改为 cache-first / stale-while-revalidate。
+- 新增一级静态资源时，同步检查是否应加入 `sw.js` 的 `SHELL_FILES`；新增数据 JSON 时加入 `DATA_FILES`。不要为了普通题库内容更新而改 Service Worker。
+- 不改题目 ID、知识点 ID、JSON schema、Supabase 表结构、登录/云同步及本地进度逻辑来实现 PWA。
+- PWA 检查：`node tests/validate-pwa.cjs`；完整安装与离线验收见 `docs/PWA_IOS.md` 和 `TESTING.md`。
