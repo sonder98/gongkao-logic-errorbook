@@ -17,3 +17,4 @@ jobs:
           node tests/validate-questions.cjs
           node tests/validate-knowledge.cjs
           node tests/validate-data-analysis.cjs
+          node tests/validate-pwa.cjs
