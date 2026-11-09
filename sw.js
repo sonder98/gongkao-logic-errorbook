@@ -15,7 +15,7 @@ const SHELL_FILES = [
   './data-analysis.js',
   './manifest.webmanifest',
   './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icons/icon-512.svg',
   './icons/apple-touch-icon.png'
 ];
 
