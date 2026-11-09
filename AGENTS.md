@@ -65,7 +65,7 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 网站顶部是两个模块、各自两个 Tab：论证逻辑·知识体系/错题练习，形式逻辑·知识体系/错题练习。
 - 原有 `questions.json`、`knowledge.json` 全部属于论证逻辑，禁止因模块改名迁移历史 ID、答题记录或知识链接；旧 `#knowledge/<id>`、`#practice/<id>` 继续指向论证逻辑。
 - 形式逻辑独立使用 `formal-questions.json`、`formal-knowledge.json`，新 ID 使用 `formal-` 前缀；其 URL 为 `#formal/knowledge[/<id>]`、`#formal/practice[/<id>]`。
-- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-07，形式逻辑28题、12知识点，论证逻辑51题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
+- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-09，形式逻辑28题、12知识点，论证逻辑52题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
 - 同一账号的个人进度仍以全局唯一的 question_id 存在现有 Supabase 表中，不修改 schema。
 
 ## 形式逻辑近期讲解与录入规则
@@ -115,3 +115,9 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 
 - 新入库 `unknown-hmpv-gorilla-human-to-animal-transmission`，答案C、类型由果推因／选非；论证逻辑当前51题，形式逻辑28题，共79题。仅修改既有知识点 `effect-overview`、`alternative-causes`、`match-target` 的关联与简要辨析。
 - A猩猩间传播为有限竞争性来源，但不能证实此次传播发生或排除人类最初引入；C无其他非人动物先例，只说明历史情况，不等于本次人传猩猩不可能。不能把A说成已证实他因，也不能把C简单说成“完全无关”。
+
+
+## 提塔利克鱼登陆：由果推因的解释型加强（2026-11-09）
+
+- 新题 `unknown-tiktaalik-fish-lungs-terrestrial-advantage`，答案A，归类「由果推因／解释型加强」，题源未知。题干解释是肺对陆地生活有显著优势；A说明只有有肺的鱼才能登陆并在陆地存活，直接补强原解释。D只说明鳃供氧量对大型动物有限，没有直接证明肺对陆地生存的优势，不是“排除他因”。
+- 将“直接补充原解释的作用机制、适应优势或关键条件”纳入现有 `effect-overview`，并关联 `match-target`；不新建知识点。论证逻辑52题／31知识点，形式逻辑28题／12知识点，共80题。题目、知识与测试同步；不改旧题ID和个人进度结构。

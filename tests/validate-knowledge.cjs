@@ -26,6 +26,13 @@ for(const id of ["unknown-hospital-three-day-registration-initial-followup","unk
 }
 const causeOverview=book.sections.flatMap(s=>s.topics).find(t=>t.id==='cause-overview');
 assert.ok(causeOverview.pitfalls.some(s=>s.includes('仍可削弱')&&s.includes('一律无效')),'must keep direction-vs-other-cause caveat');
+for(const topicId of ['effect-overview','match-target']){
+ const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
+ assert.ok(topic?.questionIds.includes('unknown-tiktaalik-fish-lungs-terrestrial-advantage'),'Tiktaalik question must link to '+topicId);
+}
+const effectOverview=book.sections.flatMap(s=>s.topics).find(t=>t.id==='effect-overview');
+assert.ok(effectOverview.patterns.some(s=>s.includes('解释型加强')&&s.includes('适应优势')),'missing explanation-strengthening method');
+assert.ok(effectOverview.examples.some(x=>x.title.includes('提塔利克鱼登陆')),'missing Tiktaalik example');
 for(const topicId of ['effect-overview','alternative-causes','match-target']){
  const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
  assert.ok(topic?.questionIds.includes('unknown-hmpv-gorilla-human-to-animal-transmission'),'HMPV question must link to '+topicId);
