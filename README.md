@@ -1,6 +1,6 @@
-# 公考学习 · 知识体系与交互错题本
+# Exam
 
-**iPhone / iOS PWA：** 本站可在 iPhone Safari 中通过「分享 → 添加到主屏幕」安装为独立应用窗口。支持最近成功加载的页面、题库与知识库离线兜底；联网时始终优先获取 GitHub Pages 最新 JSON。安装与离线说明见 [iOS PWA 使用指南](docs/PWA_IOS.md)。PWA 只负责应用外壳与缓存，不改变各模块 Agent 维护 JSON 的方式。
+**iPhone / iOS PWA（应用名称：Exam）：** 本站可在 iPhone Safari 中通过「分享 → 添加到主屏幕」安装为独立应用窗口。支持最近成功加载的页面、题库与知识库离线兜底；联网时始终优先获取 GitHub Pages 最新 JSON。安装与离线说明见 [iOS PWA 使用指南](docs/PWA_IOS.md)。PWA 只负责应用外壳与缓存，不改变各模块 Agent 维护 JSON 的方式。
 
 **2026-11-07 新增资料分析模块：** 顶部增加“资料分析 → 知识体系 / 错题练习”。先搭建框架、后随实际学习逐步收题：data-materials.json 与 data-questions.json 当前均为空；data-knowledge.json 按实际课程体系建立第2至13课共12个节点，其中第2、3、4课统一归入「速算」；其余按课程主题分组，暂不预设未核实的公式和技巧。资料分析支持多题共用材料、JSON 统计表格、简单 SVG 图表、独立懒加载图片、LaTeX/KaTeX 公式和分步解题解析。手机端材料优先纵向排列；桌面端使用材料/题目双栏。完整数据格式见 [资料分析开发说明](docs/DATA_ANALYSIS.md)。
 
