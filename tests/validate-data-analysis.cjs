@@ -14,6 +14,19 @@ const formalBook=JSON.parse(fs.readFileSync(path.join(root,'formal-knowledge.jso
 assert.ok(DA.validate(materials,questions,book,
   [...argument,...formal].map(q=>q.id),
   [...argumentBook.sections,...formalBook.sections].flatMap(s=>s.topics.map(t=>t.id))));
+const courseTopics=book.sections.flatMap(section=>section.topics);
+assert.equal(courseTopics.length,12,'资料分析课程节点应覆盖第2至13课');
+assert.equal(book.sections[0].chapter,'一、速算');
+assert.deepEqual(book.sections[0].topics.map(t=>t.title),[
+  '第2课 · 数据分析','第3课 · 放缩运算','第4课 · 快速估算'
+]);
+assert.deepEqual(courseTopics.map(t=>t.title),[
+  '第2课 · 数据分析','第3课 · 放缩运算','第4课 · 快速估算',
+  '第5课 · 增速的累积与拆分','第6课 · 拉平增长率',
+  '第7课 · 分式混合','第8课 · 分式比较大小','第9课 · 比重特殊问题',
+  '第10课 · 年均变化','第11课 · 增长贡献率与拉动增长率',
+  '第12课 · 容斥问题','第13课 · 假设代入'
+]);
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[

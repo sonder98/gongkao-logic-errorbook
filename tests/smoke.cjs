@@ -321,11 +321,14 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     `narrow mobile page overflows horizontally: ${JSON.stringify(narrowMobileLayout)}`
   );
 
-  // Data analysis scaffold: 4 knowledge topics, empty official bank, old modules unaffected.
+  // Data analysis course map: 12 lesson nodes, courses 2-4 grouped under speed calculation.
   await page.locator('#tabDataKnowledge').click();
   assert.equal(await page.locator('#tabDataKnowledge').getAttribute('aria-selected'),'true');
   assert.match(page.url(),/#data\/knowledge/);
-  assert.match(await page.locator('#knowledgeCard').innerText(),/增长量、增长率与基期量/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/第2课 · 数据分析/);
+  assert.match(await page.locator('#knowledgeNav').innerText(),/速算/);
+  assert.match(await page.locator('#knowledgeNav').innerText(),/放缩运算/);
+  assert.match(await page.locator('#knowledgeNav').innerText(),/快速估算/);
   await page.locator('#tabDataPractice').click();
   assert.equal(await page.locator('#tabDataPractice').getAttribute('aria-selected'),'true');
   assert.equal(await page.locator('.nav-item').count(),0);

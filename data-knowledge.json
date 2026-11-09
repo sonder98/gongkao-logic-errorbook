@@ -1,100 +1,147 @@
 {
-  "title": "资料分析 · 知识体系",
-  "version": "1.0.0",
-  "description": "基础公式框架；解题规则将随真实练习逐步完善。",
+  "title": "资料分析 · 课程知识体系",
+  "version": "1.1.0",
+  "description": "按用户实际课程目录组织；课程内容逐步学习、核实后再补充，不预设未确认的公式和技巧。",
   "sections": [
     {
-      "id": "data-growth",
-      "chapter": "一、增长分析",
-      "title": "增长与基期",
+      "id": "data-speed",
+      "chapter": "一、速算",
+      "title": "速算",
       "topics": [
         {
-          "id": "data-topic-growth-basics",
-          "title": "增长量、增长率与基期量",
-          "summary": "先定位现期和基期，再辨别问增长率还是增长量。以下为基础公式，速算技巧随真题补充。",
-          "recognize": [
-            "增长了多少：求增长量；增长了百分之几：求增长率。",
-            "上年、去年、同期通常表示基期；本年、今年为现期。"
-          ],
-          "patterns": [
-            "\\(\\text{增长量}=\\text{现期量}-\\text{基期量}\\)",
-            "\\(\\text{增长率}=\\frac{\\text{现期量}-\\text{基期量}}{\\text{基期量}}\\)",
-            "\\(\\text{基期量}=\\frac{\\text{现期量}}{1+\\text{增长率}}\\)"
-          ],
-          "pitfalls": [
-            "增长率的分母是基期量，不是现期量。",
-            "下降时增长率为负数；单位和统计口径必须一致。"
-          ],
+          "id": "data-topic-course-02-data-analysis",
+          "title": "第2课 · 数据分析",
+          "summary": "对应课程第2课《数据分析》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-03-scaling",
+          "title": "第3课 · 放缩运算",
+          "summary": "对应课程第3课《放缩运算》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-04-estimation",
+          "title": "第4课 · 快速估算",
+          "summary": "对应课程第4课《快速估算》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
           "questionIds": []
         }
       ]
     },
     {
-      "id": "data-share",
-      "chapter": "二、比重分析",
-      "title": "比重与百分点",
+      "id": "data-growth-rate",
+      "chapter": "二、增长率计算",
+      "title": "增长率计算",
       "topics": [
         {
-          "id": "data-topic-share-basics",
-          "title": "比重及比重变化",
-          "summary": "先分清部分量与整体量，比较比重变化时要注意百分点与百分比的区别。",
-          "recognize": [
-            "问“占……的比重”先定位分子（部分）和分母（整体）。"
-          ],
-          "patterns": [
-            "\\(\\text{比重}=\\frac{\\text{部分量}}{\\text{整体量}}\\)",
-            "\\(\\text{比重变化（百分点）}=\\text{现期比重}-\\text{基期比重}\\)"
-          ],
-          "pitfalls": [
-            "两个百分数相减得到的是百分点；不要当成相对增长率。"
-          ],
+          "id": "data-topic-course-05-growth-decomposition",
+          "title": "第5课 · 增速的累积与拆分",
+          "summary": "对应课程第5课《增速的累积与拆分》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-06-flatten-growth",
+          "title": "第6课 · 拉平增长率",
+          "summary": "对应课程第6课《拉平增长率》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
           "questionIds": []
         }
       ]
     },
     {
-      "id": "data-average",
-      "chapter": "三、平均数",
-      "title": "平均数与倍数",
+      "id": "data-fraction-share",
+      "chapter": "三、分式与比重",
+      "title": "分式与比重",
       "topics": [
         {
-          "id": "data-topic-average-basics",
-          "title": "平均数与倍数的基本识别",
-          "summary": "区分总量与份数，以及“是几倍”和“多几倍”的问法。",
-          "recognize": [
-            "每人、每家、单位面积等通常提示平均数；“是……的几倍”提示倍数。"
-          ],
-          "patterns": [
-            "\\(\\text{平均数}=\\frac{\\text{总量}}{\\text{份数}}\\)",
-            "\\(\\text{倍数}=\\frac{A}{B}\\)"
-          ],
-          "pitfalls": [
-            "“A 是 B 的几倍”与“A 比 B 多几倍”相差 1。"
-          ],
+          "id": "data-topic-course-07-fraction-mix",
+          "title": "第7课 · 分式混合",
+          "summary": "对应课程第7课《分式混合》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-08-fraction-compare",
+          "title": "第8课 · 分式比较大小",
+          "summary": "对应课程第8课《分式比较大小》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-09-share-special",
+          "title": "第9课 · 比重特殊问题",
+          "summary": "对应课程第9课《比重特殊问题》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
           "questionIds": []
         }
       ]
     },
     {
-      "id": "data-method",
-      "chapter": "四、考场计算",
-      "title": "计算与核对",
+      "id": "data-annual-contribution",
+      "chapter": "四、年均与贡献",
+      "title": "年均与贡献",
       "topics": [
         {
-          "id": "data-topic-calc-basics",
-          "title": "定位、列式、估算与核对",
-          "summary": "先确定问法与对应数据，列式后结合选项差距选择精算或估算，不一律做长除法。",
-          "recognize": [
-            "核对年份、单位、统计指标与选项精度。"
-          ],
-          "patterns": [
-            "先列式，再判断选项差距；选项差距足够大时优先估算。",
-            "多步骤题保持关键中间结果，不提前过度四舍五入。"
-          ],
-          "pitfalls": [
-            "图表百分比与绝对量混用。",
-            "错位年份或单位导致结果数量级错误。"
-          ],
+          "id": "data-topic-course-10-annual-change",
+          "title": "第10课 · 年均变化",
+          "summary": "对应课程第10课《年均变化》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-11-growth-contribution",
+          "title": "第11课 · 增长贡献率与拉动增长率",
+          "summary": "对应课程第11课《增长贡献率与拉动增长率》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        }
+      ]
+    },
+    {
+      "id": "data-other-types",
+      "chapter": "五、其他题型",
+      "title": "其他题型",
+      "topics": [
+        {
+          "id": "data-topic-course-12-inclusion-exclusion",
+          "title": "第12课 · 容斥问题",
+          "summary": "对应课程第12课《容斥问题》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
+          "questionIds": []
+        },
+        {
+          "id": "data-topic-course-13-assumption-substitution",
+          "title": "第13课 · 假设代入",
+          "summary": "对应课程第13课《假设代入》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "recognize": [],
+          "patterns": [],
+          "pitfalls": [],
           "questionIds": []
         }
       ]

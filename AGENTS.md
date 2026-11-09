@@ -4,7 +4,7 @@
 
 ## 新模块：资料分析（2026-11-07）
 
-资料分析正在从零开始收录，新增文件为 data-materials.json（共用材料）、data-questions.json（真题）、data-knowledge.json（知识点）、data-analysis.js（渲染）、data-analysis.css（布局）、docs/DATA_ANALYSIS.md（完整格式与工作规程）。**当前题库为空，知识库只有基础公式，不要把示例题当作原题入库。**
+资料分析正在从零开始收录，新增文件为 data-materials.json（共用材料）、data-questions.json（真题）、data-knowledge.json（知识点）、data-analysis.js（渲染）、data-analysis.css（布局）、docs/DATA_ANALYSIS.md（完整格式与工作规程）。**当前题库为空；知识目录已按实际课程安排建立第2至13课共12个节点，其中第2、3、4课统一归入「速算」。当前节点只是课程目录，不代表已掌握视频内容；必须在用户学习、提供讲义或核对题目后再补充公式和技巧，不得根据标题臆测。**
 
 学习侧：按“考点识别 → 定位数据 → 公式列式 → 考场速算 → 易错点”讲解；知识点优先复用现有方法，确认新规律时再补充。材料里数值、单位、统计范围和选项必须准确核对，来源未知如实标记，不凭空补数值。
 
