@@ -502,8 +502,8 @@ function renderKnowledge(){
  $('knowledgeCard').querySelectorAll('[data-open-question]').forEach(button=>button.onclick=()=>openPractice(button.dataset.openQuestion));
  const previousButton=$('knowledgeCard').querySelector('[data-kb-prev]');
  const nextButton=$('knowledgeCard').querySelector('[data-kb-next]');
- if(previousTopic)previousButton.onclick=()=>openKnowledge(previousTopic.id);
- if(nextTopic)nextButton.onclick=()=>openKnowledge(nextTopic.id);
+ if(previousTopic)previousButton.onclick=()=>openKnowledge(previousTopic.id,true);
+ if(nextTopic)nextButton.onclick=()=>openKnowledge(nextTopic.id,true);
  const item=Array.from(nav.querySelectorAll('[data-knowledge-topic]')).find(el=>el.dataset.knowledgeTopic===selectedTopic);
  if(item){
   const rect=item.getBoundingClientRect(),area=nav.getBoundingClientRect();
@@ -549,14 +549,15 @@ function switchView(view,updateHash=true){
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
 }
-function openKnowledge(id){
+function openKnowledge(id,scrollToArticle=false){
  if(!knowledgeTopic(id))return;
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
  switchView('knowledge');
- window.scrollTo({top:0,behavior:'smooth'});
+ if(scrollToArticle)$('knowledgeCard').scrollIntoView({block:'start',behavior:'smooth'});
+ else window.scrollTo({top:0,behavior:'smooth'});
 }
 function openPractice(id){
  if(!QUESTIONS.some(q=>q.id===id))return;
