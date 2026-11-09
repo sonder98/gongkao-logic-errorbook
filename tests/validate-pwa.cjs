@@ -13,7 +13,7 @@ assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,
 assert.match(html, /name="apple-mobile-web-app-capable" content="yes"/);
 assert.match(html, /name="apple-mobile-web-app-title" content="Exam"/);
 assert.match(html, /name="apple-mobile-web-app-status-bar-style" content="black-translucent"/);
-assert.match(html, /rel="apple-touch-icon" sizes="192x192" href="\\.\\/icons\\/apple-touch-icon-v3\\.png"/);
+assert.match(html, /rel="apple-touch-icon" sizes="192x192" href="\.\/icons\/apple-touch-icon-v3\.png"/);
 assert.match(html, /rel="manifest" href="\.\/manifest\.webmanifest"/);
 assert.match(html, /navigator\.serviceWorker\.register\('\.\/sw\.js'/);
 
