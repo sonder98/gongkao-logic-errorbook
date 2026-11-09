@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "公考学习 · 知识体系与错题本",
+  "short_name": "公考错题本",
+  "description": "公考论证逻辑、形式逻辑与资料分析的知识体系和交互错题练习。",
+  "lang": "zh-CN",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f5f6f7",
+  "theme_color": "#142a34",
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
