@@ -75,7 +75,7 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 网站顶部是两个模块、各自两个 Tab：论证逻辑·知识体系/错题练习，形式逻辑·知识体系/错题练习。
 - 原有 `questions.json`、`knowledge.json` 全部属于论证逻辑，禁止因模块改名迁移历史 ID、答题记录或知识链接；旧 `#knowledge/<id>`、`#practice/<id>` 继续指向论证逻辑。
 - 形式逻辑独立使用 `formal-questions.json`、`formal-knowledge.json`，新 ID 使用 `formal-` 前缀；其 URL 为 `#formal/knowledge[/<id>]`、`#formal/practice[/<id>]`。
-- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-09，形式逻辑28题、12知识点，论证逻辑52题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
+- 形式逻辑四章均已阶段性学完：翻译（包含集合五模型）、矛盾、真假、综合；“集合推理”不单列一级章，固定 topic 为 `formal-translation-quantifiers`。截至2026-11-10，形式逻辑30题、12知识点，论证逻辑54题、31知识点。完整状态见 `AI_HANDOFF.md` 文首。
 - 同一账号的个人进度仍以全局唯一的 question_id 存在现有 Supabase 表中，不修改 schema。
 
 ## 形式逻辑近期讲解与录入规则
@@ -141,3 +141,9 @@ node tests/smoke.cjs        # 需要 Playwright 与浏览器环境
 - 新增一级静态资源时，同步检查是否应加入 `sw.js` 的 `SHELL_FILES`；新增数据 JSON 时加入 `DATA_FILES`。不要为了普通题库内容更新而改 Service Worker。
 - 不改题目 ID、知识点 ID、JSON schema、Supabase 表结构、登录/云同步及本地进度逻辑来实现 PWA。
 - PWA 检查：`node tests/validate-pwa.cjs`；完整安装与离线验收见 `docs/PWA_IOS.md` 和 `TESTING.md`。
+
+
+## 综合推理毕业去向题（2026-11-10）
+
+- 题目 `formal-unknown-four-roommates-graduation-choices-disjoint-options` 归入形式逻辑「综合推理—分组方式」，答案B。最短链：甲仅考公／国企，乙由“除非和丙一起创业，否则考研”只可能考研／创业，两者可选范围无交集，故甲乙丙绝不可能同选。不要在教学中以先代入B、再通过丙找矛盾为主线。既有 `formal-comprehensive-grouping` 和 `formal-comprehensive-overview` 复用，未新增知识项。
+- 本次入库后：论证54题、形式30题（综合9题），总计84题。后续以真实JSON为准，旧题ID／笔记云端数据不得变更。

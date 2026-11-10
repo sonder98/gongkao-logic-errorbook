@@ -116,7 +116,12 @@ const spiritual=formal.find(x=>x.id==='formal-unknown-spiritual-production-consu
 assert.ok(spiritual&&spiritual.answer==='A'&&spiritual.category==='翻译推理','missing necessary-condition translation question');
 assert.equal(spiritual.options.length,4);
 assert.equal(spiritual.image,'');
-assert.equal(formal.length,29,'formal catalog count');
+const roommates=formal.find(x=>x.id==='formal-unknown-four-roommates-graduation-choices-disjoint-options');
+assert.ok(roommates&&roommates.answer==='B'&&roommates.category==='综合推理','missing graduation roommate impossibility question');
+assert.equal(roommates.options.length,4);
+assert.equal(roommates.image,'');
+assert.ok(roommates.reason.includes('无交集'),'roommate case must teach disjoint feasible options');
+assert.equal(formal.length,30,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');

@@ -258,7 +258,8 @@
             "formal-unknown-professors-provinces-subjects",
             "formal-unknown-roommates-provinces-universities",
             "formal-unknown-four-streets-income-rank",
-            "formal-unknown-five-students-age-major-groups"
+            "formal-unknown-five-students-age-major-groups",
+            "formal-unknown-four-roommates-graduation-choices-disjoint-options"
           ]
         },
         {
@@ -335,17 +336,20 @@
             "【剩余位置不足】互不重合的对象还需要4个位置，却只剩3个，则原假设不成立。",
             "【互斥恰好覆盖】6个互斥对象需要6个不同位置且仅有6个位置，则各占一格，不留空位。",
             "【绑定与排他】先把必须同组的人看成一个整体，再结合异组条件检查小组容量。",
-            "【选最短链】先数人和位置，再处理绑定、互斥；推到答案即停。"
+            "【选最短链】先数人和位置，再处理绑定、互斥；推到答案即停。",
+            "【选择范围无交集】先把每个人允许的去向列成小集合：如甲只能考公或国企、乙只能考研或创业，两者无交集，就能直接否定“甲乙丙三人同选”，无需画表或逐项代入。"
           ],
           "pitfalls": [
             "两组人数差1本身不能决定谁进较大组；必须用绑定、排他造成真正的容量矛盾。",
-            "恰好覆盖需先确认互斥对象不能共用一个位置，且都必须被安排。"
+            "恰好覆盖需先确认互斥对象不能共用一个位置，且都必须被安排。",
+            "“除非与某人一起创业，否则考研”限制了该人的全部去向：要么一起创业，要么考研；不允许把其余意向当作自由选择。"
           ],
           "questionIds": [
             "formal-unknown-five-skiers-four-events",
             "formal-unknown-four-roads-paired-survey",
             "formal-unknown-weekly-movies-cover-days",
-            "formal-unknown-five-students-age-major-groups"
+            "formal-unknown-five-students-age-major-groups",
+            "formal-unknown-four-roommates-graduation-choices-disjoint-options"
           ]
         }
       ]
