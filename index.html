@@ -336,7 +336,9 @@ async function pullCloud(){
  });
  state=merged;
  persistUserState();
- render();uiAuth();
+ // The login refresh may complete while a user is editing a local note draft.
+ if(document.activeElement?.id!=='note')render();
+ uiAuth();
  setStatus('已登录 · 已读取 '+(data||[]).length+' 条云端记录'+(pending.size?'，还有 '+pending.size+' 条本机改动待同步':''),'good');
  if(pending.size)pushCloud();
 }
