@@ -261,6 +261,53 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   assert.equal(await page.locator('.choice').count(), 5);
 
+  // iPad: Pencil/desktop pointer strokes on a nearly transparent question overlay.
+  assert.equal(await page.locator('#scratchOverlay').isVisible(),false);
+  await page.locator('#openScratch').click();
+  assert.equal(await page.locator('#scratchOverlay').isVisible(),true);
+  assert.equal(await page.locator('#openScratch').getAttribute('aria-expanded'),'true');
+  const overlayShade=await page.locator('#scratchOverlay').evaluate(el=>getComputedStyle(el).backgroundColor);
+  assert.match(overlayShade,/rgba\([^)]*,\s*0\.0\d+\)/,'Question remains readable under overlay');
+  const canvasBox=await page.locator('#scratchCanvas').boundingBox();
+  assert.ok(canvasBox.width>100&&canvasBox.height>100,'Canvas must cover question region');
+  const drawX=canvasBox.x+Math.min(60,canvasBox.width*.14);
+  const drawY=canvasBox.y+Math.min(150,canvasBox.height*.36);
+  await page.mouse.move(drawX,drawY);
+  await page.mouse.down();
+  await page.mouse.move(drawX+55,drawY+30,{steps:7});
+  await page.mouse.up();
+  const sketchCount=()=>page.evaluate(()=>Object.keys(localStorage)
+    .filter(key=>key.startsWith('exam_scratch_v1:'))
+    .reduce((n,key)=>n+JSON.parse(localStorage.getItem(key)||'[]').length,0));
+  assert.equal(await sketchCount(),1,'Mouse stroke persists locally');
+  await page.locator('#scratchMode').click();
+  assert.equal(await page.locator('#scratchOverlay').evaluate(el=>el.classList.contains('is-scrolling')),true);
+  await page.locator('#scratchMode').click();
+  assert.equal(await page.locator('#scratchOverlay').evaluate(el=>el.classList.contains('is-scrolling')),false);
+  await page.locator('#scratchUndo').click();
+  assert.equal(await sketchCount(),0,'Undo removes last stroke');
+  await page.locator('#scratchCanvas').evaluate(canvas=>{
+    const rect=canvas.getBoundingClientRect();
+    for(const [type,x,y] of [
+      ['pointerdown',60,100],['pointermove',115,128],['pointerup',115,128]
+    ]){
+      canvas.dispatchEvent(new PointerEvent(type,{bubbles:true,pointerType:'pen',
+        pointerId:991,isPrimary:true,button:0,clientX:rect.left+x,clientY:rect.top+y}));
+    }
+  });
+  assert.equal(await sketchCount(),1,'Pencil pointer events draw');
+  page.once('dialog',dialog=>dialog.dismiss());
+  await page.locator('#scratchClear').click();
+  assert.equal(await sketchCount(),1,'Cancelled clear does not erase');
+  await page.locator('#scratchDone').click();
+  await page.locator('#openScratch').click();
+  assert.equal(await sketchCount(),1,'Closing and reopening preserves strokes');
+  page.once('dialog',dialog=>dialog.accept());
+  await page.locator('#scratchClear').click();
+  assert.equal(await sketchCount(),0,'Confirmed clear erases current question');
+  await page.locator('#scratchDone').click();
+  assert.equal(await page.locator('#scratchOverlay').isVisible(),false);
+  assert.equal(await page.locator('#openScratch').getAttribute('aria-expanded'),'false');
   await page.locator('[data-answer="E"]').click();
   await page.locator('#submit').click();
   assert.match(await page.locator('.result').innerText(), /答对了/);
