@@ -183,6 +183,15 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('.nav-item').count(),29);
   assert.match(page.url(),/#formal\/practice\/formal-2013-jilin-not-all-people-like-you$/);
   assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g,''),'0/29');
+  assert.equal((await page.locator('#show').innerText()).trim(),'查看解析');
+  assert.equal(await page.locator('#show').getAttribute('aria-expanded'),'false');
+  await page.locator('#show').click();
+  assert.match(await page.locator('.result').innerText(),/正确答案 B/);
+  assert.equal((await page.locator('#show').innerText()).trim(),'收起解析');
+  assert.equal(await page.locator('#show').getAttribute('aria-expanded'),'true');
+  await page.locator('#show').click();
+  assert.equal(await page.locator('.result').count(),0);
+  assert.equal((await page.locator('#show').innerText()).trim(),'查看解析');
   await page.locator('#show').click();
   assert.match(await page.locator('.result').innerText(),/正确答案 B/);
   await page.locator('[data-id="formal-2015-fujian-disaster-unless-disagreement"]').click();
@@ -254,6 +263,12 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   await page.locator('[data-answer="E"]').click();
   await page.locator('#submit').click();
+  assert.match(await page.locator('.result').innerText(), /答对了/);
+  assert.equal((await page.locator('#show').innerText()).trim(),'收起解析');
+  await page.locator('#show').click();
+  assert.equal(await page.locator('.result').count(),0,'Submitted analysis can be collapsed');
+  assert.equal((await page.locator('#show').innerText()).trim(),'查看解析');
+  await page.locator('#show').click();
   assert.match(await page.locator('.result').innerText(), /答对了/);
 
   const shortNoteHeight=await page.locator('#note').evaluate(el=>el.getBoundingClientRect().height);
