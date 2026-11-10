@@ -170,5 +170,5 @@
    if(mounted?.key===key){mounted.strokes=[];mounted.undo.disabled=true;resize(mounted)}
   }
  }
- global.ExamScratch={mount,clearQuestions,isDrawing:()=>mounted?.pointerId!==null,isOpen:()=>!!mounted?.open};
+ global.ExamScratch={mount,clearQuestions,isDrawing:()=>!!mounted&&mounted.pointerId!==null,isOpen:()=>!!mounted?.open};
 })(window);

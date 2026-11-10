@@ -53,8 +53,10 @@ const context={
 vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname,'../scratch-overlay.js'),'utf8'),context);
 const scratch=context.window.ExamScratch;
 const key='exam_scratch_v1:guest:q1';
+assert.equal(scratch.isDrawing(),false,'Before mounting there is no active Pencil stroke');
 let elements=fresh();
 scratch.mount('q1','guest');
+assert.equal(scratch.isDrawing(),false,'Idle canvas is not drawing');
 assert.equal(scratch.isOpen(),false);
 elements.openScratch.onclick();
 assert.equal(scratch.isOpen(),true);
