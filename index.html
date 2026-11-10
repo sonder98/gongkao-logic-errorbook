@@ -314,6 +314,7 @@ async function pushCloud(){
  syncing=false;
  // A background sync must never rebuild the textarea while the user is typing.
  if(document.activeElement?.id!=='note')render();
+ else updateNoteControls(active);
  if(conflicts)setStatus('发现 '+conflicts+' 道题存在双端修改，请在题目中选择保留版本','bad');
  else if(!failed)setStatus(pending.size?'部分已同步，其余改动继续上传…':'已登录 · 改动已同步到云端','good');
  if(pending.size&&!failed)scheduleSync();
@@ -338,6 +339,7 @@ async function pullCloud(){
  persistUserState();
  // The login refresh may complete while a user is editing a local note draft.
  if(document.activeElement?.id!=='note')render();
+ else updateNoteControls(active);
  uiAuth();
  setStatus('已登录 · 已读取 '+(data||[]).length+' 条云端记录'+(pending.size?'，还有 '+pending.size+' 条本机改动待同步':''),'good');
  if(pending.size)pushCloud();
