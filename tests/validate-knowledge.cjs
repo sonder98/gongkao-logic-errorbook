@@ -25,14 +25,14 @@ for(const id of ["unknown-hospital-three-day-registration-initial-followup","unk
  }
 }
 const causeOverview=book.sections.flatMap(s=>s.topics).find(t=>t.id==='cause-overview');
-assert.ok(causeOverview.pitfalls.some(s=>s.includes('仍可削弱')&&s.includes('一律无效')),'must keep direction-vs-other-cause caveat');
+assert.ok(causeOverview.patterns.some(s=>s.includes('C也能造成B')&&s.includes('阻断A')),'must keep other-cause-versus-blocking distinction');
 for(const topicId of ['effect-overview','match-target']){
  const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
  assert.ok(topic?.questionIds.includes('unknown-tiktaalik-fish-lungs-terrestrial-advantage'),'Tiktaalik question must link to '+topicId);
 }
 const effectOverview=book.sections.flatMap(s=>s.topics).find(t=>t.id==='effect-overview');
-assert.ok(effectOverview.patterns.some(s=>s.includes('解释型加强')&&s.includes('适应优势')),'missing explanation-strengthening method');
-assert.ok(effectOverview.examples.some(x=>x.title.includes('提塔利克鱼登陆')),'missing Tiktaalik example');
+assert.ok(effectOverview.patterns.some(s=>s.includes('解释')&&s.includes('适应优势')),'missing explanation-strengthening method');
+assert.ok(effectOverview.examples.some(x=>(x.title+x.body).includes('肺')&&(x.title+x.body).includes('登陆')),'missing Tiktaalik example');
 for(const topicId of ['effect-overview','alternative-causes','match-target']){
  const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
  assert.ok(topic?.questionIds.includes('unknown-hmpv-gorilla-human-to-animal-transmission'),'HMPV question must link to '+topicId);
@@ -56,7 +56,7 @@ const truthSection=formalBook.sections.find(s=>s.id==='formal-truth');
 assert.deepEqual(truthSection.topics.map(t=>t.id),['formal-truth-contradictions','formal-truth-linked']);
 const newTruthQuestions=["formal-unknown-candy-four-children-two-true","formal-2019-jiangxi-speech-first-one-true","formal-unknown-four-classmates-accountant-true","formal-unknown-academic-committee-single-adopted-opinion","formal-unknown-singing-ranking-one-true"];
 assert.deepEqual([...new Set(truthSection.topics.flatMap(t=>t.questionIds))].sort(),newTruthQuestions.slice().sort(),'truth questions all linked');
-assert.ok(truthSection.topics[0].patterns.some(s=>s.includes('集合对角线')));
+assert.ok(truthSection.topics[0].patterns.some(s=>s.includes('集合矛盾')&&s.includes('有些A不是B')));
 assert.ok(truthSection.topics[1].patterns.some(s=>s.includes('不能同假')));
 assert.equal(formalQuestions.filter(q=>q.category==='真假推理').length,5);
 assert.equal(formalQuestions.filter(q=>q.category==='综合推理').length,8);
@@ -98,4 +98,21 @@ for(const section of formalBook.sections){
   for(const id of topic.questionIds||[])assert.ok(formalIds.has(id),'formal knowledge cross-module reference: '+id);
  }
 }
+// P0/P1 editorial contract: stable topic count, reader-facing wording and concise representative examples.
+const argumentTopics=book.sections.flatMap(section=>section.topics);
+const formalTopics=formalBook.sections.flatMap(section=>section.topics);
+assert.equal(argumentTopics.length,31,'argument knowledge count must remain stable');
+assert.equal(formalTopics.length,12,'formal knowledge count must remain stable');
+for(const topic of [...argumentTopics,...formalTopics]){
+ assert.ok(Array.isArray(topic.patterns)&&topic.patterns.length>=2,'missing usable rules: '+topic.id);
+ assert.ok(Array.isArray(topic.pitfalls)&&topic.pitfalls.length>=1,'missing usage boundary: '+topic.id);
+ assert.ok((topic.examples||[]).length<=2,'avoid example logs in knowledge: '+topic.id);
+ const prose=[topic.title,topic.summary,...(topic.recognize||[]),...topic.patterns,...(topic.strengthen||[]),...(topic.weaken||[]),...topic.pitfalls,...(topic.examples||[]).flatMap(e=>[e.title,e.body])].join(' ');
+ for(const internal of ['后续学习再补充','后续见到新结构','只先固定','目前没有单独总结','用户明确要求','讨论中的推理倾向','截图标','保留争议']){
+  assert.ok(!prose.includes(internal),'agent-facing note leaked into '+topic.id+': '+internal);
+ }
+}
+assert.deepEqual(book.sections.find(s=>s.id==='cause').topics.slice(0,3).map(t=>t.id),
+ ['cause-overview','build-remove-link','cause-prerequisite-conditions'],
+ 'cause inference should introduce mechanism and premises before other evidence methods');
 console.log('Knowledge OK:',ids.size,'topics in',book.sections.length+formalBook.sections.length,'sections; all question references valid');
