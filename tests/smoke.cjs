@@ -26,7 +26,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#knowledgeView').isVisible(),false);
   assert.equal(await page.locator('#tabPractice').getAttribute('aria-selected'),'true');
 
-  assert.equal(await page.title(), '公考学习 · 知识体系与错题本');
+  assert.equal(await page.title(), 'Exam');
   const expectedQuestions = Number((await page.locator('#navCount').innerText()).split('/')[1].trim().split(' ')[0]);
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
@@ -256,12 +256,23 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#submit').click();
   assert.match(await page.locator('.result').innerText(), /答对了/);
 
+  const shortNoteHeight=await page.locator('#note').evaluate(el=>el.getBoundingClientRect().height);
+  await page.locator('#note').fill(Array.from({length:18},(_,i)=>'我的复盘第'+(i+1)+'行').join('\\n'));
+  const longNoteHeight=await page.locator('#note').evaluate(el=>el.getBoundingClientRect().height);
+  assert.ok(longNoteHeight>shortNoteHeight+80,'Note textarea should expand to fit text');
   await page.locator('#note').fill('自动化冒烟测试笔记');
+  assert.equal(await page.locator('#saveNote').isEnabled(),true);
+  assert.match(await page.locator('#noteStatus').innerText(),/尚未提交/);
+  assert.equal(await page.evaluate(() => state[active].note||''),'','Draft must not change submitted note');
   await page.locator('#review').check();
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.nav-item', { timeout: 15000 });
 
   assert.equal(await page.locator('#note').inputValue(), '自动化冒烟测试笔记');
+  assert.equal(await page.evaluate(() => state[active].note||''),'','Draft should still be unsubmitted after reload');
+  await page.locator('#saveNote').click();
+  assert.equal(await page.evaluate(() => state[active].note),'自动化冒烟测试笔记');
+  assert.equal(await page.locator('#saveNote').isDisabled(),true);
   assert.equal(await page.locator('#review').isChecked(), true);
   assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g, ''), '1/'+expectedQuestions);
 
@@ -301,6 +312,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('[data-id="unknown-peach-bagging-small-fruit"]').click();
 
   await page.locator('#note').fill('<img src=x onerror="window.__xss=true">');
+  await page.locator('#saveNote').click();
   await page.reload({ waitUntil: 'domcontentloaded' });
   assert.equal(await page.evaluate(() => window.__xss), undefined);
 
