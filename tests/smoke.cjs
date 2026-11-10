@@ -257,13 +257,16 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('.result').innerText(), /答对了/);
 
   const shortNoteHeight=await page.locator('#note').evaluate(el=>el.getBoundingClientRect().height);
-  await page.locator('#note').fill(Array.from({length:18},(_,i)=>'我的复盘第'+(i+1)+'行').join('\\n'));
+  await page.locator('#note').fill(Array.from({length:18},(_,i)=>'我的复盘第'+(i+1)+'行').join('\n'));
   const longNoteHeight=await page.locator('#note').evaluate(el=>el.getBoundingClientRect().height);
   assert.ok(longNoteHeight>shortNoteHeight+80,'Note textarea should expand to fit text');
   await page.locator('#note').fill('自动化冒烟测试笔记');
   assert.equal(await page.locator('#saveNote').isEnabled(),true);
   assert.match(await page.locator('#noteStatus').innerText(),/尚未提交/);
   assert.equal(await page.evaluate(() => state[active].note||''),'','Draft must not change submitted note');
+  await page.locator('[data-id="2022-dingcan"]').click();
+  await page.locator('[data-id="2008-yumi"]').click();
+  assert.equal(await page.locator('#note').inputValue(),'自动化冒烟测试笔记','Draft survives question navigation');
   await page.locator('#review').check();
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForSelector('.nav-item', { timeout: 15000 });
