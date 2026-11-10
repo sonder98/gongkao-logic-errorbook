@@ -44,7 +44,13 @@ assert.ok(tiktaalik&&tiktaalik.answer==='A'&&tiktaalik.category==='由果推因'
 assert.equal(tiktaalik.type,'解释型加强');
 assert.equal(tiktaalik.options.length,4);
 assert.equal(tiktaalik.image,'');
-assert.equal(q.length,52,'argument catalog count');
+for(const [id,answer,category] of [["unknown-cockroach-extermination-allergens-endotoxin-apartment","B","相关性推因果"],["unknown-first-exercise-muscle-response-sex-long-term-adaptation","A","相关性推因果"]]) {
+ const item=q.find(x=>x.id===id);
+ assert.ok(item&&item.answer===answer&&item.category===category,'missing new argument problem: '+id);
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+}
+assert.equal(q.length,54,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
@@ -106,7 +112,11 @@ for(const [id,answer] of comprehensiveBatch){
  assert.equal(item.options.length,4);
  assert.equal(item.image,'');
 }
-assert.equal(formal.length,28,'formal catalog count');
+const spiritual=formal.find(x=>x.id==='formal-unknown-spiritual-production-consumption-necessity');
+assert.ok(spiritual&&spiritual.answer==='A'&&spiritual.category==='翻译推理','missing necessary-condition translation question');
+assert.equal(spiritual.options.length,4);
+assert.equal(spiritual.image,'');
+assert.equal(formal.length,29,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');
