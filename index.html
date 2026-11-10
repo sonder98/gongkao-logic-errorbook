@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#142a34"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Exam"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Exam</title><link rel="apple-touch-icon" sizes="192x192" href="./icons/apple-touch-icon-v3.png"><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23142a34'/%3E%3Cpath d='M12 28 Q32 23 49 36 L50 77 Q31 64 12 69 Z M88 28 Q68 23 51 36 L50 77 Q69 64 88 69 Z' fill='%23f5f7f2' stroke='%23d9b36c' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M50 36 V77' stroke='%23142a34' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="./scratch-overlay.css">
 <style>
 :root{--bg:#f5f6f7;--paper:#fff;--ink:#1b2935;--sub:#667686;--line:#e6eaed;--accent:#117d78;--mint:#e9f7f3;--red:#b34242;--rose:#fff0f0;--gold:#a46f19;--amber:#fff7e6;--shadow:0 10px 40px rgba(21,40,50,.07)}*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--bg);font:15px/1.75 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}button,textarea{font:inherit}button{cursor:pointer}header{background:#142a34;color:white;padding:28px max(22px,calc((100vw - 1180px)/2)) 34px}header .eyebrow{color:#8dd9c9;font-size:12px;font-weight:700;letter-spacing:.18em}h1{font-size:32px;line-height:1.3;margin:8px 0}header p{color:#becdd1;margin:8px 0 0}.shell{max-width:1180px;margin:-16px auto 60px;padding:0 22px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;align-items:start}aside,.maincard,.stats{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}aside{padding:20px;position:sticky;top:18px}.aside-title{font-size:12px;font-weight:800;color:var(--sub);letter-spacing:.06em;margin:0 0 11px}.stats{display:flex;padding:17px 20px;gap:24px;margin-bottom:14px;box-shadow:none}.num{font-size:26px;line-height:1.1;font-weight:800}.stats small{color:var(--sub)}
 .nav-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -198,6 +199,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="data-analysis.js"></script>
+<script src="scratch-overlay.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>console.warn('PWA service worker registration failed',error));
@@ -317,8 +319,8 @@ async function pushCloud(){
  persistUserState();
  syncing=false;
  // A background sync must never rebuild the textarea while the user is typing.
- if(document.activeElement?.id!=='note')render();
- else updateNoteControls(active);
+ if(document.activeElement?.id!=='note'&&!ExamScratch.isDrawing())render();
+ else if(document.activeElement?.id==='note')updateNoteControls(active);
  if(conflicts)setStatus('发现 '+conflicts+' 道题存在双端修改，请在题目中选择保留版本','bad');
  else if(!failed)setStatus(pending.size?'部分已同步，其余改动继续上传…':'已登录 · 改动已同步到云端','good');
  if(pending.size&&!failed)scheduleSync();
@@ -342,8 +344,8 @@ async function pullCloud(){
  state=merged;
  persistUserState();
  // The login refresh may complete while a user is editing a local note draft.
- if(document.activeElement?.id!=='note')render();
- else updateNoteControls(active);
+ if(document.activeElement?.id!=='note'&&!ExamScratch.isDrawing())render();
+ else if(document.activeElement?.id==='note')updateNoteControls(active);
  uiAuth();
  setStatus('已登录 · 已读取 '+(data||[]).length+' 条云端记录'+(pending.size?'，还有 '+pending.size+' 条本机改动待同步':''),'good');
  if(pending.size)pushCloud();
@@ -783,9 +785,18 @@ const analysisContent=hasPersonalAnalysis?
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
-$('card').innerHTML=`${dataStart}<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
+$('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span><button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
+<div class="scratch-overlay" id="scratchOverlay" hidden>
+ <canvas class="scratch-canvas" id="scratchCanvas" aria-label="透明书写草稿层"></canvas>
+ <div class="scratch-toolbar" role="group" aria-label="手写草稿操作">
+  <button type="button" id="scratchMode">滚动页面</button>
+  <button type="button" id="scratchUndo" disabled>撤销</button>
+  <button type="button" id="scratchClear">清空</button>
+  <button type="button" class="scratch-done" id="scratchDone">完成</button>
+ </div>
+</div></div>
  <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn" type="button" aria-expanded="${analysisExpanded}">${analysisExpanded?'收起解析':'查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
  ${analysisExpanded?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<div class="result-analysis-actions"><button type="button" class="btn" id="replaceAnalysis" ${!noteText(q.id,r).trim()||r._syncConflict?'disabled':''}>笔记替换解析</button>${hasPersonalAnalysis?'<button type="button" class="btn" id="restoreAnalysis">恢复原解析</button>':''}<button id="retry" class="btn" type="button">重做本题</button></div></section>`:''}
  ${r._syncConflict?`<section class="sync-conflict"><h3>这道题在另一台设备也被修改过</h3><p>为了避免静默覆盖，请选择保留当前本机版本，或采用云端版本。</p><div class="actions"><button id="keepLocal" class="btn primary">保留本机并覆盖云端</button><button id="useCloud" class="btn">采用云端版本</button></div></section>`:''}
@@ -800,6 +811,7 @@ if(dataMode){
  if(toggle)toggle.onclick=()=>{DataAnalysis.toggleMaterial(q.materialId);render()};
  DataAnalysis.renderMath($('card'));
 }
+ExamScratch.mount(q.id,user?.id||'guest');
 $('card').querySelectorAll('[data-open-topic]').forEach(b=>b.onclick=()=>openKnowledge(b.dataset.openTopic));
 $('card').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{r.selected=b.dataset.answer;save();render()});
  $('submit').onclick=()=>submit(q,r);
@@ -914,12 +926,13 @@ $('reset').onclick=async()=>{
   ids.forEach(id=>{pending.delete(id);delete cloudMeta[id]});
  }
  ids.forEach(id=>{delete state[id];delete noteDrafts[id]});
+ ExamScratch.clearQuestions(ids,user?.id||'guest');
  persistNoteDrafts();
  persistUserState();
  category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0]?.id||null;render();
  setStatus('已清空「'+moduleName+'」模块的答题记录','good');
 };
-document.addEventListener('keydown',e=>{if(currentView!=='practice'||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
+document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
  const res=await fetch('questions.json',{cache:'no-cache'});
  if(!res.ok)throw new Error('题库请求失败：HTTP '+res.status);
