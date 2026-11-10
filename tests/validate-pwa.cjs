@@ -8,6 +8,7 @@ const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('index.html');
 const manifest = JSON.parse(read('manifest.webmanifest'));
 const sw = read('sw.js');
+const scratch = read('scratch-overlay.js');
 
 assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/);
 assert.match(html, /name="apple-mobile-web-app-capable" content="yes"/);
@@ -16,6 +17,15 @@ assert.match(html, /name="apple-mobile-web-app-status-bar-style" content="black-
 assert.match(html, /rel="apple-touch-icon" sizes="192x192" href="\.\/icons\/apple-touch-icon-v3\.png"/);
 assert.match(html, /rel="manifest" href="\.\/manifest\.webmanifest"/);
 assert.match(html, /navigator\.serviceWorker\.register\('\.\/sw\.js'/);
+
+assert.ok(html.includes('href="./scratch-overlay.css"'));
+assert.ok(html.includes('src="scratch-overlay.js"'));
+assert.ok(html.includes('id="scratchCanvas"'));
+assert.ok(html.includes('id="scratchDone"'));
+assert.ok(sw.includes('./scratch-overlay.js'));
+assert.ok(sw.includes('./scratch-overlay.css'));
+assert.match(scratch, /pointerdown/);
+assert.ok(scratch.includes("e.pointerType==='touch'"));
 
 assert.equal(manifest.start_url, './');
 assert.equal(manifest.scope, './');
