@@ -254,6 +254,8 @@ function updateNoteControls(id){
  if(!button||!status)return;
  const r=record(id),dirty=noteDirty(id,r);
  button.disabled=!dirty||!!r._syncConflict;
+ const replaceButton=$('replaceAnalysis');
+ if(replaceButton)replaceButton.disabled=!noteText(id,r).trim()||!!r._syncConflict;
  status.textContent=r._syncConflict?'存在云端冲突，请先处理版本':
   dirty?'草稿已暂存本机 · 尚未提交':
   user&&pending.has(id)?'已提交 · 待云端同步':
