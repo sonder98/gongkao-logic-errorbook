@@ -464,6 +464,7 @@ function knowledgeMatches(topic,section){
  topic.title,topic.summary,section.title,section.chapter,
  ...(topic.recognize||[]),...(topic.patterns||[]),...(topic.strengthen||[]),
  ...(topic.weaken||[]),...(topic.pitfalls||[]),
+  ...(topic.tables||[]).flatMap(table=>[table.title,table.note,...(table.headers||[]),...(table.rows||[]).flat()]),
  ...(topic.examples||[]).flatMap(example=>[example.title,example.body])
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
@@ -472,6 +473,17 @@ function listHtml(items){
 }
 function sectionHtml(title,items){
  return items?.length?'<section class="kb-article-section"><h3>'+safe(title)+'</h3>'+listHtml(items)+'</section>':'';
+}
+
+function knowledgeTablesHtml(tables){
+ if(currentModule!=='data'||!Array.isArray(tables)||!tables.length)return '';
+ return tables.map(table=>{
+  const cells=(row,tag)=>'<tr>'+row.map(value=>'<'+tag+'>'+DataAnalysis.rich(value)+'</'+tag+'>').join('')+'</tr>';
+  return '<section class="kb-article-section"><h3>'+safe(table.title||'速查表')+'</h3>'+
+   '<div class="da-table-scroll kb-table-scroll"><table class="kb-formula-table"><thead>'+cells(table.headers,'th')+'</thead><tbody>'+
+   table.rows.map(row=>cells(row,'td')).join('')+'</tbody></table></div>'+
+   (table.note?'<p class="kb-table-note">'+DataAnalysis.rich(table.note)+'</p>':'')+'</section>';
+ }).join('');
 }
 function renderKnowledge(){
  if(!KNOWLEDGE){
@@ -534,7 +546,7 @@ function renderKnowledge(){
   (topic.weaken?.length?'<section class="kb-method weak"><h3>－ 削弱方向</h3>'+listHtml(topic.weaken)+'</section>':'')+
   '</div>':'';
  const examples=topic.examples?.length?'<section class="kb-article-section"><h3>典型例子</h3>'+
-  topic.examples.map(ex=>'<div class="kb-example"><strong>'+safe(ex.title)+'</strong><p>'+safe(ex.body)+'</p></div>').join('')+'</section>':'';
+  topic.examples.map(ex=>'<div class="kb-example"><strong>'+safe(ex.title)+'</strong><p>'+(currentModule==='data'?DataAnalysis.rich(ex.body):safe(ex.body))+'</p></div>').join('')+'</section>':'';
  const topicIndex=knowledgeTopics.findIndex(item=>item.id===topic.id);
  const previousTopic=knowledgeTopics[topicIndex-1]||null;
  const nextTopic=knowledgeTopics[topicIndex+1]||null;
@@ -551,6 +563,7 @@ function renderKnowledge(){
   '<h2 class="kb-heading">'+safe(topic.title)+'</h2><p class="kb-summary">'+(currentModule==='data'?DataAnalysis.rich(topic.summary):safe(topic.summary))+'</p>'+
   sectionHtml('快速识别',topic.recognize)+
   sectionHtml('结构与核心规则',topic.patterns)+
+  knowledgeTablesHtml(topic.tables)+
   methods+
   sectionHtml('常见陷阱',topic.pitfalls)+
   examples+relatedHtml+knowledgeFooterNav;

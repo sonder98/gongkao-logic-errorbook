@@ -27,6 +27,19 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
   '第10课 · 年均变化','第11课 · 增长贡献率与拉动增长率',
   '第12课 · 容斥问题','第13课 · 假设代入'
 ]);
+
+const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
+assert.ok(scaling,'放缩运算知识点 ID 必须保持稳定');
+assert.ok(scaling.tables?.[0]?.headers?.length===4,'百化分速查表需显示为四列表格');
+assert.equal(scaling.tables[0].rows.length,6,'百化分速查表条目不完整');
+const conversionRows=JSON.stringify(scaling.tables[0].rows);
+for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
+ assert.ok(conversionRows.includes(item),'缺失百化分条目：'+item);
+}
+assert.ok(scaling.patterns.some(s=>s.includes('错位相减')&&s.includes('10')),'缺少乘9错位相减');
+assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11')),'缺少乘11错位相加');
+assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
+assert.ok(scaling.questionIds.length===0,'尚无正式练习题，不能伪造收录');
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[

@@ -1,5 +1,7 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
+> **资料分析最新进展（2026-11-10）：** 真实课程第3课“放缩运算”根据9页讲义与用户补充的“百化分表”整理完成，新增结构化速查表字段 `data-topic-course-03-scaling.tables`，网页使用 LaTeX 公式与表格而不是截图。核心原则：加法误差抵消、减法同幅调整、除法分母找易算分数且分子同比例补偿；高精度选项必须检查误差。特殊口径：`0.aaa≈a/9` 转成 `9/a` 进而乘9错位相减；`0.09≈1/11` 转成乘11错位相加，但要明示0.09与1/11相差约1%。以用户实际题目判断是否够准，不因追求速算而误判。此轮**没有新增资料分析真题**；资料分析题目/材料仍独立管理。详见 `docs/DATA_ANALYSIS.md`。
+
 > **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料；知识体系已按实际课程目录建立第2至13课共12个节点，第2、3、4课统一归入「速算」，其余按增长率计算、分式与比重、年均与贡献、其他题型分组；节点暂为目录占位，课程公式与解题技巧须待用户学习、提供讲义或核对题目后再补充；旧逻辑题现为84道（论证54、形式30）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
 
 > **优先入口。** 仓库：`sonder98/gongkao-logic-errorbook`。网站：<https://sonder98.github.io/gongkao-logic-errorbook/>。本项目同时学习**论证逻辑**（加强、削弱、前提假设）与**形式逻辑**（翻译、矛盾、真假、综合），并维护考生可读的知识体系和交互错题本。本文供 AI 交接，不在网站前台展示。

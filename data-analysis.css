@@ -28,3 +28,15 @@
 .da-explanation .da-equation{font-size:13px}
 @media(max-width:1060px){.da-layout{grid-template-columns:minmax(0,1fr)}.da-material-body{max-height:380px}}
 @media(max-width:800px){.da-material-body{max-height:300px}.da-material-header{padding:10px}.da-figure table{font-size:12px}}
+
+/* Knowledge topics may supply structured, reusable math conversion tables. */
+.kb-table-scroll{border:1px solid #dce7e5;border-radius:11px;margin-top:12px}
+.kb-formula-table{width:100%;min-width:455px;border-collapse:collapse;font-size:13px}
+.kb-formula-table th,.kb-formula-table td{border-bottom:1px solid #e2eaea;padding:11px 13px;text-align:left;vertical-align:middle;white-space:nowrap}
+.kb-formula-table th{color:#285361;background:#edf6f3;font-weight:800}
+.kb-formula-table td{color:#314957;background:#fff}
+.kb-formula-table tr:last-child td{border-bottom:0}
+.kb-formula-table tr:nth-child(even) td{background:#f9fcfb}
+.kb-formula-table .katex{font-size:1.15em}
+.kb-table-note{font-size:12px;line-height:1.8;color:#576e7a;margin-top:8px;overflow-wrap:anywhere}
+@media(max-width:800px){.kb-formula-table th,.kb-formula-table td{padding:9px 11px}}

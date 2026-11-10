@@ -479,6 +479,13 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeNav').innerText(),/速算/);
   assert.match(await page.locator('#knowledgeNav').innerText(),/放缩运算/);
   assert.match(await page.locator('#knowledgeNav').innerText(),/快速估算/);
+  await page.locator('[data-knowledge-topic="data-topic-course-03-scaling"]').click();
+  assert.equal(await page.locator('.kb-formula-table thead th').count(),4,'百化分表的四列表头');
+  assert.equal(await page.locator('.kb-formula-table tbody tr').count(),6,'百化分表必须有六行');
+  assert.match(await page.locator('#knowledgeCard').innerText(),/错位相减/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/错位相加/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/0.aaa/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/0.09/);
   // The same sequential navigation works in the independent data-analysis module.
   assert.equal(await page.locator('#knowledgeCard [data-kb-prev]').isDisabled(),true);
   await page.locator('#knowledgeCard [data-kb-next]').click();
