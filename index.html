@@ -225,6 +225,8 @@ function cloudRecord(value){const copy=clone(value||{});delete copy._syncConflic
 let user=null, db=null, pending=new Set(), cloudMeta={}, syncing=false, syncTimer=null;
 let noteDrafts=readJSON(KEY+'_note_drafts');
 let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
+// UI-only collapsed state; do not add a field to the question progress cloud schema.
+const collapsedAnalysis=new Set();
 const userKey=()=>KEY+'_user_'+user.id;
 const pendingKey=()=>userKey()+'_pending';
 const metaKey=()=>userKey()+'_cloud_meta';
@@ -759,6 +761,7 @@ const answered=QUESTIONS.filter(q=>record(q.id).submitted).length,correct=QUESTI
 $('stats').innerHTML=`<div><div class="num">${answered}<small> / ${QUESTIONS.length}</small></div><small>已完成</small></div><div><div class="num">${correct}</div><small>答对题数</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
 if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析模块已准备就绪，等待录入第一组真实材料与题目。':'当前模块暂无练习题。'):'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';return}
 const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active);
+const analysisExpanded=(r.submitted||r.revealed)&&!collapsedAnalysis.has(q.id);
 const dataMode=currentModule==='data';
 const previousMaterialScroll=$('card').querySelector('.da-material-body')?.scrollTop||0;
 const material=dataMode?DATA_MATERIALS.find(m=>m.id===q.materialId):null;
@@ -776,8 +779,8 @@ const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关�
 $('card').innerHTML=`${dataStart}<div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
- <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn">${(r.submitted||r.revealed)?'解析已展开':'直接查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
- ${(r.submitted||r.revealed)?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<button id="retry" class="btn">重做本题</button></section>`:''}
+ <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn" type="button" aria-expanded="${analysisExpanded}">${analysisExpanded?'收起解析':'查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
+ ${analysisExpanded?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<button id="retry" class="btn">重做本题</button></section>`:''}
  ${r._syncConflict?`<section class="sync-conflict"><h3>这道题在另一台设备也被修改过</h3><p>为了避免静默覆盖，请选择保留当前本机版本，或采用云端版本。</p><div class="actions"><button id="keepLocal" class="btn primary">保留本机并覆盖云端</button><button id="useCloud" class="btn">采用云端版本</button></div></section>`:''}
  <p class="label">个人复盘笔记 <span class="muted">（编辑时仅在本机暂存草稿）</span></p><textarea id="note" class="note" maxlength="20000" placeholder="记录：我当时为什么会选错？下次怎么避免？">${safe(noteText(q.id,r))}</textarea>
  <div class="note-toolbar"><span id="noteStatus" class="muted note-status" role="status" aria-live="polite"></span><button type="button" id="saveNote" class="btn primary">${user?'保存并同步':'保存笔记'}</button></div>
@@ -792,7 +795,15 @@ if(dataMode){
 }
 $('card').querySelectorAll('[data-open-topic]').forEach(b=>b.onclick=()=>openKnowledge(b.dataset.openTopic));
 $('card').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{r.selected=b.dataset.answer;save();render()});
- $('submit').onclick=()=>submit(q,r);$('show').onclick=()=>{r.revealed=true;save();render()};
+ $('submit').onclick=()=>submit(q,r);
+ $('show').onclick=()=>{
+  if(analysisExpanded)collapsedAnalysis.add(q.id);
+  else{
+   collapsedAnalysis.delete(q.id);
+   if(!r.submitted&&!r.revealed){r.revealed=true;save();}
+  }
+  render();
+ };
 $('review').onchange=e=>{r.review=e.target.checked;save();if(wrongOnly&&!r.review&&!r.wrong)render()};
 const noteField=$('note');
  resizeNoteField(noteField);
@@ -820,11 +831,11 @@ if($('toggleImage'))if($('toggleImage'))$('toggleImage').onclick=async()=>{
 };
 $('prev').onclick=()=>{if(ix>0){active=f[ix-1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
 $('next').onclick=()=>{if(ix<f.length-1){active=f[ix+1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
- if($('retry'))$('retry').onclick=()=>{r.selected='';r.submitted=false;r.revealed=false;save();render()};
+ if($('retry'))$('retry').onclick=()=>{collapsedAnalysis.delete(q.id);r.selected='';r.submitted=false;r.revealed=false;save();render()};
  if($('keepLocal'))$('keepLocal').onclick=()=>useLocalConflict(q.id);
  if($('useCloud'))$('useCloud').onclick=()=>useCloudConflict(q.id);
 }
-function submit(q,r){if(!r.selected)return;r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
+function submit(q,r){if(!r.selected)return;collapsedAnalysis.delete(q.id);r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
 $('questionSearch').oninput=e=>{searchTerm=e.target.value;render();if(currentView==='practice')updateViewHash()};
 $('wrongFilter').onchange=e=>{wrongOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
 $('importantFilter').onchange=e=>{importantOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
