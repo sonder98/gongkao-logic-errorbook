@@ -39,10 +39,10 @@ for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
 assert.ok(scaling.patterns.some(s=>s.includes('错位相减')&&s.includes('10')),'缺少乘9错位相减');
 assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11')),'缺少乘11错位相加');
 assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
-assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance'],'第3课应关联两道正式题');
+assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count'],'第3课应关联三道正式题');
 assert.ok(scaling.patterns.some(s=>s.includes('有效数字→量级判断')),'应保留连续两步的课堂原则');
-assert.equal(materials.length,2,'应有两份真实材料');
-assert.equal(questions.length,2,'应有两道真实题目');
+assert.equal(materials.length,3,'应有三份真实材料');
+assert.equal(questions.length,3,'应有三道真实题目');
 const legalQuestion=questions[0];
 assert.equal(legalQuestion.id,'data-2022-g-legal-aid-average-q1');
 assert.equal(legalQuestion.materialId,'data-material-2022-g-legal-aid-average');
@@ -74,6 +74,23 @@ assert.equal(distanceMaterial.blocks[0].rows.length,11);
 assert.ok(distanceMaterial.blocks[1].text.includes('1768.2亿人公里'));
 assert.ok(DA.materialHtml(distanceMaterial).includes('da-table-scroll'));
 assert.match(DA.explanationHtml(distance),/步骤二 · 看选项，确定量级/);
+const neighbors=questions.find(q=>q.id==='data-2017-jiangsu-neighbors-unaware-count');
+assert.ok(neighbors,'2017江苏邻里关系题应入库');
+assert.equal(neighbors.materialId,'data-material-2016-neighbor-relationship-survey');
+assert.deepEqual(neighbors.options,['275人','365人','412人','418人']);
+assert.equal(neighbors.answer,'D');
+assert.equal(neighbors.analysis.formulaTitle,'方法一 · 百化分并修正误差');
+assert.equal(neighbors.analysis.quickTitle,'方法二 · 乘法放缩、错位相加');
+assert.ok(neighbors.analysis.formula.includes('105\\times4'));
+assert.ok(neighbors.analysis.quick.includes('376+37.6'));
+assert.ok(neighbors.analysis.quick.includes('413.6+4'));
+assert.ok(neighbors.analysis.trap.includes('两处'));
+assert.ok(scaling.patterns.some(s=>s.includes('乘法放缩')&&s.includes('r^2')),'乘法反向等比例放缩公式应入知识库');
+assert.ok(scaling.patterns.some(s=>s.includes('8622')&&s.includes('9000')));
+const neighborHTML=DA.explanationHtml(neighbors);
+assert.match(neighborHTML,/方法一 · 百化分并修正误差/);
+assert.match(neighborHTML,/方法二 · 乘法放缩、错位相加/);
+assert.ok((neighborHTML.match(/data-da-tex/g)||[]).length>=3);
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[

@@ -2,7 +2,7 @@
 
 **iPhone / iOS PWA（应用名称：Exam）：** 本站可在 iPhone Safari 中通过「分享 → 添加到主屏幕」安装为独立应用窗口。支持最近成功加载的页面、题库与知识库离线兜底；联网时始终优先获取 GitHub Pages 最新 JSON。安装与离线说明见 [iOS PWA 使用指南](docs/PWA_IOS.md)。PWA 只负责应用外壳与缓存，不改变各模块 Agent 维护 JSON 的方式。
 
-**2026-11-07 新增资料分析模块：** 顶部增加“资料分析 → 知识体系 / 错题练习”。按用户真实学习逐题录入：data-materials.json 与 data-questions.json 当前分别有2份材料和2道题；data-knowledge.json 按实际课程体系建立第2至13课共12个节点，其中第2、3、4课统一归入「速算」；其余按课程主题分组，暂不预设未核实的公式和技巧。资料分析支持多题共用材料、JSON 统计表格、简单 SVG 图表、独立懒加载图片、LaTeX/KaTeX 公式和分步解题解析。手机端材料优先纵向排列；桌面端使用材料/题目双栏。完整数据格式见 [资料分析开发说明](docs/DATA_ANALYSIS.md)。
+**2026-11-07 新增资料分析模块：** 顶部增加“资料分析 → 知识体系 / 错题练习”。按用户真实学习逐题录入：data-materials.json 与 data-questions.json 当前分别有3份材料和3道题；data-knowledge.json 按实际课程体系建立第2至13课共12个节点，其中第2、3、4课统一归入「速算」；其余按课程主题分组，暂不预设未核实的公式和技巧。资料分析支持多题共用材料、JSON 统计表格、简单 SVG 图表、独立懒加载图片、LaTeX/KaTeX 公式和分步解题解析。手机端材料优先纵向排列；桌面端使用材料/题目双栏。完整数据格式见 [资料分析开发说明](docs/DATA_ANALYSIS.md)。
 
 **性能约束：** 题目/知识更新不重新上传图片。新材料表格优先结构化，必须使用图片时独立存到 assets/data-analysis/，优先 WebP，禁止 Base64。现有 Supabase 同步表和旧逻辑题原始 ID 完全复用；新题以 data- 前缀隔离。测试新增 `node tests/validate-data-analysis.cjs`，GitHub Actions 会在推送后执行三组数据校验。公式资源按需从固定版本 KaTeX CDN 加载。
 
