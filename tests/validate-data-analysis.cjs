@@ -39,9 +39,10 @@ for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
 assert.ok(scaling.patterns.some(s=>s.includes('错位相减')&&s.includes('10')),'缺少乘9错位相减');
 assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11')),'缺少乘11错位相加');
 assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
-assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1'],'第3课应关联第一道正式题');
-assert.equal(materials.length,1,'首题应只有一份文字材料');
-assert.equal(questions.length,1,'首题应只有一道题');
+assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance'],'第3课应关联两道正式题');
+assert.ok(scaling.patterns.some(s=>s.includes('有效数字→量级判断')),'应保留连续两步的课堂原则');
+assert.equal(materials.length,2,'应有两份真实材料');
+assert.equal(questions.length,2,'应有两道真实题目');
 const legalQuestion=questions[0];
 assert.equal(legalQuestion.id,'data-2022-g-legal-aid-average-q1');
 assert.equal(legalQuestion.materialId,'data-material-2022-g-legal-aid-average');
@@ -56,6 +57,23 @@ assert.equal((legalHTML.match(/data-da-tex/g)||[]).length,5,'两种方法应显�
 const futureVertical=DA.explanationHtml({...legalQuestion,longDivision:' 1.08\\n196 ) 213\\n<bad>'});
 assert.ok(futureVertical.includes('da-long-division'),'竖式渲染入口必须存在');
 assert.ok(futureVertical.includes('&lt;bad&gt;'),'竖式内容必须转义为纯文本');
+const distance=questions.find(q=>q.id==='data-2018-q-passenger-average-distance');
+assert.ok(distance,'2018年Q省平均运输距离题未入库');
+assert.equal(distance.materialId,'data-material-2018-q-transport-passenger-distance');
+assert.equal(distance.answer,'D');
+assert.equal(distance.options[2],'1170公里');
+assert.equal(distance.options[3],'117公里');
+assert.equal(distance.analysis.formulaTitle,'步骤一 · 除法放缩（先算有效数字）');
+assert.equal(distance.analysis.quickTitle,'步骤二 · 看选项，确定量级');
+assert.ok(distance.analysis.formula.includes('168\\times7=1176'));
+assert.ok(distance.analysis.quick.includes('\\frac{1768}{15}'));
+assert.ok(distance.analysis.trap.includes('连续两步'));
+const distanceMaterial=materials.find(m=>m.id==='data-material-2018-q-transport-passenger-distance');
+assert.equal(distanceMaterial.blocks[0].type,'table');
+assert.equal(distanceMaterial.blocks[0].rows.length,11);
+assert.ok(distanceMaterial.blocks[1].text.includes('1768.2亿人公里'));
+assert.ok(DA.materialHtml(distanceMaterial).includes('da-table-scroll'));
+assert.match(DA.explanationHtml(distance),/步骤二 · 看选项，确定量级/);
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[
