@@ -40,3 +40,10 @@
 .kb-formula-table .katex{font-size:1.15em}
 .kb-table-note{font-size:12px;line-height:1.8;color:#576e7a;margin-top:8px;overflow-wrap:anywhere}
 @media(max-width:800px){.kb-formula-table th,.kb-formula-table td{padding:9px 11px}}
+
+/* 多步公式独立排版；长算式在公式区域内滚动，不撑开页面。 */
+.da-explanation .da-equation{font-size:15px;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:12px 2px;scrollbar-width:thin}
+.da-explanation .da-equation .katex-display{margin:.3em 0;overflow:visible}
+.da-explain-section h4{font-size:14px;margin-bottom:8px}
+.da-long-division pre{margin:8px 0;background:#f7f9fa;border:1px solid #e0e8eb;border-radius:10px;padding:14px;max-width:100%;overflow-x:auto;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;color:#233946}
+@media(max-width:800px){.da-explanation .da-equation{font-size:14px}}

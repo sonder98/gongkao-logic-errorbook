@@ -99,9 +99,10 @@
   function toggleMaterial(id){if(collapsed.has(id))collapsed.delete(id);else collapsed.add(id);}
   function explanationHtml(q){
     const a=q.analysis||{};
-    const sections=[['考点识别',a.identify],['数据定位',a.locate],['公式与计算',a.formula],['考场速解',a.quick],['易错点',a.trap]];
+    const sections=[['考点识别',a.identify],['数据定位',a.locate],[a.formulaTitle||'公式与计算',a.formula],[a.quickTitle||'考场速解',a.quick],['易错点',a.trap]];
     return '<div class="da-explanation">'+sections.filter(x=>x[1]).map(([name,content])=>
       '<section class="da-explain-section"><h4>'+name+'</h4><div>'+rich(content)+'</div></section>').join('')+
+      (q.longDivision?'<section class="da-explain-section da-long-division"><h4>竖式除法</h4><pre aria-label="竖式除法步骤">'+esc(q.longDivision)+'</pre></section>':'')+
       (q.rule?'<div class="da-rule"><b>可迁移规则：</b>'+rich(q.rule)+'</div>':'')+'</div>';
   }
   function validate(materials,questions,book,externalQuestionIds=[],externalTopicIds=[]){
@@ -130,6 +131,8 @@
         !'ABCDE'.slice(0,q.options.length).includes(q.answer)||
         !q.analysis||!['identify','locate','formula','quick','trap'].every(k=>typeof q.analysis[k]==='string'))throw Error('资料分析题目格式或关联无效：'+(q&&q.id));
       if(q.important!==undefined&&typeof q.important!=='boolean')throw Error('重点题标记不合法：'+q.id);
+      if(q.longDivision!==undefined&&(typeof q.longDivision!=='string'||q.longDivision.length>10000))throw Error('竖式内容格式错误：'+q.id);
+      for(const label of ['formulaTitle','quickTitle'])if(q.analysis[label]!==undefined&&typeof q.analysis[label]!=='string')throw Error('解析标题格式错误：'+q.id);
       seenQ.add(q.id);
     }
     for(const section of book.sections){

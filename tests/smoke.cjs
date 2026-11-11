@@ -486,17 +486,27 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeCard').innerText(),/错位相加/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.aaa/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.09/);
-  // The same sequential navigation works in the independent data-analysis module.
-  assert.equal(await page.locator('#knowledgeCard [data-kb-prev]').isDisabled(),true);
+  // The sequential navigation should work from the second topic (放缩运算).
+  assert.equal(await page.locator('#knowledgeCard [data-kb-prev]').isDisabled(),false);
   await page.locator('#knowledgeCard [data-kb-next]').click();
   assert.match(page.url(),/#data\/knowledge\//);
-  assert.match((await page.locator('#knowledgeCard .kb-footer-nav .pill').innerText()).trim(),/^2 \/ \d+$/);
+  assert.match((await page.locator('#knowledgeCard .kb-footer-nav .pill').innerText()).trim(),/^3 \/ \d+$/);
   await page.locator('#knowledgeCard [data-kb-prev]').click();
-  assert.equal(await page.locator('#knowledgeCard [data-kb-prev]').isDisabled(),true);
+  assert.match((await page.locator('#knowledgeCard .kb-footer-nav .pill').innerText()).trim(),/^2 \/ \d+$/);
   await page.locator('#tabDataPractice').click();
   assert.equal(await page.locator('#tabDataPractice').getAttribute('aria-selected'),'true');
-  assert.equal(await page.locator('.nav-item').count(),0);
-  assert.match(await page.locator('#card').innerText(),/等待录入第一组真实材料/);
+  assert.equal(await page.locator('.nav-item').count(),1);
+  assert.equal(await page.locator('.nav-item').first().getAttribute('data-id'),'data-2022-g-legal-aid-average-q1');
+  assert.match(await page.locator('.da-material').innerText(),/195779/);
+  await page.locator('#show').click();
+  assert.match(await page.locator('.da-explanation').innerText(),/方法一 · 除法放缩/);
+  assert.match(await page.locator('.da-explanation').innerText(),/方法二 · 直接和选项比/);
+  assert.equal(await page.locator('.da-explanation [data-da-tex]').count(),5);
+  await page.locator('.da-explanation .katex').first().waitFor({state:'visible',timeout:15000});
+  await page.locator('#show').click();
+  assert.equal(await page.locator('.da-explanation').count(),0);
+  await page.locator('#show').click();
+  assert.equal(await page.locator('.da-explanation').count(),1);
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 

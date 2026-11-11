@@ -39,7 +39,23 @@ for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
 assert.ok(scaling.patterns.some(s=>s.includes('错位相减')&&s.includes('10')),'缺少乘9错位相减');
 assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11')),'缺少乘11错位相加');
 assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
-assert.ok(scaling.questionIds.length===0,'尚无正式练习题，不能伪造收录');
+assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1'],'第3课应关联第一道正式题');
+assert.equal(materials.length,1,'首题应只有一份文字材料');
+assert.equal(questions.length,1,'首题应只有一道题');
+const legalQuestion=questions[0];
+assert.equal(legalQuestion.id,'data-2022-g-legal-aid-average-q1');
+assert.equal(legalQuestion.materialId,'data-material-2022-g-legal-aid-average');
+assert.equal(legalQuestion.answer,'A');
+assert.equal(legalQuestion.options.length,4);
+assert.ok(legalQuestion.analysis.formula.includes('\\frac{218}{200}'),'保留218/200的放缩过程');
+assert.ok(legalQuestion.analysis.quick.includes('215.6>213'),'保留与1.1直接比较的过程');
+const legalHTML=DA.explanationHtml(legalQuestion);
+assert.match(legalHTML,/方法一 · 除法放缩/);
+assert.match(legalHTML,/方法二 · 直接和选项比/);
+assert.equal((legalHTML.match(/data-da-tex/g)||[]).length,5,'两种方法应显示5段数学公式');
+const futureVertical=DA.explanationHtml({...legalQuestion,longDivision:' 1.08\\n196 ) 213\\n<bad>'});
+assert.ok(futureVertical.includes('da-long-division'),'竖式渲染入口必须存在');
+assert.ok(futureVertical.includes('&lt;bad&gt;'),'竖式内容必须转义为纯文本');
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[
