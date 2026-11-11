@@ -84,7 +84,7 @@ assert.equal(neighbors.analysis.quickTitle,'方法二 · 乘法放缩、错位�
 assert.ok(neighbors.analysis.formula.includes('105\\times4'));
 assert.ok(neighbors.analysis.quick.includes('376+37.6'));
 assert.ok(neighbors.analysis.quick.includes('413.6+4'));
-assert.ok(neighbors.analysis.trap.includes('两处'));
+assert.ok(neighbors.analysis.trap.includes('945→940')&&neighbors.analysis.trap.includes('44.2%→44%'),'误差应归因于两处放缩，而非错位相加本身');
 assert.ok(scaling.patterns.some(s=>s.includes('乘法放缩')&&s.includes('r^2')),'乘法反向等比例放缩公式应入知识库');
 assert.ok(scaling.patterns.some(s=>s.includes('8622')&&s.includes('9000')));
 const neighborHTML=DA.explanationHtml(neighbors);
