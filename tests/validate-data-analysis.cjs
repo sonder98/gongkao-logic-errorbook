@@ -41,8 +41,8 @@ assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11'))
 assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count'],'第3课应关联三道正式题');
 assert.ok(scaling.patterns.some(s=>s.includes('有效数字→量级判断')),'应保留连续两步的课堂原则');
-assert.equal(materials.length,3,'应有三份真实材料');
-assert.equal(questions.length,3,'应有三道真实题目');
+assert.equal(materials.length,5,'应有五份真实材料');
+assert.equal(questions.length,5,'应有五道真实题目');
 const legalQuestion=questions[0];
 assert.equal(legalQuestion.id,'data-2022-g-legal-aid-average-q1');
 assert.equal(legalQuestion.materialId,'data-material-2022-g-legal-aid-average');
@@ -91,6 +91,28 @@ const neighborHTML=DA.explanationHtml(neighbors);
 assert.match(neighborHTML,/方法一 · 百化分并修正误差/);
 assert.match(neighborHTML,/方法二 · 乘法放缩、错位相加/);
 assert.ok((neighborHTML.match(/data-da-tex/g)||[]).length>=3);
+const estimation=courseTopics.find(t=>t.id==='data-topic-course-04-estimation');
+assert.ok(estimation,'第4课快速估算主题须保持稳定');
+assert.deepEqual(estimation.questionIds,['data-2015-hebei-2013-highway-passengers','data-2020-fujian-2018-industrial-profits']);
+assert.ok(estimation.patterns.some(s=>s.includes('提前修正')&&s.includes('4.2')));
+assert.ok(estimation.patterns.some(s=>s.includes('先看哪边好算')));
+assert.ok(estimation.patterns.some(s=>s.includes('49')&&s.includes('40')&&s.includes('89')));
+assert.equal(estimation.tables[0].rows.length,7,'提前修正增速速查表应包含7行');
+for(const x of ['2.04%','3.1%','4.2%','7.5%','−7.4%'])assert.ok(JSON.stringify(estimation.tables[0]).includes(x));
+const hebei=questions.find(q=>q.id==='data-2015-hebei-2013-highway-passengers');
+const fujian=questions.find(q=>q.id==='data-2020-fujian-2018-industrial-profits');
+assert.ok(hebei&&fujian,'2015河北、2020福建两道例题必须入库');
+assert.deepEqual(hebei.options,['184.31','185.16','185.31','186.15']);
+assert.deepEqual(fujian.options,['899.3','965.9','1043.1','1066.3']);
+assert.equal(hebei.answer,'C');
+assert.equal(fujian.answer,'C');
+assert.match(hebei.analysis.formula,/5\.33/);
+assert.ok(hebei.analysis.quick.includes('5.33')&&hebei.analysis.quick.includes('5.18'));
+assert.ok(fujian.analysis.formula.includes('49+40=89'));
+assert.ok(fujian.analysis.quick.includes('960\\times8\\%'));
+assert.ok(fujian.analysis.quick.includes('1042.8'));
+assert.ok(DA.explanationHtml(hebei).includes('data-da-tex'));
+assert.ok(DA.explanationHtml(fujian).includes('data-da-tex'));
 const fixtures=[{
   id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
   blocks:[
