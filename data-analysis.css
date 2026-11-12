@@ -67,3 +67,10 @@
 .kb-structured-caution{font-size:12px;color:#795c3d;line-height:1.8;margin:10px 0 0;padding-left:10px;border-left:2px solid #dfc6a1}
 .kb-structured-item .kb-table-scroll{margin-top:12px}
 @media(max-width:800px){.kb-structured-head h3{font-size:18px}.kb-structured-item{padding:14px 12px}.kb-structured-jump button{min-height:42px}}
+
+/* A method may contain multiple independent correction approaches; keep them inside the parent method. */
+.kb-structured-subitems{display:grid;gap:12px;margin-top:14px}
+.kb-structured-subitem{min-width:0;padding:15px;border:1px solid #d8e9e5;border-radius:10px;background:#f8fcfb}
+.kb-structured-subitem h5{margin:0 0 9px;color:#1f6860;font-size:14px;line-height:1.45;font-weight:800}
+.kb-structured-subitem .kb-structured-formula{margin:12px 0}
+@media(max-width:800px){.kb-structured-subitem{padding:13px 10px}.kb-structured-subitem h5{font-size:13px}}

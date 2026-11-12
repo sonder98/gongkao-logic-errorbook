@@ -466,7 +466,7 @@ function knowledgeMatches(topic,section){
  ...(topic.weaken||[]),...(topic.pitfalls||[]),
   ...(topic.tables||[]).flatMap(table=>[table.title,table.note,...(table.headers||[]),...(table.rows||[]).flat()]),
  ...(topic.examples||[]).flatMap(example=>[example.title,example.body]),
- ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[])])])
+ ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution])])])
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
 function listHtml(items){
@@ -486,6 +486,13 @@ function knowledgeTablesHtml(tables){
  if(currentModule!=='data'||!Array.isArray(tables)||!tables.length)return '';
  return tables.map(table=>'<section class="kb-article-section"><h3>'+safe(table.title||'速查表')+'</h3>'+knowledgeTableMarkup(table)+'</section>').join('');
 }
+function structuredKnowledgeDetailsHtml(item){
+ return (item.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(item.description)+'</p>':'')+
+  (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
+  (item.table?knowledgeTableMarkup(item.table):'')+
+  (item.example?'<p class="kb-structured-example"><strong>例：</strong>'+DataAnalysis.rich(item.example)+'</p>':'')+
+  (item.caution?'<p class="kb-structured-caution">'+DataAnalysis.rich(item.caution)+'</p>':'');
+}
 function structuredKnowledgeHtml(topic){
  if(currentModule!=='data'||!Array.isArray(topic.contentSections)||!topic.contentSections.length)return '';
  const sections=topic.contentSections;
@@ -496,11 +503,10 @@ function structuredKnowledgeHtml(topic){
    '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safe(section.title)+'</h3>'+
    (section.description?'<p>'+DataAnalysis.rich(section.description)+'</p>':'')+'</div></div>'+
    (section.items||[]).map(item=>'<article class="kb-structured-item"><h4>'+safe(item.title)+'</h4>'+
-    (item.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(item.description)+'</p>':'')+
-    (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
-    (item.table?knowledgeTableMarkup(item.table):'')+
-    (item.example?'<p class="kb-structured-example"><strong>例：</strong>'+DataAnalysis.rich(item.example)+'</p>':'')+
-    (item.caution?'<p class="kb-structured-caution">'+DataAnalysis.rich(item.caution)+'</p>':'')+
+    structuredKnowledgeDetailsHtml(item)+
+    (item.subitems?.length?'<div class="kb-structured-subitems">'+item.subitems.map(sub=>
+      '<section class="kb-structured-subitem"><h5>'+safe(sub.title)+'</h5>'+
+      structuredKnowledgeDetailsHtml(sub)+'</section>').join('')+'</div>':'')+
     '</article>').join('')+'</section>').join('')+'</div>';
 }
 function renderKnowledge(){
