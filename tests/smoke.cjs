@@ -563,9 +563,14 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('.da-explanation').innerText(),/1042.8/);
   await page.locator('#tabDataKnowledge').click();
   await page.locator('[data-knowledge-topic="data-topic-course-04-estimation"]').click();
-  assert.equal(await page.locator('.kb-formula-table tbody tr').count(),7);
+  assert.equal(await page.locator('.kb-formula-table').count(),2);
+  assert.equal(await page.locator('.kb-formula-table').first().locator('tbody tr').count(),7);
+  assert.equal(await page.locator('.kb-formula-table').last().locator('thead th').count(),6);
+  assert.equal(await page.locator('.kb-formula-table').last().locator('tbody tr').count(),6);
   assert.match(await page.locator('#knowledgeCard').innerText(),/化除为乘/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/提前修正/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/份数思想/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/aa.a%/);
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 

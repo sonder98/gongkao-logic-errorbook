@@ -97,7 +97,22 @@ assert.deepEqual(estimation.questionIds,['data-2015-hebei-2013-highway-passenger
 assert.ok(estimation.patterns.some(s=>s.includes('提前修正')&&s.includes('4.2')));
 assert.ok(estimation.patterns.some(s=>s.includes('先看哪边好算')));
 assert.ok(estimation.patterns.some(s=>s.includes('49')&&s.includes('40')&&s.includes('89')));
+assert.equal(estimation.tables.length,2,'第4课应含提前修正与份数思想两张表');
 assert.equal(estimation.tables[0].rows.length,7,'提前修正增速速查表应包含7行');
+const partTable=estimation.tables[1];
+assert.equal(partTable.rows.length,6,'份数思想应严格保留讲义左右各6行');
+assert.equal(partTable.headers.length,6,'份数思想左右两组、每组三列');
+assert.deepEqual(partTable.rows.map(row=>row[0]),['50%','33.3%','25.0%','20.0%','16.7%','14.3%']);
+assert.deepEqual(partTable.rows.map(row=>row[3]),['12.5%','11.1%','aa.a%','28.6%','40%','66.7%']);
+assert.equal(partTable.rows[0][2],'\\(\\frac13\\)');
+assert.equal(partTable.rows[1][5],'\\(\\frac1{10}\\)');
+assert.equal(partTable.rows[2][4],'\\(\\frac a9\\)');
+assert.equal(partTable.rows[2][5],'\\(\\frac{a}{9+a}\\)');
+assert.equal(partTable.rows[3][4],'\\(\\frac27\\)');
+assert.equal(partTable.rows[3][5],'\\(\\frac29\\)');
+assert.ok(estimation.patterns.some(p=>p.includes('份数思想：核心公式')&&p.includes('n+1')));
+assert.ok(estimation.patterns.some(p=>p.includes('基期看作')&&p.includes('n+1')));
+
 for(const x of ['2.04%','3.1%','4.2%','7.5%','−7.4%'])assert.ok(JSON.stringify(estimation.tables[0]).includes(x));
 const hebei=questions.find(q=>q.id==='data-2015-hebei-2013-highway-passengers');
 const fujian=questions.find(q=>q.id==='data-2020-fujian-2018-industrial-profits');
