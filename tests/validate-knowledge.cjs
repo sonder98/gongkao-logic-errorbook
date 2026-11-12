@@ -119,6 +119,15 @@ for(const [topicId,ids] of [
  const topic=book.sections.flatMap(section=>section.topics).find(topic=>topic.id===topicId);
  for(const id of ids)assert.ok(topic?.questionIds.includes(id),'missing existing knowledge link '+topicId+': '+id);
 }
+for(const [topicId,qids] of [
+ ['implication',['unknown-gout-high-purine-diet-necessary-condition']],['claim-strength',['unknown-gout-high-purine-diet-necessary-condition']],
+ ['cause-overview',['unknown-gout-high-purine-diet-necessary-condition','unknown-salty-pickles-hypertension-other-causes']],
+ ['build-remove-link',['unknown-gout-high-purine-diet-necessary-condition','unknown-salty-pickles-hypertension-other-causes']],
+ ['match-target',['unknown-salty-pickles-hypertension-other-causes']]
+]){
+ const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
+ for(const qid of qids)assert.ok(topic?.questionIds.includes(qid),'missing knowledge link '+topicId+': '+qid);
+}
 const argumentTopics=book.sections.flatMap(section=>section.topics);
 const formalTopics=formalBook.sections.flatMap(section=>section.topics);
 assert.equal(argumentTopics.length,31,'argument knowledge count must remain stable');

@@ -68,7 +68,15 @@ for(const [id,answer,category] of [
 const muscleComparison=q.find(x=>x.id==='unknown-first-exercise-muscle-response-sex-long-term-adaptation');
 assert.equal(muscleComparison.answer,'A');
 assert.ok(muscleComparison.trap.includes('高度白酒预防X病毒题') && muscleComparison.reason.includes('整体评价'),'muscle comparison explanation must remain');
-assert.equal(q.length,57,'argument catalog count');
+for(const [id,answer] of [['unknown-gout-high-purine-diet-necessary-condition','D'],['unknown-salty-pickles-hypertension-other-causes','B']]){
+ const item=q.find(x=>x.id===id);
+ assert.ok(item&&item.answer===answer&&item.category==='由因推果','new argument exercise missing: '+id);
+ assert.equal(item.options.length,4);assert.equal(item.image,'');
+ assert.ok(!Object.hasOwn(item,'rule'),'do not invent per-question rule: '+id);
+}
+assert.ok(q.find(x=>x.id==='unknown-gout-high-purine-diet-necessary-condition').reason.includes('A且非B'));
+assert.ok(q.find(x=>x.id==='unknown-salty-pickles-hypertension-other-causes').trap.includes('误选D'));
+assert.equal(q.length,59,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));

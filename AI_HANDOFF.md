@@ -1,5 +1,9 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
+> **2026-11-12 痛风与高血压错题入库：** 新增「痛风与饮食过量：必要条件的反例」`unknown-gout-high-purine-diet-necessary-condition`（答案D）和「咸菜、高盐饮食与高血压」`unknown-salty-pickles-hypertension-other-causes`（答案B）。痛风题须按严格必要条件判定，D为饮食过量但未患痛风的A且非B反例，B是反向关系不能据此削弱。高盐题用户误选D：D虽提及吸烟、饮酒、精神紧张，也明确包含高盐饮食导致高血压风险增加，直接支持小李；多个原因可并存，不能据此排除原有由因推果关系。B只说其他健康危害，没有提及高血压。题目完整解析已录入，无新`rule`，复用现有知识点，仅更新其questionIds，未改变既有知识正文、笔记、云端进度。当前论证逻辑59题、形式逻辑30题、资料分析5题，共94题。
+
+
+
 > **2026-11-12 论证逻辑错题补录与跨题比较：** 新增三道未入库的真实讨论题：J市话剧调查与大剧院人数差异（选非B，`unknown-j-city-theatre-monthly-share-ticket-audience`）、降药价政策与常用药上涨（B，`unknown-drug-price-reduction-policies-common-drug-inflation`，用户误选A）、高度白酒预防X病毒（选非B，`unknown-xvirus-high-proof-baijiu-prevention-weak-effect`）。并完善已有男女肌肉首次运动题（A，`unknown-first-exercise-muscle-response-sex-long-term-adaptation`）的正确答案解析与跨题辨析。白酒题B虽仅小幅降低某感染途径风险，仍符合“可以起到预防作用”的弱结论；肌肉题A保留初次反应差异，却动摇从初次反应推广到“女性总体更适宜运动”的宽泛结论。新题`rule`均省略，具体对比只写题库`reason`/`trap`；复用现有知识点并仅增补`questionIds`，不改知识讲解正文、目录或稳定ID。论证逻辑57题、形式逻辑30题、资料分析5题，总计92题；用户个人笔记、云端进度结构保持不变。
 
 
@@ -38,7 +42,7 @@
 
 > **资料分析最新进展（2026-11-10）：** 真实课程第3课“放缩运算”根据9页讲义与用户补充的“百化分表”整理完成，新增结构化速查表字段 `data-topic-course-03-scaling.contentSections[1].items` 的“百化分”下的 table，网页使用 LaTeX 公式与表格而不是截图。核心原则：加法误差抵消、减法同幅调整、除法分母找易算分数且分子同比例补偿；高精度选项必须检查误差。特殊口径：`0.aaa≈a/9` 转成 `9/a` 进而乘9错位相减；`0.09≈1/11` 转成乘11错位相加，但要明示0.09与1/11相差约1%。以用户实际题目判断是否够准，不因追求速算而误判。此轮**没有新增资料分析真题**；资料分析题目/材料仍独立管理。详见 `docs/DATA_ANALYSIS.md`。
 
-> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料；知识体系已按实际课程目录建立第2至13课共12个节点，第2、3、4课统一归入「速算」，其余按增长率计算、分式与比重、年均与贡献、其他题型分组；节点暂为目录占位，课程公式与解题技巧须待用户学习、提供讲义或核对题目后再补充；旧逻辑题现为87道（论证57、形式30）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
+> **2026-11-07 新阶段：** 网站扩展为公考学习系统，增加“资料分析”模块。新模块当前无正式真题/材料；知识体系已按实际课程目录建立第2至13课共12个节点，第2、3、4课统一归入「速算」，其余按增长率计算、分式与比重、年均与贡献、其他题型分组；节点暂为目录占位，课程公式与解题技巧须待用户学习、提供讲义或核对题目后再补充；旧逻辑题现为89道（论证59、形式30）。资料分析采用 data-materials.json（材料按 blocks 复用）、data-questions.json（题目通过 materialId 关联）、data-knowledge.json（考点）；data-analysis.js / data-analysis.css 负责表格、图表、图片和公式，详细数据格式见 docs/DATA_ANALYSIS.md。资料分析题目 ID 使用 data- 前缀，资料图仅以 assets/data-analysis/ 下的独立 WebP/PNG/JPG 存储，**不要内嵌 Base64 或每次上传旧图**；知识/解析公式以 LaTeX 保存，由 KaTeX 按需渲染。原账号、云同步、进度、旧题 ID、旧路由都必须保留。模块路由 #data/knowledge 和 #data/practice。数据校验增加 node tests/validate-data-analysis.cjs，已配置 push 后的自动校验工作流。实际 CI 和上线状态另行核验。
 
 > **优先入口。** 仓库：`sonder98/gongkao-logic-errorbook`。网站：<https://sonder98.github.io/gongkao-logic-errorbook/>。本项目同时学习**论证逻辑**（加强、削弱、前提假设）与**形式逻辑**（翻译、矛盾、真假、综合），并维护考生可读的知识体系和交互错题本。本文供 AI 交接，不在网站前台展示。
 

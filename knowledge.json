@@ -129,7 +129,8 @@
           ],
           "questionIds": [
             "medical",
-            "unknown-adolescent-prefrontal-rationality-training"
+            "unknown-adolescent-prefrontal-rationality-training",
+            "unknown-gout-high-purine-diet-necessary-condition"
           ],
           "recognize": [
             "题目使用“只要、只有、如果……就……”等明确条件语句；或选项试图用反例否定充分性、必要性。"
@@ -163,7 +164,8 @@
             "unknown-ecigarette-smoking-intention-relative-probability-disputed",
             "unknown-adolescent-prefrontal-rationality-training",
             "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
-            "unknown-first-exercise-muscle-response-sex-long-term-adaptation"
+            "unknown-first-exercise-muscle-response-sex-long-term-adaptation",
+            "unknown-gout-high-purine-diet-necessary-condition"
           ],
           "recognize": [
             "特别留意“可能、有助于、风险增加、主要、最、唯一、必须、所有、完全”等词。"
@@ -198,7 +200,9 @@
             "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past",
             "unknown-hospital-three-day-registration-initial-followup",
             "unknown-atlas-moth-colorful-wings-mating-attraction",
-            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
+            "unknown-gout-high-purine-diet-necessary-condition",
+            "unknown-salty-pickles-hypertension-other-causes"
           ],
           "examples": [
             {
@@ -261,7 +265,9 @@
             "unknown-atlas-moth-colorful-wings-mating-attraction",
             "unknown-cockroach-extermination-allergens-endotoxin-apartment",
             "unknown-drug-price-reduction-policies-common-drug-inflation",
-            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
+            "unknown-gout-high-purine-diet-necessary-condition",
+            "unknown-salty-pickles-hypertension-other-causes"
           ]
         },
         {
@@ -994,7 +1000,8 @@
             "unknown-first-exercise-muscle-response-sex-long-term-adaptation",
             "unknown-j-city-theatre-monthly-share-ticket-audience",
             "unknown-drug-price-reduction-policies-common-drug-inflation",
-            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
+            "unknown-salty-pickles-hypertension-other-causes"
           ],
           "examples": [],
           "recognize": [
