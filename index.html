@@ -466,6 +466,7 @@ function knowledgeMatches(topic,section){
  ...(topic.weaken||[]),...(topic.pitfalls||[]),
   ...(topic.tables||[]).flatMap(table=>[table.title,table.note,...(table.headers||[]),...(table.rows||[]).flat()]),
  ...(topic.examples||[]).flatMap(example=>[example.title,example.body]),
+ ...(topic.methodComparison?[topic.methodComparison.title,...(topic.methodComparison.headers||[]),...(topic.methodComparison.rows||[]).flat()]:[]),
  ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution])])])
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
@@ -498,7 +499,8 @@ function structuredKnowledgeHtml(topic){
  const sections=topic.contentSections;
  const jump='<nav class="kb-structured-jump" aria-label="本课内容">'+sections.map(section=>
    '<button type="button" data-kb-structured-jump="'+safe(section.id)+'">'+safe(section.title)+'</button>').join('')+'</nav>';
- return jump+'<div class="kb-structured">'+sections.map((section,i)=>
+ const comparison=topic.methodComparison?'<section class="kb-article-section kb-method-comparison"><h3>'+safe(topic.methodComparison.title||'方法对比')+'</h3>'+knowledgeTableMarkup(topic.methodComparison)+'</section>':'';
+ return comparison+jump+'<div class="kb-structured">'+sections.map((section,i)=>
   '<section class="kb-structured-group" id="kb-structured-'+safe(section.id)+'">'+
    '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safe(section.title)+'</h3>'+
    (section.description?'<p>'+DataAnalysis.rich(section.description)+'</p>':'')+'</div></div>'+
