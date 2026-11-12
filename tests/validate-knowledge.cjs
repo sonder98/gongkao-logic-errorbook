@@ -100,6 +100,15 @@ for(const section of formalBook.sections){
  }
 }
 // P0/P1 editorial contract: stable topic count, reader-facing wording and concise representative examples.
+for(const [topicId,qid] of [
+ ['build-remove-link','unknown-cockroach-extermination-allergens-endotoxin-apartment'],
+ ['experiment-comparability','unknown-cockroach-extermination-allergens-endotoxin-apartment'],
+ ['match-target','unknown-first-exercise-muscle-response-sex-long-term-adaptation']
+]){
+ const t=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
+ assert.ok(t?.questionIds.includes(qid),'unlinked existing argument knowledge: '+topicId);
+}
+assert.ok(formalBook.sections.flatMap(s=>s.topics).find(t=>t.id==='formal-translation-basics')?.questionIds.includes('formal-unknown-spiritual-production-consumption-necessity'),'unlinked formal translation question');
 const argumentTopics=book.sections.flatMap(section=>section.topics);
 const formalTopics=formalBook.sections.flatMap(section=>section.topics);
 assert.equal(argumentTopics.length,31,'argument knowledge count must remain stable');

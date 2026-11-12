@@ -103,7 +103,7 @@
     return '<div class="da-explanation">'+sections.filter(x=>x[1]).map(([name,content])=>
       '<section class="da-explain-section"><h4>'+name+'</h4><div>'+rich(content)+'</div></section>').join('')+
       (q.longDivision?'<section class="da-explain-section da-long-division"><h4>竖式除法</h4><pre aria-label="竖式除法步骤">'+esc(q.longDivision)+'</pre></section>':'')+
-      (q.rule?'<div class="da-rule"><b>可迁移规则：</b>'+rich(q.rule)+'</div>':'')+'</div>';
+      (typeof q.rule==='string'&&q.rule.trim()?'<div class="da-rule"><b>可迁移方法：</b>'+rich(q.rule.trim())+'</div>':'')+'</div>';
   }
   function validate(materials,questions,book,externalQuestionIds=[],externalTopicIds=[]){
     if(!Array.isArray(materials)||!Array.isArray(questions)||!book||!Array.isArray(book.sections))throw Error('资料分析 JSON 根结构错误');

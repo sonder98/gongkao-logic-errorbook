@@ -690,9 +690,10 @@ async function loadFormalData(){
  const [questions,book]=await Promise.all([questionsResponse.json(),knowledgeResponse.json()]);
  if(!Array.isArray(questions)||!book||!Array.isArray(book.sections))throw new Error('形式逻辑数据格式错误');
  const questionIds=new Set(ARGUMENT_QUESTIONS.map(q=>q.id));
- const required=['id','year','exam','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','rule','image'];
+ const required=['id','year','exam','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','image'];
  for(const q of questions){
   if(!q||!q.id?.startsWith('formal-')||questionIds.has(q.id)||required.some(key=>typeof q[key]!=='string')||
+   (Object.hasOwn(q,'rule')&&typeof q.rule!=='string')||
    !Array.isArray(q.options)||q.options.length<2||q.options.length>5||
    !q.options.every(opt=>typeof opt==='string'&&opt.trim())||
    !'ABCDE'.slice(0,q.options.length).includes(q.answer)||q.image!=='')throw new Error('形式逻辑题目格式错误或 ID 重复');
@@ -788,7 +789,7 @@ const originalAnalysisContent=dataMode?DataAnalysis.explanationHtml(q):[
  '<p><b>逻辑结构：</b>'+safe(q.structure)+'</p>',
  '<p><b>为什么选 '+safe(q.answer)+'：</b>'+safe(q.reason)+'</p>',
  '<p><b>易错陷阱：</b>'+safe(q.trap)+'</p>',
- '<p><b>一句话记忆：</b>'+safe(q.rule)+'</p>'
+ ...(typeof q.rule==='string'&&q.rule.trim()?['<p><b>可迁移方法：</b>'+safe(q.rule.trim())+'</p>']:[])
 ].join('');
 // Personal overrides live in per-question progress; source JSON explanations stay untouched.
 const hasPersonalAnalysis=typeof r.analysisOverride==='string'&&r.analysisOverride.length>0;
