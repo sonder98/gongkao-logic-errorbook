@@ -750,6 +750,21 @@ function filtered(){
  );
 }
 function safe(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
+// Mobile practice pagination lands on the question card, not the page header.
+function navigatePracticeQuestion(id){
+ active=id;
+ render();
+ updateViewHash();
+ requestAnimationFrame(()=>{
+  if(currentView!=='practice'||active!==id)return;
+  if(window.matchMedia('(max-width:800px)').matches){
+   const top=window.scrollY+$('card').getBoundingClientRect().top-12;
+   window.scrollTo({top:Math.max(0,top),behavior:'auto'});
+  }else{
+   window.scrollTo({top:0,behavior:'smooth'});
+  }
+ });
+}
 function render(){const f=filtered();if(!f.some(q=>q.id===active)&&f.length)active=f[0].id;
 let cats=['全部',...new Set(QUESTIONS.map(q=>q.category))];$('filters').innerHTML=cats.map(c=>`<button class="${category===c?'active':''}" data-cat="${safe(c)}">${safe(c)}</button>`).join('');
 $('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render();if(currentView==='practice')updateViewHash()});
@@ -883,8 +898,8 @@ if($('toggleImage'))if($('toggleImage'))$('toggleImage').onclick=async()=>{
   $('toggleImage').textContent='截图加载失败，点击重试';
  }
 };
-$('prev').onclick=()=>{if(ix>0){active=f[ix-1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
-$('next').onclick=()=>{if(ix<f.length-1){active=f[ix+1].id;render();updateViewHash();window.scrollTo({top:0,behavior:'smooth'})}};
+$('prev').onclick=()=>{if(ix>0)navigatePracticeQuestion(f[ix-1].id)};
+$('next').onclick=()=>{if(ix<f.length-1)navigatePracticeQuestion(f[ix+1].id)};
  if($('retry'))$('retry').onclick=()=>{collapsedAnalysis.delete(q.id);r.selected='';r.submitted=false;r.revealed=false;save();render()};
  if($('keepLocal'))$('keepLocal').onclick=()=>useLocalConflict(q.id);
  if($('useCloud'))$('useCloud').onclick=()=>useCloudConflict(q.id);
