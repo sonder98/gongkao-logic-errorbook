@@ -443,6 +443,24 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.maincard').isVisible(), true);
   assert.equal(await page.locator('.choice').first().isVisible(), true);
+  // Phone pagination should land at the next question, not the site header.
+  await page.locator('.nav-item').first().click();
+  const firstQuestionId=await page.locator('.nav-item.active').getAttribute('data-id');
+  assert.equal(await page.locator('#prev').isDisabled(),true);
+  await page.locator('#next').click();
+  await page.waitForFunction(()=>{
+    const top=document.getElementById('card').getBoundingClientRect().top;
+    return top>=0&&top<=35;
+  });
+  const secondQuestionId=await page.locator('.nav-item.active').getAttribute('data-id');
+  assert.notEqual(secondQuestionId,firstQuestionId);
+  assert.match(page.url(),new RegExp('#practice/'+secondQuestionId+'$'));
+  await page.locator('#prev').click();
+  await page.waitForFunction(()=>{
+    const top=document.getElementById('card').getBoundingClientRect().top;
+    return top>=0&&top<=35;
+  });
+  assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),firstQuestionId);
   const mobileLayout = await page.evaluate(() => ({
     viewportWidth: document.documentElement.clientWidth,
     pageWidth: document.documentElement.scrollWidth,
@@ -464,6 +482,12 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
     `mobile page overflows horizontally: ${JSON.stringify(mobileLayout)}`
   );
   await page.setViewportSize({ width: 320, height: 720 });
+  await page.locator('#next').click();
+  await page.waitForFunction(()=>{
+    const top=document.getElementById('card').getBoundingClientRect().top;
+    return top>=0&&top<=35;
+  });
+  assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),secondQuestionId);
   const narrowMobileLayout = await page.evaluate(() => ({
     viewportWidth: document.documentElement.clientWidth,
     pageWidth: document.documentElement.scrollWidth
