@@ -130,11 +130,15 @@ assert.equal(partTable.rows[3][5],'\\(\\frac29\\)');
 assert.ok(parts.items.some(x=>x.title.includes('份数关系')&&x.formula.includes('n+1')),'应保留份数思想核心公式');
 const partsCorrection=parts.items.find(x=>x.title==='份数法修正');
 assert.ok(partsCorrection,'份数法修正必须属于份数思想');
-assert.deepEqual(partsCorrection.subitems.map(x=>x.title),['方法一｜增量与增长率近似同比','方法二｜事后修正'],'必须严格保留用户的两种修正方法');
+assert.deepEqual(partsCorrection.subitems.map(x=>x.title),['方法一｜增量与增长率近似同比','方法二｜事后修正','方法三｜事前修正'],'份数法修正必须按既定顺序保留三种方法');
 assert.ok(partsCorrection.subitems[0].formula.includes('\\frac{1+r_2}{1+r_1}'),'方法一必须保留增长量与增长率近似同比的推导');
 assert.ok(partsCorrection.subitems[0].example.includes('4.9\\%'),'方法一应区别0.7个百分点和增长量约4.9%的相对补偿');
 assert.ok(partsCorrection.subitems[1].formula.includes('15\\%-14.3\\%'),'方法二应使用真实增速与近似增速的0.7个百分点之差');
 assert.ok(partsCorrection.subitems[1].example.includes('0.7\\%'),'方法二必须保留用近似基期补算遗漏的增长量');
+assert.ok(partsCorrection.subitems[2].description.includes('增长率估大'),'事前修正应先判断增长率是否估大');
+assert.ok(partsCorrection.subitems[2].description.includes('现期量'),'事前修正应通过调整现期量来补偿');
+assert.ok(partsCorrection.subitems[2].caution.includes('更好算'),'只有调整后便于凑整才优先事前修正');
+assert.ok(partsCorrection.subitems[2].caution.includes('事后修正'),'无法凑整时应采用事后修正');
 assert.ok(!conversion.items.some(x=>x.title.includes('份数法修正')),'份数法修正不得混入化除为乘');
 
 const hebei=questions.find(q=>q.id==='data-2015-hebei-2013-highway-passengers');

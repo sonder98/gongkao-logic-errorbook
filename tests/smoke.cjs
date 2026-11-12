@@ -580,10 +580,12 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeCard').innerText(),/提前修正/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/份数思想/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/aa.a%/);
-  assert.equal(await page.locator('.kb-structured-group').last().locator('.kb-structured-subitem').count(),2,'份数法修正必须在份数思想中独立展示两种方法');
-  assert.deepEqual(await page.locator('.kb-structured-group').last().locator('.kb-structured-subitem h5').allInnerTexts(),['方法一｜增量与增长率近似同比','方法二｜事后修正']);
+  assert.equal(await page.locator('.kb-structured-group').last().locator('.kb-structured-subitem').count(),3,'份数法修正必须在份数思想中独立展示三种方法');
+  assert.deepEqual(await page.locator('.kb-structured-group').last().locator('.kb-structured-subitem h5').allInnerTexts(),['方法一｜增量与增长率近似同比','方法二｜事后修正','方法三｜事前修正']);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.7个百分点/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/4.9%/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/调小现期量/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/更好算/);
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 
