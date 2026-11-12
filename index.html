@@ -465,7 +465,8 @@ function knowledgeMatches(topic,section){
  ...(topic.recognize||[]),...(topic.patterns||[]),...(topic.strengthen||[]),
  ...(topic.weaken||[]),...(topic.pitfalls||[]),
   ...(topic.tables||[]).flatMap(table=>[table.title,table.note,...(table.headers||[]),...(table.rows||[]).flat()]),
- ...(topic.examples||[]).flatMap(example=>[example.title,example.body])
+ ...(topic.examples||[]).flatMap(example=>[example.title,example.body]),
+ ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[])])])
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
 function listHtml(items){
@@ -475,15 +476,32 @@ function sectionHtml(title,items){
  return items?.length?'<section class="kb-article-section"><h3>'+safe(title)+'</h3>'+listHtml(items)+'</section>':'';
 }
 
+function knowledgeTableMarkup(table){
+ const cells=(row,tag)=>'<tr>'+row.map(value=>'<'+tag+'>'+DataAnalysis.rich(value)+'</'+tag+'>').join('')+'</tr>';
+ return '<div class="da-table-scroll kb-table-scroll"><table class="kb-formula-table"><thead>'+cells(table.headers,'th')+'</thead><tbody>'+
+  table.rows.map(row=>cells(row,'td')).join('')+'</tbody></table></div>'+
+  (table.note?'<p class="kb-table-note">'+DataAnalysis.rich(table.note)+'</p>':'');
+}
 function knowledgeTablesHtml(tables){
  if(currentModule!=='data'||!Array.isArray(tables)||!tables.length)return '';
- return tables.map(table=>{
-  const cells=(row,tag)=>'<tr>'+row.map(value=>'<'+tag+'>'+DataAnalysis.rich(value)+'</'+tag+'>').join('')+'</tr>';
-  return '<section class="kb-article-section"><h3>'+safe(table.title||'速查表')+'</h3>'+
-   '<div class="da-table-scroll kb-table-scroll"><table class="kb-formula-table"><thead>'+cells(table.headers,'th')+'</thead><tbody>'+
-   table.rows.map(row=>cells(row,'td')).join('')+'</tbody></table></div>'+
-   (table.note?'<p class="kb-table-note">'+DataAnalysis.rich(table.note)+'</p>':'')+'</section>';
- }).join('');
+ return tables.map(table=>'<section class="kb-article-section"><h3>'+safe(table.title||'速查表')+'</h3>'+knowledgeTableMarkup(table)+'</section>').join('');
+}
+function structuredKnowledgeHtml(topic){
+ if(currentModule!=='data'||!Array.isArray(topic.contentSections)||!topic.contentSections.length)return '';
+ const sections=topic.contentSections;
+ const jump='<nav class="kb-structured-jump" aria-label="本课内容">'+sections.map(section=>
+   '<button type="button" data-kb-structured-jump="'+safe(section.id)+'">'+safe(section.title)+'</button>').join('')+'</nav>';
+ return jump+'<div class="kb-structured">'+sections.map((section,i)=>
+  '<section class="kb-structured-group" id="kb-structured-'+safe(section.id)+'">'+
+   '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safe(section.title)+'</h3>'+
+   (section.description?'<p>'+DataAnalysis.rich(section.description)+'</p>':'')+'</div></div>'+
+   (section.items||[]).map(item=>'<article class="kb-structured-item"><h4>'+safe(item.title)+'</h4>'+
+    (item.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(item.description)+'</p>':'')+
+    (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
+    (item.table?knowledgeTableMarkup(item.table):'')+
+    (item.example?'<p class="kb-structured-example"><strong>例：</strong>'+DataAnalysis.rich(item.example)+'</p>':'')+
+    (item.caution?'<p class="kb-structured-caution">'+DataAnalysis.rich(item.caution)+'</p>':'')+
+    '</article>').join('')+'</section>').join('')+'</div>';
 }
 function renderKnowledge(){
  if(!KNOWLEDGE){
@@ -561,13 +579,15 @@ function renderKnowledge(){
    '</div><div class="kb-footer-note">点击题目可直接进入错题练习；答题区也能返回关联知识点。</div></section>':'<section class="kb-footer"><div class="kb-footer-note">这个知识点暂时没有收录的配套真题，后续会持续补充。</div></section>';
  $('knowledgeCard').innerHTML='<div class="kb-breadcrumb">'+safe(group.chapter)+' / '+safe(group.title)+'</div>'+
   '<h2 class="kb-heading">'+safe(topic.title)+'</h2><p class="kb-summary">'+(currentModule==='data'?DataAnalysis.rich(topic.summary):safe(topic.summary))+'</p>'+
-  sectionHtml('快速识别',topic.recognize)+
-  sectionHtml('结构与核心规则',topic.patterns)+
-  knowledgeTablesHtml(topic.tables)+
-  methods+
-  sectionHtml('常见陷阱',topic.pitfalls)+
-  examples+relatedHtml+knowledgeFooterNav;
+  (topic.contentSections?.length?structuredKnowledgeHtml(topic):
+   sectionHtml('快速识别',topic.recognize)+sectionHtml('结构与核心规则',topic.patterns)+
+   knowledgeTablesHtml(topic.tables)+methods+sectionHtml('常见陷阱',topic.pitfalls)+examples)+
+  relatedHtml+knowledgeFooterNav;
  if(currentModule==='data')DataAnalysis.renderMath($('knowledgeCard'));
+ $('knowledgeCard').querySelectorAll('[data-kb-structured-jump]').forEach(button=>button.onclick=()=>{
+  const section=$('knowledgeCard').querySelector('#kb-structured-'+button.dataset.kbStructuredJump);
+  if(section)section.scrollIntoView({behavior:'smooth',block:'start'});
+ });
  $('knowledgeCard').querySelectorAll('[data-open-question]').forEach(button=>button.onclick=()=>openPractice(button.dataset.openQuestion));
  const previousButton=$('knowledgeCard').querySelector('[data-kb-prev]');
  const nextButton=$('knowledgeCard').querySelector('[data-kb-next]');

@@ -30,17 +30,26 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
 assert.ok(scaling,'放缩运算知识点 ID 必须保持稳定');
-assert.ok(scaling.tables?.[0]?.headers?.length===4,'百化分速查表需显示为四列表格');
-assert.equal(scaling.tables[0].rows.length,6,'百化分速查表条目不完整');
-const conversionRows=JSON.stringify(scaling.tables[0].rows);
+assert.deepEqual(scaling.contentSections.map(s=>s.title),['加减法放缩','除法放缩','乘法放缩'],'第3课必须按运算类别划分');
+assert.deepEqual(scaling.contentSections.map(s=>s.items.length),[3,6,2],'第3课的方法层级和数量不能丢失');
+assert.ok(!scaling.patterns,'第3课不再采用按录入顺序堆积的规则列表');
+const addSub=scaling.contentSections[0],division=scaling.contentSections[1],multiplication=scaling.contentSections[2];
+assert.deepEqual(addSub.items.map(item=>item.title),['加法｜有借有还','平均数｜削峰填谷','减法｜公平对待']);
+const fraction=division.items.find(item=>item.title.includes('百化分')).table;
+assert.ok(fraction?.headers?.length===4,'百化分速查表需在除法部分展示为四列');
+assert.equal(fraction.rows.length,6,'百化分速查表条目不完整');
+const conversionRows=JSON.stringify(fraction.rows);
 for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
  assert.ok(conversionRows.includes(item),'缺失百化分条目：'+item);
 }
-assert.ok(scaling.patterns.some(s=>s.includes('错位相减')&&s.includes('10')),'缺少乘9错位相减');
-assert.ok(scaling.patterns.some(s=>s.includes('错位相加')&&s.includes('11')),'缺少乘11错位相加');
-assert.ok(scaling.pitfalls.some(s=>s.includes('0.09')&&s.includes('1/11')),'缺少0.09和1/11近似误差警告');
+assert.ok(division.items.some(item=>item.title.includes('错位相减')&&item.formula.includes('10')),'缺少乘9错位相减');
+assert.ok(division.items.some(item=>item.title.includes('错位相加')&&item.formula.includes('11')),'缺少乘11错位相加');
+assert.ok(division.items.some(item=>item.title.includes('错位相加')&&item.caution.includes('0.09')&&item.caution.includes('1/11')),'缺少0.09和1/11近似误差警告');
+assert.ok(division.items.some(item=>item.title.includes('精度与量级判断')&&item.example.includes('1170')),'有效数字与量级连续步骤应保留');
+assert.ok(multiplication.items.some(item=>item.title.includes('反向')&&item.formula.includes('r^2')),'缺少乘法反向放缩');
+assert.ok(multiplication.items.some(item=>item.example&&item.example.includes('8622')&&item.example.includes('9000')),'缺少乘法凑整例题');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count'],'第3课应关联三道正式题');
-assert.ok(scaling.patterns.some(s=>s.includes('有效数字→量级判断')),'应保留连续两步的课堂原则');
+assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
 assert.equal(materials.length,5,'应有五份真实材料');
 assert.equal(questions.length,5,'应有五道真实题目');
 const legalQuestion=questions[0];
@@ -85,8 +94,7 @@ assert.ok(neighbors.analysis.formula.includes('105\\times4'));
 assert.ok(neighbors.analysis.quick.includes('376+37.6'));
 assert.ok(neighbors.analysis.quick.includes('413.6+4'));
 assert.ok(neighbors.analysis.trap.includes('945→940')&&neighbors.analysis.trap.includes('44.2%→44%'),'误差应归因于两处放缩，而非错位相加本身');
-assert.ok(scaling.patterns.some(s=>s.includes('乘法放缩')&&s.includes('r^2')),'乘法反向等比例放缩公式应入知识库');
-assert.ok(scaling.patterns.some(s=>s.includes('8622')&&s.includes('9000')));
+assert.ok(multiplication.items.some(item=>item.formula?.includes('1-r^2')),'乘法等比例误差公式应入知识库');
 const neighborHTML=DA.explanationHtml(neighbors);
 assert.match(neighborHTML,/方法一 · 百化分并修正误差/);
 assert.match(neighborHTML,/方法二 · 乘法放缩、错位相加/);

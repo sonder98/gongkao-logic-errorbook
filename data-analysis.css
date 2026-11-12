@@ -47,3 +47,23 @@
 .da-explain-section h4{font-size:14px;margin-bottom:8px}
 .da-long-division pre{margin:8px 0;background:#f7f9fa;border:1px solid #e0e8eb;border-radius:10px;padding:14px;max-width:100%;overflow-x:auto;font:14px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:pre;color:#233946}
 @media(max-width:800px){.da-explanation .da-equation{font-size:14px}}
+
+/* Hierarchical, method-based notes for data analysis: groups > techniques > formulas / examples. */
+.kb-structured-jump{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.kb-structured-jump button{border:1px solid #bcdcd5;border-radius:20px;background:#f4faf8;color:#176f67;padding:8px 13px;font-size:13px;font-weight:750;min-height:38px}
+.kb-structured-jump button:hover,.kb-structured-jump button:focus-visible{background:#e7f5f0;border-color:#4fae9f}
+.kb-structured-group{padding-top:24px;margin-top:24px;border-top:1px solid #dce7e5;scroll-margin-top:20px}
+.kb-structured-head{display:flex;align-items:flex-start;gap:13px;margin-bottom:16px}
+.kb-structured-index{flex:none;color:#148377;font-size:12px;font-weight:850;border-radius:9px;background:#e8f6f2;padding:5px 8px;margin-top:3px}
+.kb-structured-head h3{font-size:20px;line-height:1.35;color:#1b3940;margin:0}
+.kb-structured-head p{font-size:13px;line-height:1.75;color:#637981;margin:6px 0 0}
+.kb-structured-item{padding:16px 18px;margin:12px 0;border:1px solid #e5ecea;border-radius:12px;background:#fff}
+.kb-structured-item h4{font-size:15px;color:#24615e;font-weight:850;line-height:1.5;margin:0 0 7px}
+.kb-structured-desc{font-size:14px;color:#334e59;line-height:1.8;margin:0}
+.kb-structured-formula{margin:10px 0;max-width:100%;overflow-x:auto}
+.kb-structured-formula .da-equation{font-size:16px}
+.kb-structured-example{margin:11px 0 0;padding:11px 13px;background:#f5f8f8;border-radius:8px;font-size:13px;color:#3d5560;line-height:1.85}
+.kb-structured-example strong{color:#277169}
+.kb-structured-caution{font-size:12px;color:#795c3d;line-height:1.8;margin:10px 0 0;padding-left:10px;border-left:2px solid #dfc6a1}
+.kb-structured-item .kb-table-scroll{margin-top:12px}
+@media(max-width:800px){.kb-structured-head h3{font-size:18px}.kb-structured-item{padding:14px 12px}.kb-structured-jump button{min-height:42px}}
