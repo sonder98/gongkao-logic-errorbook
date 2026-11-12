@@ -54,7 +54,21 @@ for(const [id,answer,category] of [["unknown-cockroach-extermination-allergens-e
 assert.ok(q.filter(item=>typeof item.rule==='string'&&item.rule.trim()).length<q.length/2,'do not write new rules for every argument question');
 assert.ok(!Object.hasOwn(q.find(item=>item.id==='unknown-cloud-flight-recorder-reliability'),'rule'),'question-specific argument analysis should stay in explanation');
 assert.ok(Object.hasOwn(q.find(item=>item.id==='unknown-first-exercise-muscle-response-sex-long-term-adaptation'),'rule'),'representative transferable principle retained');
-assert.equal(q.length,54,'argument catalog count');
+for(const [id,answer,category] of [
+ ['unknown-j-city-theatre-monthly-share-ticket-audience','B','原因解释'],
+ ['unknown-drug-price-reduction-policies-common-drug-inflation','B','原因解释'],
+ ['unknown-xvirus-high-proof-baijiu-prevention-weak-effect','B','由因推果']
+]){
+ const item=q.find(x=>x.id===id);
+ assert.ok(item && item.answer===answer && item.category===category,'missing argument problem '+id);
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+ assert.ok(!Object.hasOwn(item,'rule'),'do not invent a per-question transferable rule: '+id);
+}
+const muscleComparison=q.find(x=>x.id==='unknown-first-exercise-muscle-response-sex-long-term-adaptation');
+assert.equal(muscleComparison.answer,'A');
+assert.ok(muscleComparison.trap.includes('高度白酒预防X病毒题') && muscleComparison.reason.includes('整体评价'),'muscle comparison explanation must remain');
+assert.equal(q.length,57,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));

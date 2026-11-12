@@ -31,7 +31,9 @@
             "2024-hebei-diet-cognition",
             "unknown-sushi-suxun-laoquan-avoidance",
             "unknown-chaoshan-tulou-defense-prerequisite",
-            "2015-guokao-tv-price-quality-market-share"
+            "2015-guokao-tv-price-quality-market-share",
+            "unknown-j-city-theatre-monthly-share-ticket-audience",
+            "unknown-drug-price-reduction-policies-common-drug-inflation"
           ],
           "examples": []
         },
@@ -159,7 +161,9 @@
             "unknown-gut-microbiota-bone-density-conditions",
             "unknown-grape-seed-free-radicals-aging",
             "unknown-ecigarette-smoking-intention-relative-probability-disputed",
-            "unknown-adolescent-prefrontal-rationality-training"
+            "unknown-adolescent-prefrontal-rationality-training",
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
+            "unknown-first-exercise-muscle-response-sex-long-term-adaptation"
           ],
           "recognize": [
             "特别留意“可能、有助于、风险增加、主要、最、唯一、必须、所有、完全”等词。"
@@ -193,7 +197,8 @@
             "2022-henan-adolescent-risk-cardiovascular-intervention",
             "unknown-vitamin-d-sunlight-calcium-osteoporosis-modern-vs-past",
             "unknown-hospital-three-day-registration-initial-followup",
-            "unknown-atlas-moth-colorful-wings-mating-attraction"
+            "unknown-atlas-moth-colorful-wings-mating-attraction",
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
           ],
           "examples": [
             {
@@ -254,7 +259,9 @@
             "2020-guangdong-pe-class-exercise-time-assumption",
             "unknown-hospital-three-day-registration-initial-followup",
             "unknown-atlas-moth-colorful-wings-mating-attraction",
-            "unknown-cockroach-extermination-allergens-endotoxin-apartment"
+            "unknown-cockroach-extermination-allergens-endotoxin-apartment",
+            "unknown-drug-price-reduction-policies-common-drug-inflation",
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
           ]
         },
         {
@@ -984,7 +991,10 @@
             "unknown-atlas-moth-colorful-wings-mating-attraction",
             "unknown-hmpv-gorilla-human-to-animal-transmission",
             "unknown-tiktaalik-fish-lungs-terrestrial-advantage",
-            "unknown-first-exercise-muscle-response-sex-long-term-adaptation"
+            "unknown-first-exercise-muscle-response-sex-long-term-adaptation",
+            "unknown-j-city-theatre-monthly-share-ticket-audience",
+            "unknown-drug-price-reduction-policies-common-drug-inflation",
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
           ],
           "examples": [],
           "recognize": [

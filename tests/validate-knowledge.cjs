@@ -109,6 +109,16 @@ for(const [topicId,qid] of [
  assert.ok(t?.questionIds.includes(qid),'unlinked existing argument knowledge: '+topicId);
 }
 assert.ok(formalBook.sections.flatMap(s=>s.topics).find(t=>t.id==='formal-translation-basics')?.questionIds.includes('formal-unknown-spiritual-production-consumption-necessity'),'unlinked formal translation question');
+for(const [topicId,ids] of [
+ ['match-target',['unknown-j-city-theatre-monthly-share-ticket-audience','unknown-drug-price-reduction-policies-common-drug-inflation','unknown-xvirus-high-proof-baijiu-prevention-weak-effect']],
+ ['identify',['unknown-j-city-theatre-monthly-share-ticket-audience','unknown-drug-price-reduction-policies-common-drug-inflation']],
+ ['build-remove-link',['unknown-drug-price-reduction-policies-common-drug-inflation','unknown-xvirus-high-proof-baijiu-prevention-weak-effect']],
+ ['cause-overview',['unknown-xvirus-high-proof-baijiu-prevention-weak-effect']],
+ ['claim-strength',['unknown-xvirus-high-proof-baijiu-prevention-weak-effect','unknown-first-exercise-muscle-response-sex-long-term-adaptation']]
+]){
+ const topic=book.sections.flatMap(section=>section.topics).find(topic=>topic.id===topicId);
+ for(const id of ids)assert.ok(topic?.questionIds.includes(id),'missing existing knowledge link '+topicId+': '+id);
+}
 const argumentTopics=book.sections.flatMap(section=>section.topics);
 const formalTopics=formalBook.sections.flatMap(section=>section.topics);
 assert.equal(argumentTopics.length,31,'argument knowledge count must remain stable');
