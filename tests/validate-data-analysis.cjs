@@ -35,6 +35,10 @@ assert.deepEqual(scaling.contentSections.map(s=>s.items.length),[3,6,2],'第3课
 assert.ok(!scaling.patterns,'第3课不再采用按录入顺序堆积的规则列表');
 const addSub=scaling.contentSections[0],division=scaling.contentSections[1],multiplication=scaling.contentSections[2];
 assert.deepEqual(addSub.items.map(item=>item.title),['加法｜有借有还','平均数｜削峰填谷','减法｜公平对待']);
+const averageMethod=addSub.items.find(item=>item.title==='平均数｜削峰填谷');
+assert.equal(averageMethod.example,undefined,'禁止把未由用户提供的60000基准示例混入知识体系');
+assert.ok(averageMethod.formula.includes('偏差之和'),'保留用户确认的基准数与偏差方法');
+assert.ok(scaling.questionIds.includes('data-2015-2016-micro-service-quarterly-average'),'用户给出的平均数题须保留在正式习题集内');
 const fraction=division.items.find(item=>item.title.includes('百化分')).table;
 assert.ok(fraction?.headers?.length===4,'百化分速查表需在除法部分展示为四列');
 assert.equal(fraction.rows.length,6,'百化分速查表条目不完整');
