@@ -467,7 +467,7 @@ function knowledgeMatches(topic,section){
   ...(topic.tables||[]).flatMap(table=>[table.title,table.note,...(table.headers||[]),...(table.rows||[]).flat()]),
  ...(topic.examples||[]).flatMap(example=>[example.title,example.body]),
  ...(topic.methodComparison?[topic.methodComparison.title,...(topic.methodComparison.headers||[]),...(topic.methodComparison.rows||[]).flat()]:[]),
- ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution])])])
+ ...(topic.contentSections||[]).flatMap(group=>[group.title,group.description,...(group.items||[]).flatMap(item=>[item.title,item.description,item.formula,item.example,item.caution,...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution]),...(item.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])])])
  ].some(s=>String(s||'').toLocaleLowerCase().includes(term));
 }
 function listHtml(items){
@@ -492,6 +492,12 @@ function structuredKnowledgeDetailsHtml(item){
   (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
   (item.table?knowledgeTableMarkup(item.table):'')+
   (item.example?'<p class="kb-structured-example"><strong>例：</strong>'+DataAnalysis.rich(item.example)+'</p>':'')+
+  (item.workedExamples?.length?'<div class="kb-structured-worked-examples">'+item.workedExamples.map(ex=>
+   '<section class="kb-structured-worked-example"><h5>'+safe(ex.title)+'</h5>'+
+   (ex.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(ex.description)+'</p>':'')+
+   (ex.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(ex.formula)+'</div>':'')+
+   (ex.note?'<p class="kb-structured-caution">'+DataAnalysis.rich(ex.note)+'</p>':'')+
+   '</section>').join('')+'</div>':'')+
   (item.caution?'<p class="kb-structured-caution">'+DataAnalysis.rich(item.caution)+'</p>':'');
 }
 function structuredKnowledgeHtml(topic){

@@ -518,6 +518,10 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeCard').innerText(),/错位相加/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.aaa/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.09/);
+  assert.equal(await page.locator('#kb-structured-multiplication .kb-structured-worked-example').count(),1,'新增例题应在乘法反向放缩方法下');
+  assert.match(await page.locator('#kb-structured-multiplication .kb-structured-worked-example').innerText(),/561.4/);
+  assert.match(await page.locator('#kb-structured-multiplication .kb-structured-worked-example').innerText(),/257.12/);
+  await page.locator('#kb-structured-multiplication .kb-structured-worked-example .katex').first().waitFor({state:'visible',timeout:15000});
   // The sequential navigation should work from the second topic (放缩运算).
   assert.equal(await page.locator('#knowledgeCard [data-kb-prev]').isDisabled(),false);
   await page.locator('#knowledgeCard [data-kb-next]').click();

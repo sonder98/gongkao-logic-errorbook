@@ -74,3 +74,10 @@
 .kb-structured-subitem h5{margin:0 0 9px;color:#1f6860;font-size:14px;line-height:1.45;font-weight:800}
 .kb-structured-subitem .kb-structured-formula{margin:12px 0}
 @media(max-width:800px){.kb-structured-subitem{padding:13px 10px}.kb-structured-subitem h5{font-size:13px}}
+
+/* Dedicated worked examples remain nested inside the method they demonstrate. */
+.kb-structured-worked-examples{display:grid;gap:12px;margin-top:12px}
+.kb-structured-worked-example{min-width:0;padding:14px 16px;border-radius:10px;border:1px solid #d9e7e3;background:#f8fcfb}
+.kb-structured-worked-example h5{margin:0 0 8px;color:#21645c;font-size:14px;font-weight:800;line-height:1.45}
+.kb-structured-worked-example .kb-structured-formula{margin:12px 0}
+@media(max-width:800px){.kb-structured-worked-example{padding:12px 10px}}

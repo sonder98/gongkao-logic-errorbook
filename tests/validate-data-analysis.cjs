@@ -48,6 +48,16 @@ assert.ok(division.items.some(item=>item.title.includes('错位相加')&&item.ca
 assert.ok(division.items.some(item=>item.title.includes('精度与量级判断')&&item.example.includes('1170')),'有效数字与量级连续步骤应保留');
 assert.ok(multiplication.items.some(item=>item.title.includes('反向')&&item.formula.includes('r^2')),'缺少乘法反向放缩');
 assert.ok(multiplication.items.some(item=>item.example&&item.example.includes('8622')&&item.example.includes('9000')),'缺少乘法凑整例题');
+const reverse= multiplication.items.find(item=>item.title==='反向近等比例调整');
+assert.ok(reverse,'乘法反向放缩方法应保留');
+assert.equal(reverse.workedExamples?.length,1,'新例题应归入原有反向放缩方法，不新建同级条目');
+const newExample=reverse.workedExamples[0];
+assert.ok(newExample.title.includes('561.4')&&newExample.title.includes('45.8%'));
+assert.ok(newExample.formula.includes('561.4+15'),'需保留用户的现期向上补偿心算过程');
+assert.ok(newExample.formula.includes('576\\times\\frac49'),'须保留576乘4/9的百化分计算');
+assert.ok(newExample.formula.includes('=256'),'576×4/9正确结果是256');
+assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('2559'),'不得保留错误乘积与补偿');
+assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count'],'第3课应关联三道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
 assert.equal(materials.length,5,'应有五份真实材料');
