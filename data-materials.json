@@ -136,5 +136,102 @@
         "text": "2019年前三季度，某省规模以上工业企业利润总额965.9亿元，同比下降7.4%。"
       }
     ]
+  },
+  {
+    "id": "data-material-2014q4-2016q4-micro-service-operations",
+    "title": "2014年4季度以来小微服务业经营平稳面状况",
+    "year": "2014—2016",
+    "exam": "未知",
+    "blocks": [
+      {
+        "type": "chart",
+        "chartType": "line",
+        "yMin": 73,
+        "yMax": 82,
+        "unit": "%",
+        "alt": "2014年4季度至2016年4季度小微服务业经营平稳面占比折线图，纵轴单位百分比，所有9个季度标注具体数值",
+        "caption": "2014年4季度以来小微服务业经营平稳面状况（单位：%）",
+        "data": [
+          {
+            "label": "2014年4季度",
+            "value": 76.7,
+            "shortLabel": "14Q4"
+          },
+          {
+            "label": "2015年1季度",
+            "value": 79.5,
+            "shortLabel": "15Q1"
+          },
+          {
+            "label": "2015年2季度",
+            "value": 77.2,
+            "shortLabel": "15Q2"
+          },
+          {
+            "label": "2015年3季度",
+            "value": 78.2,
+            "shortLabel": "15Q3"
+          },
+          {
+            "label": "2015年4季度",
+            "value": 76.2,
+            "shortLabel": "15Q4"
+          },
+          {
+            "label": "2016年1季度",
+            "value": 77.9,
+            "shortLabel": "16Q1"
+          },
+          {
+            "label": "2016年2季度",
+            "value": 76.5,
+            "shortLabel": "16Q2"
+          },
+          {
+            "label": "2016年3季度",
+            "value": 81.1,
+            "shortLabel": "16Q3"
+          },
+          {
+            "label": "2016年4季度",
+            "value": 79.5,
+            "shortLabel": "16Q4"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data-material-2017-2018-export-cross-border-ecommerce",
+    "title": "2017—2018年中国出口跨境电商交易规模与B2B占比",
+    "year": "2017—2018",
+    "exam": "未知",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "出口跨境电商交易模式包括B2B和B2C。材料给出出口跨境电商交易总规模及B2B交易占比，剩余部分为B2C占比。"
+      },
+      {
+        "type": "table",
+        "columns": [
+          "年份",
+          "出口跨境电商交易规模（万亿元）",
+          "B2B交易占比"
+        ],
+        "rows": [
+          [
+            "2017年",
+            "6.3",
+            "81%"
+          ],
+          [
+            "2018年",
+            "7.1",
+            "80.3%"
+          ]
+        ],
+        "caption": "按题目图表提取的两年有关数据"
+      }
+    ]
   }
 ]

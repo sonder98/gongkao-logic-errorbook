@@ -56,10 +56,19 @@
   function renderChart(block){
     const items=block.data||[],w=640,h=294,left=56,right=18,top=30,bottom=70;
     if(!items.length)return '';
-    const vals=items.map(x=>Number(x.value)),high=Math.max(1,...vals)*1.14,plotW=w-left-right,plotH=h-top-bottom;
+    const vals=items.map(x=>Number(x.value)),plotW=w-left-right,plotH=h-top-bottom;
+    const bounded=block.chartType==='line'&&Number.isFinite(block.yMin)&&Number.isFinite(block.yMax)&&block.yMax>block.yMin;
+    const low=bounded?block.yMin:0,high=bounded?block.yMax:Math.max(1,...vals)*1.14;
     const x=i=>left+plotW*(i+.5)/items.length;
-    const y=value=>top+plotH*(1-value/high);
+    const y=value=>top+plotH*(1-(value-low)/(high-low));
     let shapes='<line x1="'+left+'" y1="'+(h-bottom)+'" x2="'+(w-right)+'" y2="'+(h-bottom)+'" stroke="#9baeb6"/>';
+    if(bounded){
+      for(let i=0;i<=3;i++){
+        const value=low+(high-low)*i/3,yy=y(value);
+        shapes+='<line x1="'+left+'" y1="'+yy+'" x2="'+(w-right)+'" y2="'+yy+'" stroke="#e2ebed" stroke-dasharray="4 4"/>';
+        shapes+='<text x="'+(left-9)+'" y="'+(yy+4)+'" text-anchor="end" font-size="12" fill="#637981">'+value.toFixed(1).replace(/\.0$/,'')+'</text>';
+      }
+    }
     if(block.chartType==='line'){
       shapes+='<polyline points="'+items.map((it,i)=>x(i)+','+y(Number(it.value))).join(' ')+'" fill="none" stroke="#117d78" stroke-width="3"/>';
       items.forEach((it,i)=>shapes+='<circle cx="'+x(i)+'" cy="'+y(Number(it.value))+'" r="5" fill="#117d78"/>');
@@ -72,7 +81,7 @@
     }
     items.forEach((it,i)=>{
       shapes+='<text x="'+x(i)+'" y="'+Math.max(17,y(Number(it.value))-9)+'" text-anchor="middle" font-size="13" fill="#365260">'+esc(it.value)+'</text>';
-      shapes+='<text x="'+x(i)+'" y="'+(h-bottom+23)+'" text-anchor="middle" font-size="12" fill="#526b79">'+esc(it.label)+'</text>';
+      shapes+='<text x="'+x(i)+'" y="'+(h-bottom+23)+'" text-anchor="middle" font-size="12" fill="#526b79">'+esc(it.shortLabel||it.label)+'</text>';
     });
     return '<figure class="da-figure"><div class="da-chart-scroll"><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(block.alt||block.caption||'资料统计图')+'">'+shapes+'</svg></div>'+
       (block.caption?'<figcaption>'+rich(block.caption)+'</figcaption>':'')+'</figure>';
@@ -120,7 +129,12 @@
           if(!imagePath.test(b.src)||!b.alt)throw Error('图片必须使用 assets/data-analysis 下的相对路径并提供 alt：'+m.id);
         }else if(b.type==='chart'){
           if(!['bar','line'].includes(b.chartType)||!Array.isArray(b.data)||b.data.length<1||b.data.length>12||
-            !b.data.every(it=>it&&typeof it.label==='string'&&Number.isFinite(it.value)&&it.value>=0))throw Error('图表数据不合法：'+m.id);
+            !b.data.every(it=>it&&typeof it.label==='string'&&(!('shortLabel' in it)||typeof it.shortLabel==='string')&&Number.isFinite(it.value)&&it.value>=0))throw Error('图表数据不合法：'+m.id);
+          if(b.yMin!==undefined||b.yMax!==undefined){
+            const vals=b.data.map(it=>it.value);
+            if(b.chartType!=='line'||!Number.isFinite(b.yMin)||!Number.isFinite(b.yMax)||
+              b.yMin>=Math.min(...vals)||b.yMax<=Math.max(...vals))throw Error('折线图纵轴范围不合法：'+m.id);
+          }
         }else throw Error('不支持的材料类型：'+b.type);
       }
     }

@@ -1,6 +1,6 @@
 {
   "title": "资料分析 · 课程知识体系",
-  "version": "1.7.2",
+  "version": "1.7.3",
   "description": "按课程目录组织：第3课放缩运算；第4课快速估算包含化除为乘、份数思想及对应速查表。",
   "sections": [
     {
@@ -24,7 +24,9 @@
           "questionIds": [
             "data-2022-g-legal-aid-average-q1",
             "data-2018-q-passenger-average-distance",
-            "data-2017-jiangsu-neighbors-unaware-count"
+            "data-2017-jiangsu-neighbors-unaware-count",
+            "data-2015-2016-micro-service-quarterly-average",
+            "data-2018-export-cross-border-b2c-growth-rate"
           ],
           "contentSections": [
             {

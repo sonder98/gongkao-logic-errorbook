@@ -520,6 +520,8 @@ function structuredKnowledgeHtml(topic){
 function renderKnowledge(){
  if(!KNOWLEDGE){
   $('knowledgeCount').textContent='—';
+  $('knowledgeNav').textContent='知识目录加载中…';
+  $('knowledgeCard').innerHTML='<div class="kb-load-state">当前模块的知识体系加载中…</div>';
   return;
  }
  const searching=Boolean(knowledgeQuery.trim());
@@ -634,6 +636,17 @@ function activateModule(next){
  $('questionSearch').value=searchTerm;
  $('knowledgeSearch').value=knowledgeQuery;
 }
+// Rebind freshly loaded module resources only if that module is currently selected.
+function refreshLoadedModule(module){
+ if(currentModule!==module)return;
+ QUESTIONS=module==='formal'?FORMAL_QUESTIONS:module==='data'?DATA_QUESTIONS:ARGUMENT_QUESTIONS;
+ KNOWLEDGE=module==='formal'?FORMAL_KNOWLEDGE:module==='data'?DATA_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
+ knowledgeTopics=KNOWLEDGE?.sections.flatMap(section=>section.topics)||[];
+ if(!QUESTIONS.some(q=>q.id===active))active=QUESTIONS[0]?.id||null;
+ if(!knowledgeTopics.some(topic=>topic.id===selectedTopic))selectedTopic=knowledgeTopics[0]?.id||null;
+ if(selectedTopic&&!knowledgeExpanded.size)expandKnowledgeSectionForTopic(selectedTopic);
+ if(currentView==='knowledge')renderKnowledge();else render();
+}
 function updateViewHash(){
  const id=currentView==='knowledge'?selectedTopic:active;
  const prefix=currentModule==='formal'?'formal/':currentModule==='data'?'data/':'';
@@ -693,7 +706,7 @@ async function loadKnowledge(){
   if(!result.ok)throw new Error('HTTP '+result.status);
   const book=await result.json();
   if(!book||!Array.isArray(book.sections)||!book.sections.length)throw new Error('章节内容不完整');
-  const used=new Set(),knownQuestions=new Set(QUESTIONS.map(q=>q.id));
+  const used=new Set(),knownQuestions=new Set(ARGUMENT_QUESTIONS.map(q=>q.id));
   for(const section of book.sections){
    if(!section.chapter||!section.title||!Array.isArray(section.topics)||!section.topics.length)throw new Error('章节数据不完整');
    for(const topic of section.topics){
@@ -702,17 +715,15 @@ async function loadKnowledge(){
     for(const id of topic.questionIds||[])if(!knownQuestions.has(id))throw new Error('未知的关联题目 '+id);
    }
   }
-  KNOWLEDGE=book;
   ARGUMENT_KNOWLEDGE=book;
-  knowledgeTopics=book.sections.flatMap(section=>section.topics);
-  if(!selectedTopic)selectedTopic=knowledgeTopics[0].id;
-  expandKnowledgeSectionForTopic(selectedTopic);
-  renderKnowledge();
+  refreshLoadedModule('argument');
  }catch(error){
   console.warn('知识库加载失败',error);
-  $('knowledgeNav').textContent='知识目录加载失败';
-  $('knowledgeCount').textContent='不可用';
-  $('knowledgeCard').innerHTML='<div class="kb-load-state">知识体系暂时无法加载，请刷新页面重试。错题练习不受影响。</div>';
+  if(currentModule==='argument'){
+   $('knowledgeNav').textContent='知识目录加载失败';
+   $('knowledgeCount').textContent='不可用';
+   $('knowledgeCard').innerHTML='<div class="kb-load-state">知识体系暂时无法加载，请刷新页面重试。错题练习不受影响。</div>';
+  }
  }
 }
 async function loadFormalData(){
@@ -733,7 +744,7 @@ async function loadFormalData(){
    !'ABCDE'.slice(0,q.options.length).includes(q.answer)||q.image!=='')throw new Error('形式逻辑题目格式错误或 ID 重复');
   questionIds.add(q.id);
  }
- const topicIds=new Set(knowledgeTopics.map(topic=>topic.id));
+ const topicIds=new Set(ARGUMENT_KNOWLEDGE.sections.flatMap(section=>section.topics.map(topic=>topic.id)));
  for(const section of book.sections){
   if(!section.id||!section.chapter||!section.title||!Array.isArray(section.topics))throw new Error('形式逻辑章节格式错误');
   for(const topic of section.topics){
@@ -745,6 +756,7 @@ async function loadFormalData(){
  FORMAL_QUESTIONS=questions;
  FORMAL_KNOWLEDGE=book;
  $('questionCount').textContent=ARGUMENT_QUESTIONS.length+questions.length;
+ refreshLoadedModule('formal');
 }
 async function loadDataAnalysis(){
  const [mr,qr,kr]=await Promise.all([
@@ -759,6 +771,7 @@ async function loadDataAnalysis(){
   [...ARGUMENT_KNOWLEDGE.sections,...FORMAL_KNOWLEDGE.sections].flatMap(s=>s.topics.map(t=>t.id)));
  DATA_MATERIALS=materials;DATA_QUESTIONS=questions;DATA_KNOWLEDGE=book;
  $('questionCount').textContent=ARGUMENT_QUESTIONS.length+FORMAL_QUESTIONS.length+DATA_QUESTIONS.length;
+ refreshLoadedModule('data');
 }
 $('tabKnowledge').onclick=()=>{activateModule('argument');switchView('knowledge')};
 $('tabPractice').onclick=()=>{activateModule('argument');switchView('practice')};

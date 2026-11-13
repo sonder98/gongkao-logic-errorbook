@@ -518,6 +518,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeCard').innerText(),/错位相加/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.aaa/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/0.09/);
+  assert.equal(await page.locator('[data-open-question="data-2015-2016-micro-service-quarterly-average"]').count(),1,'平均数习题必须关联第3课');
+  assert.equal(await page.locator('[data-open-question="data-2018-export-cross-border-b2c-growth-rate"]').count(),1,'乘法放缩习题必须关联第3课');
   assert.equal(await page.locator('#kb-structured-division .kb-structured-worked-example').count(),1,'百化分必须有且仅有一条嵌套例题');
   assert.match(await page.locator('#kb-structured-division .kb-structured-worked-example').innerText(),/27007.4/);
   assert.match(await page.locator('#kb-structured-division .kb-structured-worked-example').innerText(),/22046.86/);
@@ -535,7 +537,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match((await page.locator('#knowledgeCard .kb-footer-nav .pill').innerText()).trim(),/^2 \/ \d+$/);
   await page.locator('#tabDataPractice').click();
   assert.equal(await page.locator('#tabDataPractice').getAttribute('aria-selected'),'true');
-  assert.equal(await page.locator('.nav-item').count(),5);
+  assert.equal(await page.locator('.nav-item').count(),7);
   assert.equal(await page.locator('.nav-item').first().getAttribute('data-id'),'data-2022-g-legal-aid-average-q1');
   assert.match(await page.locator('.da-material').innerText(),/195779/);
   await page.locator('#show').click();
@@ -574,6 +576,19 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#show').click();
   assert.match(await page.locator('.da-explanation').innerText(),/步骤一 · 选择提前修正/);
   assert.match(await page.locator('.da-explanation').innerText(),/1042.8/);
+  await page.locator('[data-id="data-2015-2016-micro-service-quarterly-average"]').click();
+  assert.equal(await page.locator('.da-chart-scroll svg circle').count(),9,'九个季度都应在折线图上显示');
+  assert.equal(await page.locator('.da-chart-scroll svg polyline').count(),1);
+  assert.match(await page.locator('.da-material').innerText(),/2014年4季度以来小微服务业/);
+  await page.locator('#show').click();
+  assert.match(await page.locator('.da-explanation').innerText(),/步骤一 · 以78%为基准/);
+  assert.match(await page.locator('.da-explanation').innerText(),/步骤二 · 偏差做差，再除以8个季度/);
+  assert.match(await page.locator('.da-explanation').innerText(),/78.2625/);
+  await page.locator('[data-id="data-2018-export-cross-border-b2c-growth-rate"]').click();
+  assert.equal(await page.locator('.da-material .da-figure table tbody tr').count(),2);
+  await page.locator('#show').click();
+  assert.match(await page.locator('.da-explanation').innerText(),/710/);
+  assert.match(await page.locator('.da-explanation').innerText(),/16.7/);
   await page.locator('#tabDataKnowledge').click();
   await page.locator('[data-knowledge-topic="data-topic-course-04-estimation"]').click();
   assert.equal(await page.locator('.kb-structured-group').count(),3,'第4课必须按三种方法分组');
@@ -600,6 +615,42 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('#knowledgeCard').innerText(),/更好算/);
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
+
+  // Reproduce early tab switching while data-knowledge.json has not finished loading.
+  // The selected module must show its own loading state and repaint automatically.
+  const raceContext=await browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block'});
+  const racePage=await raceContext.newPage();
+  let releaseData;
+  const dataGate=new Promise(resolve=>{releaseData=resolve;});
+  await raceContext.route('**/data-knowledge.json',async route=>{
+    await dataGate;
+    await route.continue();
+  });
+  try{
+    await racePage.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
+    await racePage.waitForSelector('.nav-item',{timeout:15000});
+    await racePage.locator('#tabKnowledge').click();
+    await racePage.locator('#knowledgeCard h2').waitFor({state:'visible',timeout:15000});
+    const argumentTitle=await racePage.locator('#knowledgeCard h2').innerText();
+    await racePage.locator('#tabDataKnowledge').click();
+    assert.equal(await racePage.locator('#tabDataKnowledge').getAttribute('aria-selected'),'true');
+    assert.match(await racePage.locator('#knowledgeCard').innerText(),/当前模块的知识体系加载中/);
+    assert.doesNotMatch(await racePage.locator('#knowledgeCard').innerText(),new RegExp(argumentTitle));
+    releaseData();
+    await racePage.waitForFunction(
+      ()=>document.querySelector('#knowledgeCard h2')?.textContent.includes('第2课 · 数据分析'),
+      null,{timeout:30000}
+    );
+    assert.match(await racePage.locator('#knowledgeNav').innerText(),/放缩运算/);
+    assert.equal(await racePage.locator('#tabDataKnowledge').getAttribute('aria-selected'),'true');
+    await racePage.locator('#tabKnowledge').click();
+    assert.equal(await racePage.locator('#knowledgeCard h2').innerText(),argumentTitle);
+    await racePage.locator('#tabDataKnowledge').click();
+    assert.match(await racePage.locator('#knowledgeCard h2').innerText(),/第2课 · 数据分析/);
+  }finally{
+    releaseData();
+    await raceContext.close();
+  }
 
   await browser.close();
 
