@@ -38,6 +38,16 @@ assert.deepEqual(addSub.items.map(item=>item.title),['加法｜有借有还','�
 const fraction=division.items.find(item=>item.title.includes('百化分')).table;
 assert.ok(fraction?.headers?.length===4,'百化分速查表需在除法部分展示为四列');
 assert.equal(fraction.rows.length,6,'百化分速查表条目不完整');
+const fractionMethod=division.items.find(item=>item.title==='百化分｜常用分数对照');
+assert.equal(fractionMethod.workedExamples?.length,1,'百化分例题应内嵌在原方法下，不增加平级知识');
+const fractionExample=fractionMethod.workedExamples[0];
+assert.ok(fractionExample.title.includes('27007.4')&&fractionExample.title.includes('1.225'),'例题数值必须精确');
+assert.ok(fractionExample.formula.includes('\\frac{270}{123}'),'保留270/123心算步骤');
+assert.ok(fractionExample.formula.includes('\\text{分母}+2')&&fractionExample.formula.includes('\\text{分子}+5'),'保留先凑分母、分子补偿顺序');
+assert.ok(fractionExample.formula.includes('\\frac{275}{125}')&&fractionExample.formula.includes('275\\times8'),'保留百化分乘8步骤');
+assert.ok(fractionExample.formula.includes('=2200')&&fractionExample.formula.includes('22000'),'保留有效数字与恢复量级的连续两步');
+assert.ok(fractionExample.note.includes('22046.86'),'验证实际量级');
+assert.ok(Math.abs(27007.4/1.225-22046.857142857)<0.01,'真实除法值不符');
 const conversionRows=JSON.stringify(fraction.rows);
 for(const item of ['0.333','0.125','0.111','0.09','0.aaa','0.667','0.286']) {
  assert.ok(conversionRows.includes(item),'缺失百化分条目：'+item);
