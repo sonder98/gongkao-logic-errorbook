@@ -150,7 +150,9 @@
             "【可能／概率】A提高B发生概率，不等于每个A都出现B。",
             "【比较／最优】A比B好或A是首选，需要对应的比较指标和竞争对象。",
             "【绝对／唯一】“所有、必然、唯一”更容易被符合条件的反例或竞争原因击中。",
-            "【效果范围】短期有效、缓解症状、预防发病、总体有益是不同强度与指标。"
+            "【效果范围】短期有效、缓解症状、预防发病、总体有益是不同强度与指标。",
+            "【弱效果与强效果】“可以起到作用”只要求存在相应方向的效果；“显著有效”“总体有效”“完全预防”需要额外证明效果程度和适用范围。",
+            "【低毒性与安全】“毒性低”是相对安全性的正向证据，不能单独断言绝对零毒性或已满足具体使用剂量下的安全标准；“有毒性”也不自动等于“不安全”。"
           ],
           "pitfalls": [
             "“未根治”不等于“无效果”；“还没证实有效”不等于“已经证实无效”。",
@@ -170,7 +172,8 @@
             "unknown-adolescent-prefrontal-rationality-training",
             "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
             "unknown-first-exercise-muscle-response-sex-long-term-adaptation",
-            "unknown-gout-high-purine-diet-necessary-condition"
+            "unknown-gout-high-purine-diet-necessary-condition",
+            "unknown-tyrosinase-skin-commensal-whitening-low-toxicity"
           ],
           "recognize": [
             "特别留意“可能、有助于、风险增加、主要、最、唯一、必须、所有、完全”等词。"
@@ -207,7 +210,8 @@
             "unknown-atlas-moth-colorful-wings-mating-attraction",
             "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
             "unknown-gout-high-purine-diet-necessary-condition",
-            "unknown-salty-pickles-hypertension-other-causes"
+            "unknown-salty-pickles-hypertension-other-causes",
+            "unknown-tyrosinase-skin-commensal-whitening-low-toxicity"
           ],
           "examples": [
             {
@@ -1014,7 +1018,8 @@
             "unknown-night-owl-diabetes-risk-association-genetic-direction",
             "unknown-haimai-offshore-oil-exploration-extraction-prerequisite",
             "unknown-chinese-western-medicine-lifespan-premise-selection",
-            "unknown-mir205-hair-follicle-softening-premise"
+            "unknown-mir205-hair-follicle-softening-premise",
+            "unknown-tyrosinase-skin-commensal-whitening-low-toxicity"
           ],
           "examples": [],
           "recognize": [
@@ -1029,7 +1034,8 @@
             "【事实与可能】证实本次事件确有某因素，通常比泛泛说明理论可能性更有针对性。",
             "【概率与个例】提高风险不要求所有个体都发病；未发病个例不严格反驳风险更高。",
             "【充分与必要】“只要A就B”受到缺少必要条件的挑战；“只有A才B”受到无A也有B的挑战。",
-            "【语境比较】明确而具体的数字也可能分母错误、对象不一致；不能只因数字多就认为更强。"
+            "【语境比较】明确而具体的数字也可能分母错误、对象不一致；不能只因数字多就认为更强。",
+            "【程度词三步】先看选项表述的效果方向（降低风险、降低毒性等），再看结论要求的程度与指标，最后比较选项证据的直接性和力度。"
           ],
           "pitfalls": [
             "不能机械排除“可能、未必、不一定”的选项，也不能忽略其与结论对象和证据范围是否吻合。",
@@ -1049,7 +1055,9 @@
             "unknown-southwest-shale-gas-commercial-extraction-prerequisite",
             "2018-liankao-global-warming-food-security-compensation",
             "unknown-hongye-fire-truck-replacement-prerequisite",
-            "2020-guangdong-waste-sorting-fine-motivation"
+            "2020-guangdong-waste-sorting-fine-motivation",
+            "unknown-tyrosinase-skin-commensal-whitening-low-toxicity",
+            "unknown-xvirus-high-proof-baijiu-prevention-weak-effect"
           ],
           "examples": [],
           "recognize": [
