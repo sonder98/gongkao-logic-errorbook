@@ -87,7 +87,15 @@ const medicine=q.find(x=>x.id==='unknown-chinese-western-medicine-lifespan-premi
 assert.equal(medicine.important,true);
 assert.ok(medicine.reason.includes('寿命变化')&&medicine.trap.includes('核心比较立场'),'medicine answer analysis must keep the reasoning chain and D distinction');
 assert.ok(!/不是.{0,50}而是/.test(medicine.structure+' '+medicine.reason+' '+medicine.trap),'medicine answer should avoid defensive template language');
-assert.equal(q.length,63,'argument catalog count');
+const whitening=q.find(item=>item.id==='unknown-tyrosinase-skin-commensal-whitening-low-toxicity');
+assert.ok(whitening&&whitening.answer==='C'&&whitening.category==='由因推果','missing paired low-toxicity whitening problem');
+assert.equal(whitening.options.length,4);
+assert.equal(whitening.image,'');
+assert.ok(!Object.hasOwn(whitening,'rule'),'new comparison must reuse existing knowledge');
+assert.ok(whitening.reason.includes('毒性低')&&whitening.trap.includes('高度白酒预防X病毒题'),'whitening comparison reasoning');
+const winePair=q.find(item=>item.id==='unknown-xvirus-high-proof-baijiu-prevention-weak-effect');
+assert.ok(winePair.reason.includes('风险小幅下降')&&winePair.trap.includes('美白剂题'),'wine comparison reasoning');
+assert.equal(q.length,64,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
