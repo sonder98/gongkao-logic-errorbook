@@ -165,4 +165,5 @@ assert.ok(Object.hasOwn(formal.find(item=>item.id==='formal-unknown-weekly-movie
 assert.equal(formal.length,30,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
+require('./validate-explanation-style.cjs');
 console.log('题库校验通过：论证'+q.length+'道、形式'+formal.length+'道，历史ID保留，历史原图可用');
