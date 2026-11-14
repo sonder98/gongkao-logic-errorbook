@@ -77,8 +77,6 @@
   {
     "id": "data-material-2026-example",
     "title": "某地区产业统计",
-    "year": "2026",
-    "exam": "未知",
     "blocks": [
       {"type": "paragraph", "text": "下表为某地统计数据。"},
       {"type": "table", "columns": ["年份", "产值（亿元）"], "rows": [["2024", "120"], ["2025", "150"]], "caption": "单位：亿元"},
@@ -100,8 +98,6 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
   {
     "id": "data-2026-example-q1",
     "materialId": "data-material-2026-example",
-    "year": "2026",
-    "exam": "未知",
     "title": "某地区产业产值增长率",
     "category": "增长率",
     "type": "计算题",
@@ -123,7 +119,7 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
 ]
 ~~~
 
-年份、题干、选项、来源和答案只依据真实题目或人工核对的信息；无法确认填“未知”，不能编造。新题不上传整页截图，需要图片时仅保存单独的图形材料。
+题干、选项、答案和参与计算的统计年份只依据真实题目或人工核对的信息。考试年份、省份及出处（year/exam）不再需要录入，网站也不会展示；旧字段仅为兼容存档。不能编造题干和材料事实。新题不上传整页截图，需要图片时仅保存单独的图形材料。
 
 ## 已入库第一道题（2026-11-11）
 

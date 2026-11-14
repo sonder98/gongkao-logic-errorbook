@@ -30,6 +30,11 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const expectedQuestions = Number((await page.locator('#navCount').innerText()).split('/')[1].trim().split(' ')[0]);
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
+  // No exam year/province metadata in visible or accessible exercise chrome.
+  assert.match((await page.locator('.qtop .subtle').innerText()).trim(),/^\d+ \/ \d+$/);
+  assert.doesNotMatch(await page.locator('.qtop').innerText(),/管综联考/);
+  assert.doesNotMatch(await page.locator('.nav-item').first().getAttribute('title'),/管综联考|2008/);
+  assert.doesNotMatch(await page.locator('.nav-item').first().getAttribute('aria-label'),/管综联考|2008/);
   // Compact navigation should remain bounded as the catalog grows.
   const navMetrics=await page.locator('#questionList').evaluate(element=>({
     maxHeight:parseFloat(getComputedStyle(element).maxHeight),
@@ -69,6 +74,9 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#questionSearch').fill('');
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
   assert.equal(await page.locator('#questionSearch').inputValue(),'');
+  await page.locator('#questionSearch').fill('管综联考');
+  assert.equal(await page.locator('.nav-item').count(),0,'Exam provenance must not be a search field');
+  await page.locator('#questionSearch').fill('');
   assert.equal(await page.locator('.nav-title').first().getAttribute('title'),null);
 
   const jsonResponse=await page.request.get(new URL('questions.json',url).href);
@@ -158,6 +166,9 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('[data-knowledge-section="effect"]').click();
   await page.locator('[data-knowledge-topic="alternative-causes"]').click();
   assert.match(await page.locator('#knowledgeCard').innerText(),/他因分析/);
+  const linkedArrows=await page.locator('#knowledgeCard .kb-related-sub').allTextContents();
+  assert.ok(linkedArrows.length>0&&linkedArrows.every(text=>text.trim()==='→'),
+    'Knowledge related questions should display arrows, not provenance');
   await page.locator('#knowledgeCard [data-open-question="unknown-peach-bagging-small-fruit"]').click();
   assert.equal(await page.locator('#practiceView').isVisible(),true);
   assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),'unknown-peach-bagging-small-fruit');
@@ -201,6 +212,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#practiceView').isVisible(),true);
   assert.equal(await page.locator('#tabFormalPractice').getAttribute('aria-selected'),'true');
   assert.equal(await page.locator('.nav-item').count(),30);
+  assert.match((await page.locator('.qtop .subtle').innerText()).trim(),/^\d+ \/ \d+$/);
   assert.match(page.url(),/#formal\/practice\/formal-2013-jilin-not-all-people-like-you$/);
   assert.equal((await page.locator('.stats .num').first().innerText()).replace(/\s/g,''),'0/30');
   assert.equal((await page.locator('#show').innerText()).trim(),'查看解析');
@@ -559,6 +571,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#tabDataPractice').getAttribute('aria-selected'),'true');
   assert.equal(await page.locator('.nav-item').count(),7);
   assert.equal(await page.locator('.nav-item').first().getAttribute('data-id'),'data-2022-g-legal-aid-average-q1');
+  assert.match((await page.locator('.qtop .subtle').innerText()).trim(),/^\d+ \/ \d+$/);
+  assert.equal(await page.locator('.da-material-header small').count(),0);
   assert.match(await page.locator('.da-material').innerText(),/195779/);
   await page.locator('#show').click();
   assert.match(await page.locator('.da-explanation').innerText(),/方法一 · 除法放缩/);
