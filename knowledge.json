@@ -33,7 +33,11 @@
             "unknown-chaoshan-tulou-defense-prerequisite",
             "2015-guokao-tv-price-quality-market-share",
             "unknown-j-city-theatre-monthly-share-ticket-audience",
-            "unknown-drug-price-reduction-policies-common-drug-inflation"
+            "unknown-drug-price-reduction-policies-common-drug-inflation",
+            "unknown-night-owl-diabetes-risk-association-genetic-direction",
+            "unknown-haimai-offshore-oil-exploration-extraction-prerequisite",
+            "unknown-chinese-western-medicine-lifespan-premise-selection",
+            "unknown-mir205-hair-follicle-softening-premise"
           ],
           "examples": []
         },
@@ -106,7 +110,8 @@
             "2008-yumi",
             "fruit",
             "unknown-mosquito-blood-type-bite-ranking",
-            "unknown-dog-anxiety-magnesium-causal-reversal"
+            "unknown-dog-anxiety-magnesium-causal-reversal",
+            "unknown-night-owl-diabetes-risk-association-genetic-direction"
           ],
           "recognize": [
             "论据只有相关性、同现比例、某群体比另一群体结果更多，结论却说“导致、影响、使风险增大”。"
@@ -311,7 +316,10 @@
             "2018-liankao-global-warming-food-security-compensation",
             "unknown-hongye-fire-truck-replacement-prerequisite",
             "2020-guangdong-waste-sorting-fine-motivation",
-            "2020-guangdong-pe-class-exercise-time-assumption"
+            "2020-guangdong-pe-class-exercise-time-assumption",
+            "unknown-haimai-offshore-oil-exploration-extraction-prerequisite",
+            "unknown-chinese-western-medicine-lifespan-premise-selection",
+            "unknown-mir205-hair-follicle-softening-premise"
           ]
         },
         {
@@ -930,7 +938,8 @@
           ],
           "questionIds": [
             "medical",
-            "unknown-dog-anxiety-magnesium-causal-reversal"
+            "unknown-dog-anxiety-magnesium-causal-reversal",
+            "unknown-mir205-hair-follicle-softening-premise"
           ],
           "recognize": [
             "题干明确给出两层关联或推断，问“基于什么前提／必须假设什么”才能连接到最终结论。"
@@ -1001,7 +1010,11 @@
             "unknown-j-city-theatre-monthly-share-ticket-audience",
             "unknown-drug-price-reduction-policies-common-drug-inflation",
             "unknown-xvirus-high-proof-baijiu-prevention-weak-effect",
-            "unknown-salty-pickles-hypertension-other-causes"
+            "unknown-salty-pickles-hypertension-other-causes",
+            "unknown-night-owl-diabetes-risk-association-genetic-direction",
+            "unknown-haimai-offshore-oil-exploration-extraction-prerequisite",
+            "unknown-chinese-western-medicine-lifespan-premise-selection",
+            "unknown-mir205-hair-follicle-softening-premise"
           ],
           "examples": [],
           "recognize": [
@@ -1064,7 +1077,8 @@
             "unknown-alzheimer-light-stimulation-treatment",
             "unknown-hunger-anger-correlation-example",
             "unknown-western-democracy-rights-absolutism-dispute",
-            "2020-guangdong-pe-class-exercise-time-assumption"
+            "2020-guangdong-pe-class-exercise-time-assumption",
+            "unknown-chinese-western-medicine-lifespan-premise-selection"
           ],
           "examples": [],
           "recognize": [

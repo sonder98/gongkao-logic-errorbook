@@ -128,6 +128,10 @@ for(const [topicId,qids] of [
  const topic=book.sections.flatMap(s=>s.topics).find(t=>t.id===topicId);
  for(const qid of qids)assert.ok(topic?.questionIds.includes(qid),'missing knowledge link '+topicId+': '+qid);
 }
+for(const [topicId,questionIds] of [["correlation-vs-cause",["unknown-night-owl-diabetes-risk-association-genetic-direction"]],["match-target",["unknown-night-owl-diabetes-risk-association-genetic-direction","unknown-haimai-offshore-oil-exploration-extraction-prerequisite","unknown-chinese-western-medicine-lifespan-premise-selection","unknown-mir205-hair-follicle-softening-premise"]],["identify",["unknown-night-owl-diabetes-risk-association-genetic-direction","unknown-haimai-offshore-oil-exploration-extraction-prerequisite","unknown-chinese-western-medicine-lifespan-premise-selection","unknown-mir205-hair-follicle-softening-premise"]],["cause-prerequisite-conditions",["unknown-haimai-offshore-oil-exploration-extraction-prerequisite","unknown-chinese-western-medicine-lifespan-premise-selection","unknown-mir205-hair-follicle-softening-premise"]],["two-premise",["unknown-mir205-hair-follicle-softening-premise"]],["irrelevant-repeat",["unknown-chinese-western-medicine-lifespan-premise-selection"]]]){
+ const topic=book.sections.flatMap(section=>section.topics).find(x=>x.id===topicId);
+ for(const id of questionIds)assert.ok(topic?.questionIds.includes(id),'new question missing existing knowledge association: '+topicId+' / '+id);
+}
 const argumentTopics=book.sections.flatMap(section=>section.topics);
 const formalTopics=formalBook.sections.flatMap(section=>section.topics);
 assert.equal(argumentTopics.length,31,'argument knowledge count must remain stable');

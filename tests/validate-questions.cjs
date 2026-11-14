@@ -76,7 +76,18 @@ for(const [id,answer] of [['unknown-gout-high-purine-diet-necessary-condition','
 }
 assert.ok(q.find(x=>x.id==='unknown-gout-high-purine-diet-necessary-condition').reason.includes('A且非B'));
 assert.ok(q.find(x=>x.id==='unknown-salty-pickles-hypertension-other-causes').trap.includes('误选D'));
-assert.equal(q.length,59,'argument catalog count');
+for(const [id,answer] of [["unknown-night-owl-diabetes-risk-association-genetic-direction","C"],["unknown-haimai-offshore-oil-exploration-extraction-prerequisite","C"],["unknown-chinese-western-medicine-lifespan-premise-selection","C"],["unknown-mir205-hair-follicle-softening-premise","D"]]){
+ const question=q.find(x=>x.id===id);
+ assert.ok(question&&question.answer===answer,'missing or incorrect newly discussed problem: '+id);
+ assert.equal(question.options.length,4);
+ assert.equal(question.image,'');
+ assert.ok(!Object.hasOwn(question,'rule'),'avoid per-question unique rules: '+id);
+}
+const medicine=q.find(x=>x.id==='unknown-chinese-western-medicine-lifespan-premise-selection');
+assert.equal(medicine.important,true);
+assert.ok(medicine.reason.includes('寿命变化')&&medicine.trap.includes('核心比较立场'),'medicine answer analysis must keep the reasoning chain and D distinction');
+assert.ok(!/不是.{0,50}而是/.test(medicine.structure+' '+medicine.reason+' '+medicine.trap),'medicine answer should avoid defensive template language');
+assert.equal(q.length,63,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
