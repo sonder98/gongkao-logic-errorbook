@@ -39,6 +39,26 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(navMetrics.direction,'column');
   assert.ok(navMetrics.maxHeight<=400);
   assert.equal(navMetrics.overflow,'auto');
+  // Desktop wheel should scroll all 59+ catalog entries, even from category chips.
+  const scrollInfo=()=>page.locator('#questionList').evaluate(el=>({
+    top:el.scrollTop,max:el.scrollHeight-el.clientHeight
+  }));
+  const initialScroll=await scrollInfo();
+  assert.ok(initialScroll.max>300,'Question catalog needs a genuinely scrollable viewport');
+  await page.locator('#filters').hover();
+  await page.mouse.wheel(0,500);
+  await page.waitForFunction(()=>document.querySelector('#questionList').scrollTop>80);
+  assert.ok((await scrollInfo()).top>80,'Wheel over filters should scroll the catalog');
+  await page.locator('#questionList').hover();
+  await page.mouse.wheel(0,20000);
+  await page.waitForFunction(()=>{
+    const el=document.querySelector('#questionList');
+    return el.scrollHeight-el.clientHeight-el.scrollTop<2;
+  });
+  assert.equal(await page.locator('.nav-item').last().count(),1,'Last question remains in the list');
+  await page.mouse.wheel(0,-20000);
+  await page.waitForFunction(()=>document.querySelector('#questionList').scrollTop<2);
+  assert.ok((await scrollInfo()).top<2,'Wheel upward returns to the first question');
   assert.equal(await page.locator('#navCount').innerText(),expectedQuestions+' / '+expectedQuestions+' 题');
   await page.locator('#questionSearch').fill('蟠桃');
   assert.equal(await page.locator('.nav-item').count(),1);
