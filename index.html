@@ -181,7 +181,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 
 <p class="aside-title nav-heading">题库导航 <span id="navCount" class="nav-count" aria-live="polite">—</span></p>
 <label for="questionSearch" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">搜索题目</label>
-<input id="questionSearch" class="question-search" type="search" placeholder="搜索题名、题干、来源…" autocomplete="off">
+<input id="questionSearch" class="question-search" type="search" placeholder="搜索题名、题干、分类…" autocomplete="off">
 <div id="filters" class="filter"></div>
 <div class="question-list" id="questionList" tabindex="0" aria-label="题目列表，可使用鼠标滚轮或滚动条上下浏览"></div>
 <p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
@@ -595,7 +595,7 @@ function renderKnowledge(){
   '</nav>';
  const related=(topic.questionIds||[]).map(id=>QUESTIONS.find(q=>q.id===id)).filter(Boolean);
  const relatedHtml=related.length?'<section class="kb-footer"><div class="kb-breadcrumb">配套真题 · '+related.length+' 道</div><div class="kb-related-list">'+
-   related.map(q=>'<button type="button" class="kb-related-link" data-open-question="'+safe(q.id)+'"><span>'+safe(q.title)+'</span><span class="kb-related-sub">'+safe(q.exam)+'　→</span></button>').join('')+
+   related.map(q=>'<button type="button" class="kb-related-link" data-open-question="'+safe(q.id)+'"><span>'+safe(q.title)+'</span><span class="kb-related-sub" aria-hidden="true">→</span></button>').join('')+
    '</div><div class="kb-footer-note">点击题目可直接进入错题练习；答题区也能返回关联知识点。</div></section>':'<section class="kb-footer"><div class="kb-footer-note">这个知识点暂时没有收录的配套真题，后续会持续补充。</div></section>';
  $('knowledgeCard').innerHTML='<div class="kb-breadcrumb">'+safe(group.chapter)+' / '+safe(group.title)+'</div>'+
   '<h2 class="kb-heading">'+safe(topic.title)+'</h2><p class="kb-summary">'+(currentModule==='data'?DataAnalysis.rich(topic.summary):safe(topic.summary))+'</p>'+
@@ -739,7 +739,7 @@ async function loadFormalData(){
  const [questions,book]=await Promise.all([questionsResponse.json(),knowledgeResponse.json()]);
  if(!Array.isArray(questions)||!book||!Array.isArray(book.sections))throw new Error('形式逻辑数据格式错误');
  const questionIds=new Set(ARGUMENT_QUESTIONS.map(q=>q.id));
- const required=['id','year','exam','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','image'];
+ const required=['id','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','image'];
  for(const q of questions){
   if(!q||!q.id?.startsWith('formal-')||questionIds.has(q.id)||required.some(key=>typeof q[key]!=='string')||
    (Object.hasOwn(q,'rule')&&typeof q.rule!=='string')||
@@ -797,7 +797,7 @@ function filtered(){
   (category==='全部'||q.category===category)&&
   (!wrongOnly||record(q.id).wrong||record(q.id).review)&&
   (!importantOnly||q.important===true)&&
-  (!needle||[q.title,q.stem,q.exam,q.year,q.category].some(value=>String(value||'').toLocaleLowerCase().includes(needle)))
+  (!needle||[q.title,q.stem,q.ask,q.category,q.type].some(value=>String(value||'').toLocaleLowerCase().includes(needle)))
  );
 }
 function safe(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
@@ -847,7 +847,7 @@ list.innerHTML=f.length?f.map((q,i)=>{
  const statusClass=r.submitted?(r.selected===q.answer?'correct':'incorrect'):(r.review?'review':'');
  const statusName=r.submitted?(r.selected===q.answer?'已答对':'已答错'):(r.review?'待复习':'未完成');
  const pin=q.important===true?'<span class="nav-pin" aria-hidden="true">★</span>':'';
- return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title+' · '+q.exam)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+q.exam+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
+ return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
 }).join(''):'<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析题库尚未收录真题，请先浏览知识体系；后续从真题材料逐步入库。':'当前模块暂无题目。'):'未找到匹配的题目，请调整搜索或筛选条件')+'</div>';
 list.scrollTop=oldScroll;
 list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
@@ -884,7 +884,7 @@ const analysisContent=hasPersonalAnalysis?
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
-$('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle">${safe(q.year)} · ${safe(q.exam)} · ${ix+1}/${f.length}</span><button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
+$('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle" aria-label="当前题目序号">${ix+1} / ${f.length}</span><button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
 <div class="scratch-overlay" id="scratchOverlay" hidden>
