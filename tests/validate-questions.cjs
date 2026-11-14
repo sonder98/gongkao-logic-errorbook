@@ -7,9 +7,10 @@ const legacy=["2008-yumi","2022-dingcan","fruit","2025-fish","medical","2024-heb
 assert.ok(Array.isArray(q)&&q.length>=legacy.length,'历史题目不得减少');
 assert.deepEqual(q.slice(0,legacy.length).map(x=>x.id),legacy,'历史题目ID及顺序不可更改');
 assert.equal(new Set(q.map(x=>x.id)).size,q.length,'题目ID不可重复');
-const required=['id','year','exam','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','image'];
+const required=['id','title','category','type','difficulty','stem','ask','answer','structure','reason','trap','image'];
 for(const item of q){
  for(const key of required)assert.equal(typeof item[key],'string',item.id+': '+key+' 字段不合法');
+ for(const key of ['year','exam'])if(item[key]!==undefined)assert.equal(typeof item[key],'string',item.id+': optional provenance metadata invalid');
  if(Object.hasOwn(item,'rule'))assert.equal(typeof item.rule,'string',item.id+': optional rule must be a string');
  assert.ok(Array.isArray(item.options)&&item.options.length>=2&&item.options.length<=5,item.id+' 选项数量异常');
  assert.ok(item.options.every(opt=>typeof opt==='string'&&opt.trim()),item.id+' 选项不完整');
@@ -95,6 +96,7 @@ for(const item of formal){
  assert.ok(item.id.startsWith('formal-')&&!allIds.has(item.id),'形式逻辑 ID 必须独立且唯一');
  allIds.add(item.id);
  for(const key of required)assert.equal(typeof item[key],'string',item.id+': '+key+' 字段不合法');
+ for(const key of ['year','exam'])if(item[key]!==undefined)assert.equal(typeof item[key],'string',item.id+': optional provenance metadata invalid');
  if(Object.hasOwn(item,'rule'))assert.equal(typeof item.rule,'string',item.id+': optional rule must be a string');
  assert.ok(Array.isArray(item.options)&&item.options.length>=2&&item.options.length<=5);
  assert.ok(item.options.every(opt=>typeof opt==='string'&&opt.trim()));

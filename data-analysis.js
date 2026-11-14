@@ -101,7 +101,7 @@
     if(!material)return '<div class="da-material-missing">材料暂缺，请检查题目的 materialId。</div>';
     const closed=collapsed.has(material.id);
     return '<section class="da-material"><header class="da-material-header"><div><span class="da-overline">共用资料</span><h3>'+esc(material.title)+'</h3>'+
-      '<small>'+esc([material.year,material.exam].filter(Boolean).join(' · '))+'</small></div>'+
+      '</div>'+
       '<button type="button" data-da-toggle="'+esc(material.id)+'" aria-expanded="'+(!closed)+'">'+(closed?'展开材料':'收起材料')+'</button></header>'+
       (closed?'':'<div class="da-material-body">'+(material.blocks||[]).map(renderBlock).join('')+'</div>')+'</section>';
   }

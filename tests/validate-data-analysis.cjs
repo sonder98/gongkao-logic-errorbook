@@ -188,8 +188,8 @@ assert.ok(conversion.items.some(x=>x.title.includes('正增长')&&x.formula.incl
 assert.ok(conversion.items.some(x=>x.title.includes('负增长')&&x.formula.includes('1-t')),'化除为乘应包含负增长估算');
 assert.ok(conversion.items.some(x=>x.title.includes('修正时机')&&x.formula.includes('16.52')),'保留提前/延后修正口径');
 assert.ok(conversion.items.some(x=>x.title.includes('平方速判')&&x.example.includes('49＋40')),'保留正负增长率平方速判');
-assert.ok(conversion.items.some(x=>x.title.includes('2015河北')&&x.formula.includes('185.32')),'河北例题应归入化除为乘');
-assert.ok(conversion.items.some(x=>x.title.includes('2020福建')&&x.formula.includes('1042.8')),'福建例题应归入化除为乘');
+assert.ok(conversion.items.some(x=>x.title==='先算增长量再反推基期'&&x.formula.includes('185.32')),'河北例题应归入化除为乘');
+assert.ok(conversion.items.some(x=>x.title==='提前修正与凑整'&&x.formula.includes('1042.8')),'福建例题应归入化除为乘');
 const correction=conversion.items.find(x=>x.table).table;
 assert.equal(correction.rows.length,7,'提前修正表应为7行');
 for(const x of ['2.04%','3.1%','4.2%','7.5%','−7.4%'])assert.ok(JSON.stringify(correction).includes(x));
@@ -233,7 +233,7 @@ assert.ok(fujian.analysis.quick.includes('1042.8'));
 assert.ok(DA.explanationHtml(hebei).includes('data-da-tex'));
 assert.ok(DA.explanationHtml(fujian).includes('data-da-tex'));
 const fixtures=[{
-  id:'data-material-fixture',title:'功能验证：示例材料',year:'未知',exam:'测试',
+  id:'data-material-fixture',title:'功能验证：示例材料',year:'2099',exam:'特殊考试出处',
   blocks:[
     {type:'paragraph',text:'2024 年同比增长。'},
     {type:'table',columns:['年份','收入'],rows:[['2023','120'],['2024','150']],caption:'单位：亿元'},
@@ -251,6 +251,8 @@ const fixtureBook={sections:[{id:'fixture',chapter:'测试',title:'测试',topic
 }]}]};
 assert.ok(DA.validate(fixtures,fixtureQuestions,fixtureBook,argument.map(x=>x.id)));
 const content=DA.materialHtml(fixtures[0]);
+assert.doesNotMatch(content,/2099|特殊考试出处/,'Material must hide provenance');
+assert.doesNotMatch(content,/<small>/,'No reserved metadata row');
 assert.match(content,/da-table-scroll/);
 assert.match(content,/da-chart-scroll/);
 assert.match(content,/loading="lazy"/);
