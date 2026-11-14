@@ -8,7 +8,11 @@
 .question-search{display:block;width:100%;height:39px;padding:8px 12px;margin:0 0 12px;border:1px solid var(--line);border-radius:10px;background:#fafcfc;color:var(--ink);font-size:13px;outline-offset:2px}
 .question-search:focus{outline:2px solid #79c7bb;border-color:var(--accent)}
 .question-search::placeholder{color:#8b969f}
-.question-list{display:flex;flex-direction:column;gap:3px;max-height:380px;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;scrollbar-width:thin;padding:2px 3px 2px 0;margin-bottom:20px}
+.question-list{display:flex;flex-direction:column;gap:3px;max-height:380px;overflow-y:auto;overflow-x:hidden;scrollbar-width:auto;scrollbar-color:#8abbb3 #edf4f2;padding:2px 5px 2px 0;margin-bottom:20px}
+.question-list::-webkit-scrollbar{width:10px}
+.question-list::-webkit-scrollbar-track{background:#edf4f2;border-radius:12px}
+.question-list::-webkit-scrollbar-thumb{background:#8abbb3;border-radius:12px;border:2px solid #edf4f2}
+.question-list::-webkit-scrollbar-thumb:hover{background:#579b90}
 .nav-item{display:flex;align-items:center;gap:9px;width:100%;min-width:0;min-height:40px;text-align:left;border:1px solid transparent;background:transparent;border-radius:9px;padding:8px 9px;color:var(--ink);line-height:1.4}
 .nav-item:hover{background:#f3f6f6}
 .nav-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
@@ -179,7 +183,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <label for="questionSearch" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">搜索题目</label>
 <input id="questionSearch" class="question-search" type="search" placeholder="搜索题名、题干、来源…" autocomplete="off">
 <div id="filters" class="filter"></div>
-<div class="question-list" id="questionList" aria-label="题目列表"></div>
+<div class="question-list" id="questionList" tabindex="0" aria-label="题目列表，可使用鼠标滚轮或滚动条上下浏览"></div>
 <p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
 <button class="outline" id="exportBackup" type="button">导出 JSON 备份</button>
 <label class="switch" style="display:block;margin-top:8px">导入 JSON 备份 <input id="importBackup" type="file" accept=".json,application/json" style="max-width:100%;margin-top:6px"></label>
@@ -812,6 +816,25 @@ function navigatePracticeQuestion(id){
   }
  });
 }
+// Wheel anywhere on the catalog header / search / filters / list scrolls the question list.
+// Use non-passive listeners only in this sidebar zone. On list boundaries let the page scroll.
+function initQuestionListWheel(){
+ const list=$('questionList');
+ const onWheel=event=>{
+  // Touch gestures do not produce wheel events, so mouse/trackpad support works at any width.
+  if(event.ctrlKey||!event.cancelable||Math.abs(event.deltaY)<=Math.abs(event.deltaX))return;
+  const max=list.scrollHeight-list.clientHeight;
+  if(max<=0)return;
+  const scale=event.deltaMode===1?20:event.deltaMode===2?list.clientHeight:1;
+  const next=Math.max(0,Math.min(max,list.scrollTop+event.deltaY*scale));
+  if(Math.abs(next-list.scrollTop)<.5)return;
+  list.scrollTop=next;
+  event.preventDefault();
+ };
+ [list,$('filters'),$('questionSearch'),$('navCount').closest('.nav-heading')].forEach(el=>
+  el.addEventListener('wheel',onWheel,{passive:false}));
+}
+initQuestionListWheel();
 function render(){const f=filtered();if(!f.some(q=>q.id===active)&&f.length)active=f[0].id;
 let cats=['全部',...new Set(QUESTIONS.map(q=>q.category))];$('filters').innerHTML=cats.map(c=>`<button class="${category===c?'active':''}" data-cat="${safe(c)}">${safe(c)}</button>`).join('');
 $('filters').querySelectorAll('button').forEach(b=>b.onclick=()=>{category=b.dataset.cat;render();if(currentView==='practice')updateViewHash()});
