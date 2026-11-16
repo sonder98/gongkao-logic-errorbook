@@ -233,5 +233,15 @@
         "caption": "按题目图表提取的两年有关数据"
       }
     ]
+  },
+  {
+    "id": "data-material-2020-national-disposable-income",
+    "title": "2020年全国居民人均可支配收入",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "2020年全国居民人均可支配收入32189元，比上年增长4.7%。"
+      }
+    ]
   }
 ]

@@ -183,7 +183,8 @@
           "summary": "快速估算增长量有三种方法：变化率绝对值≤10%时优先考虑化除为乘；增速接近常用分数时考虑份数思想；不适合前两种方法时采用放缩法。",
           "questionIds": [
             "data-2015-hebei-2013-highway-passengers",
-            "data-2020-fujian-2018-industrial-profits"
+            "data-2020-fujian-2018-industrial-profits",
+            "data-2020-national-disposable-income-2019-base"
           ],
           "contentSections": [
             {
