@@ -342,5 +342,15 @@
         "caption": "2014年1—11月我国货物运输情况（按原题图表整理）"
       }
     ]
+  },
+  {
+    "id": "data-material-2021-poverty-alleviated-counties-rural-income",
+    "title": "2021年脱贫县农村居民人均可支配收入",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "2021年，脱贫县农村居民人均可支配收入14051元，比上年增长11.6%，增速比全国农村快了1.1个百分点。"
+      }
+    ]
   }
 ]
