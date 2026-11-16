@@ -695,7 +695,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('[data-knowledge-section="data-growth-rate"]').click();
   await page.locator('[data-knowledge-topic="data-topic-course-05-growth-decomposition"]').click();
   assert.equal(await page.locator('.kb-structured-group').count(),1,'第5课第一个方法必须结构化呈现');
-  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['乘积增长率／间隔增长率']);
+  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['增长率累积· 乘积增长率/间隔增长率']);
   assert.deepEqual(await page.locator('.kb-structured-item h4').allInnerTexts(),['给出两段增长率','给出两段倍数']);
   assert.match(await page.locator('#knowledgeCard').innerText(),/交叉乘积/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/总倍数基础上减去1/);
