@@ -99,7 +99,13 @@ assert.ok(!Object.hasOwn(whitening,'rule'),'new comparison must reuse existing k
 assert.ok(whitening.reason.includes('毒性低')&&whitening.trap.includes('高度白酒预防X病毒题'),'whitening comparison reasoning');
 const winePair=q.find(item=>item.id==='unknown-xvirus-high-proof-baijiu-prevention-weak-effect');
 assert.ok(winePair.reason.includes('风险小幅下降')&&winePair.trap.includes('美白剂题'),'wine comparison reasoning');
-assert.equal(q.length,64,'argument catalog count');
+const sIsland=q.find(item=>item.id==='unknown-s-island-moai-quarry-work-areas-multiple-tribes');
+assert.ok(sIsland && sIsland.category==='由果推因' && sIsland.answer==='D','S岛石像题必须正确入库');
+assert.equal(sIsland.options.length,4);
+assert.equal(sIsland.image,'');
+assert.ok(!Object.hasOwn(sIsland,'rule'),'单题A/D力度比较不另建规则');
+assert.ok(sIsland.trap.includes('A说明') && sIsland.trap.includes('D提供'),'A和D的相对加强力度需要保留');
+assert.equal(q.length,65,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
