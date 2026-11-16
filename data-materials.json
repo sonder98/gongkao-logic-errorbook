@@ -448,5 +448,15 @@
         "caption": "2021年11月—2022年10月我国化学药品原药产量及增长情况"
       }
     ]
+  },
+  {
+    "id": "data-material-2020-rural-disposable-income-growth",
+    "title": "2020年农村居民人均可支配收入及增速",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "2020年，农村居民人均可支配收入17131元，比上年增长6.9%。"
+      }
+    ]
   }
 ]
