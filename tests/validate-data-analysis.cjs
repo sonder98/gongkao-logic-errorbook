@@ -231,7 +231,7 @@ assert.ok(cargoQuestion.analysis.trap.includes('12.96'),'纠正144×9%的笔误'
 assert.match(DA.explanationHtml(cargoQuestion),/方法一 · 乘法放缩，算完后修正/);
 assert.match(DA.explanationHtml(cargoQuestion),/方法二 · 增长率提前修正/);
 assert.ok(Math.abs(168.7*0.088/1.088-13.6456)<0.001,'正确增长量须约13.65');
-assert.equal(160*0.09,14.4);
+assert.ok(Math.abs(160*0.09-14.4)<1e-12,'浮点误差不应造成乘法验证失败');
 assert.ok(Math.abs(14.4-14.4*0.09-13.104)<1e-12);
 assert.equal(168*0.08,13.44);
 const estimation=courseTopics.find(t=>t.id==='data-topic-course-04-estimation');
