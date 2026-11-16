@@ -692,6 +692,14 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await partsGroup.locator('.kb-structured-key-point .da-inline-math').count(),5,'增长率符号与误差公式必须可渲染为LaTeX');
   assert.match(await page.locator('#knowledgeCard').innerText(),/调小现期量/);
   assert.match(await page.locator('#knowledgeCard').innerText(),/更好算/);
+  await page.locator('[data-knowledge-section="data-growth-rate"]').click();
+  await page.locator('[data-knowledge-topic="data-topic-course-05-growth-decomposition"]').click();
+  assert.equal(await page.locator('.kb-structured-group').count(),1,'第5课第一个方法必须结构化呈现');
+  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['乘积增长率／间隔增长率']);
+  assert.deepEqual(await page.locator('.kb-structured-item h4').allInnerTexts(),['给出两段增长率','给出两段倍数']);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/交叉乘积/);
+  assert.match(await page.locator('#knowledgeCard').innerText(),/总倍数基础上减去1/);
+  assert.equal(await page.locator('.kb-structured-formula [data-da-tex]').count(),2,'两条公式均应正确展示');
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 

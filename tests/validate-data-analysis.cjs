@@ -28,6 +28,17 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
   '第12课 · 容斥问题','第13课 · 假设代入'
 ]);
 
+const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
+assert.ok(lesson05,'第5课稳定知识ID必须保留');
+assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
+assert.deepEqual(lesson05.contentSections.map(s=>s.title),['乘积增长率／间隔增长率'],'两个名称属于同一知识点');
+assert.ok(lesson05.contentSections[0].description.includes('一回事'));
+assert.deepEqual(lesson05.contentSections[0].items.map(x=>x.title),['给出两段增长率','给出两段倍数']);
+assert.ok(lesson05.contentSections[0].items[0].formula.includes('r_1+r_2+r_1r_2'),'两段增长率公式必须包含乘积项');
+assert.ok(lesson05.contentSections[0].items[0].caution.includes('估算'),'交叉乘积一般估算');
+assert.ok(lesson05.contentSections[0].items[1].formula.includes('r_1\\times r_2-1'),'给两段倍数时增长率须减去1');
+assert.deepEqual(lesson05.questionIds,[],'不能虚构习题');
+assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
 assert.ok(scaling,'放缩运算知识点 ID 必须保持稳定');
 assert.deepEqual(scaling.contentSections.map(s=>s.title),['加减法放缩','除法放缩','乘法放缩'],'第3课必须按运算类别划分');

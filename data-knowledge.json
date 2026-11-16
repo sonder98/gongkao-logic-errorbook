@@ -1,6 +1,6 @@
 {
   "title": "资料分析 · 课程知识体系",
-  "version": "1.7.4",
+  "version": "1.7.5",
   "description": "按课程目录组织：第3课放缩运算；第4课快速估算包含化除为乘、份数思想及对应速查表。",
   "sections": [
     {
@@ -467,11 +467,29 @@
         {
           "id": "data-topic-course-05-growth-decomposition",
           "title": "第5课 · 增速的累积与拆分",
-          "summary": "对应课程第5课《增速的累积与拆分》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
-          "recognize": [],
-          "patterns": [],
-          "pitfalls": [],
-          "questionIds": []
+          "summary": "乘积增长率（间隔增长率）用于两段变化的累积：已知两段增长率则相加并加交叉乘积；已知两段变化倍数则先相乘，求增长率时再减1。",
+          "questionIds": [],
+          "contentSections": [
+            {
+              "id": "compound-interval-growth",
+              "title": "乘积增长率／间隔增长率",
+              "description": "乘积增长率和间隔增长率是一回事，都是两段连续变化累积后的总体增长率。",
+              "items": [
+                {
+                  "title": "给出两段增长率",
+                  "description": "已知第一部分增长率为r₁，第二部分增长率为r₂，两段乘积增长率由增长率之和及交叉乘积组成。",
+                  "formula": "\\[r=r_1+r_2+r_1r_2\\]",
+                  "caution": "其中 r₁×r₂ 一般通过估算计算。"
+                },
+                {
+                  "title": "给出两段倍数",
+                  "description": "第一部分为r₁倍、第二部分为r₂倍，两段相乘后的总倍数为r₁×r₂。若题目要求增长率，则要在总倍数基础上减去1。",
+                  "formula": "\\[\\begin{aligned}\\text{总倍数}&=r_1\\times r_2\\\\\\text{乘积增长率}&=r_1\\times r_2-1\\end{aligned}\\]",
+                  "caution": "r₁×r₂表示总倍数；增长率等于总倍数减1。"
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "data-topic-course-06-flatten-growth",
