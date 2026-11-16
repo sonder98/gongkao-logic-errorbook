@@ -80,3 +80,9 @@
 .kb-structured-worked-example h5{margin:0 0 8px;color:#21645c;font-size:14px;font-weight:800;line-height:1.45}
 .kb-structured-worked-example .kb-structured-formula{margin:12px 0}
 @media(max-width:800px){.kb-structured-worked-example{padding:12px 10px}}
+
+/* Emphasize key conceptual boundaries in-place, without creating flat rule lists. */
+.kb-structured-key-point{margin:12px 0 8px;padding:0;font-size:14px;line-height:1.85;font-weight:600;color:#215750}
+.kb-structured-key-point strong{font-weight:850;color:#135e54;margin-right:5px}
+.kb-structured-key-point .da-inline-math{font-weight:600}
+@media(max-width:800px){.kb-structured-key-point{font-size:13px;line-height:1.8}}
