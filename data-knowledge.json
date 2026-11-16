@@ -1,6 +1,6 @@
 {
   "title": "资料分析 · 课程知识体系",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "description": "按课程目录组织：第3课放缩运算；第4课快速估算包含化除为乘、份数思想及对应速查表。",
   "sections": [
     {
@@ -467,7 +467,7 @@
         {
           "id": "data-topic-course-05-growth-decomposition",
           "title": "第5课 · 增速的累积与拆分",
-          "summary": "乘积增长率（间隔增长率）用于两段变化的累积：已知两段增长率则相加并加交叉乘积；已知两段变化倍数则先相乘，求增长率时再减1。",
+          "summary": "增速的累积与拆分：累积时可由两段增长率求乘积增长率（间隔增长率）；拆分时已知累计增长率与其中一部分增长率，可反求另一部分的增长率。",
           "questionIds": [],
           "contentSections": [
             {
@@ -486,6 +486,18 @@
                   "description": "第一部分为r₁倍、第二部分为r₂倍，两段相乘后的总倍数为r₁×r₂。若题目要求增长率，则要在总倍数基础上减去1。",
                   "formula": "\\[\\begin{aligned}\\text{总倍数}&=r_1\\times r_2\\\\\\text{乘积增长率}&=r_1\\times r_2-1\\end{aligned}\\]",
                   "caution": "r₁×r₂表示总倍数；增长率等于总倍数减1。"
+                }
+              ]
+            },
+            {
+              "id": "growth-rate-decomposition",
+              "title": "增速的拆分",
+              "description": "已知累计增长率为 r₁，其中一部分的增长率为 r₂，求另一部分的增长率 r。",
+              "items": [
+                {
+                  "title": "已知累计增长率与一部分增长率",
+                  "description": "用累计增长率减去已知部分的增长率，再除以（1＋已知部分的增长率）。",
+                  "formula": "\\[\\boxed{r=\\frac{r_1-r_2}{1+r_2}}\\]"
                 }
               ]
             }

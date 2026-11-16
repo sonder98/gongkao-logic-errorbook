@@ -177,6 +177,10 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
 
 在 analysis.*、知识点 summary / patterns 等文本字段支持行内公式 \(\frac{A}{B}\)，独立公式 \[\frac{A-B}{B}\]，也支持 aligned 环境多行计算。在 JSON 中反斜杠必须正确转义（例如源文本内写两个反斜杠代表一个 LaTeX 反斜杠）；请先校验 JSON。公式引擎按需从固定版本 KaTeX CDN 加载，失败时显示原始 LaTeX 文本，不阻断答题。
 
+## 第5课第二节：增速的拆分（2026-11-16）
+
+沿用 `data-topic-course-05-growth-decomposition`，新增并列的 `contentSections[growth-rate-decomposition]`，标题「增速的拆分」。用户提供的唯一公式：若累计增长率为 `r1`，其中一部分增长率为 `r2`，则另一部分增长率 `r=(r1-r2)/(1+r2)`。保持分子 `r1-r2`、分母 `1+r2`，不能反过来，也不额外扩充例题或独立规则。首节标题「增长率累积· 乘积增长率/间隔增长率」保持不变；用户习题、材料及记录不改。
+
 ## 第5课首个知识点：乘积增长率／间隔增长率（2026-11-16）
 
 沿用 `data-topic-course-05-growth-decomposition` 的已有课程ID，新增 `contentSections[compound-interval-growth]`，将两个名称作为同一个知识方法，分“给出两段增长率／给出两段倍数”两种输入情况。知识正文不附加讲义未给出的其他方法或例题。

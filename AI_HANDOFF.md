@@ -1,5 +1,8 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
+> **2026-11-16 第5课新增第二节「增速的拆分」**：`data-topic-course-05-growth-decomposition.contentSections[growth-rate-decomposition]`，与首节「增长率累积· 乘积增长率/间隔增长率」并列。用户提供：累计增长率r1，一部分增长率r2，则另一部分增长率r=(r1−r2)/(1+r2)。不增编例题或其他方法，沿用既有KaTeX公式显示。题库及用户进度均不变。
+
+
 > **2026-11-16 第5课节标题统一**：`data-topic-course-05-growth-decomposition.contentSections[compound-interval-growth].title` 现为「增长率累积· 乘积增长率/间隔增长率」，仅调整标题文字；保持第5课课程名、内容、稳定ID和题目关联不变。
 
 > **2026-11-16 第5课「增速的累积与拆分」首个知识点正式入库。** 既有 `data-topic-course-05-growth-decomposition` 内新增结构化 `contentSections[compound-interval-growth]`，名称「乘积增长率／间隔增长率」，两者是同一回事。用户给两种条件：①两段增长率r1、r2，则总体增长率r1+r2+r1×r2，交叉乘积通常估算；②两段变化倍数r1、r2，则总倍数r1×r2。必要的概念校正：题问“乘积增长率”时，须用总倍数减1，公式r1×r2−1。未添加自创习题、独立方法或用户未讲授的其他技巧。旧知识和云端进度不变。

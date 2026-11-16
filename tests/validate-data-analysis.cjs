@@ -31,12 +31,17 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
-assert.deepEqual(lesson05.contentSections.map(s=>s.title),['增长率累积· 乘积增长率/间隔增长率'],'标题统一为增长率累积下的乘积增长率/间隔增长率');
+assert.deepEqual(lesson05.contentSections.map(s=>s.title),['增长率累积· 乘积增长率/间隔增长率','增速的拆分'],'第5课应由增长率累积与增速拆分两节组成');
 assert.ok(lesson05.contentSections[0].description.includes('一回事'));
 assert.deepEqual(lesson05.contentSections[0].items.map(x=>x.title),['给出两段增长率','给出两段倍数']);
 assert.ok(lesson05.contentSections[0].items[0].formula.includes('r_1+r_2+r_1r_2'),'两段增长率公式必须包含乘积项');
 assert.ok(lesson05.contentSections[0].items[0].caution.includes('估算'),'交叉乘积一般估算');
 assert.ok(lesson05.contentSections[0].items[1].formula.includes('r_1\\times r_2-1'),'给两段倍数时增长率须减去1');
+const growthSplit=lesson05.contentSections[1];
+assert.equal(growthSplit.id,'growth-rate-decomposition','拆分节须有稳定ID');
+assert.equal(growthSplit.items.length,1,'用户只讲了一种拆分条件');
+assert.ok(growthSplit.description.includes('累计增长率')&&growthSplit.description.includes('r₂'),'保持用户变量定义');
+assert.ok(growthSplit.items[0].formula.includes('\\frac{r_1-r_2}{1+r_2}'),'拆分公式分子必须为r1-r2，分母必须为1+r2');
 assert.deepEqual(lesson05.questionIds,[],'不能虚构习题');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
