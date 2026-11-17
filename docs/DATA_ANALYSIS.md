@@ -177,6 +177,16 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
 
 在 analysis.*、知识点 summary / patterns 等文本字段支持行内公式 \(\frac{A}{B}\)，独立公式 \[\frac{A-B}{B}\]，也支持 aligned 环境多行计算。在 JSON 中反斜杠必须正确转义（例如源文本内写两个反斜杠代表一个 LaTeX 反斜杠）；请先校验 JSON。公式引擎按需从固定版本 KaTeX CDN 加载，失败时显示原始 LaTeX 文本，不阻断答题。
 
+## 第5课快速计算新增第3点：增速拆分复用快速估算（2026-11-17）
+
+在 `data-topic-course-05-growth-decomposition.contentSections[growth-quick-calculation]` 现有两个条目之后，增加「增速拆分的快速计算」，不新增章节或题目。
+
+- 公式仍是 `r=(r1-r2)/(1+r2)`；分子 `r1-r2` 类比现期量，分母中的 `r2` 当作增长率，复用既有第4课方法。
+- `|r2|≤10%` 时化除为乘（用户称「r2≤10%」，与第4课统一为绝对值条件，避免负值误分类）。
+- 增速较大且接近百化分：份数思想；较大且不接近百化分：放缩估算。
+- 沿用既有禁忌：绝对值较大的负增长率优先放缩法，不使用份数思想。
+- 仅把这一处方法选择规则写进快速计算的第3项，保留原三大节、现有知识点ID、所有习题、笔记与进度。
+
 ## 第5课第三节：快速计算（2026-11-17）
 
 在 `data-topic-course-05-growth-decomposition` 下新增与“增长率累积”“增速的拆分”并列的 `contentSections[growth-quick-calculation]`，**没有插入平级流水账规则**，也未新建习题。
