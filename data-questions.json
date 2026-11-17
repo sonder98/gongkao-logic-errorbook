@@ -437,5 +437,58 @@
       "quick": "\\[\\begin{aligned}\nr_{18/15}\n&\\approx23.9\\%+10\\%+23.9\\%\\times10\\%\\\\\n&\\approx33.9\\%+2.4\\%\\\\\n&=36.3\\%\n\\end{aligned}\\]\n\\[\\begin{aligned}\n\\text{倍数}&\\approx1+36.3\\%\\\\\n&=1.363\\approx1.4\n\\end{aligned}\\]\n选C。",
       "trap": ""
     }
+  },
+  {
+    "id": "data-2016-national-cotton-yield-per-area-growth",
+    "materialId": "data-material-2016-national-cotton-output-sowing-area",
+    "title": "2016年全国棉花单位面积产量同比变化",
+    "category": "平均数增长率",
+    "type": "增长率",
+    "difficulty": "未知",
+    "stem": "2016年，全国棉花产量534.3万吨，比2015年减产26.0万吨。全国棉花播种面积为3376.1千公顷，比2015年减少420.5千公顷。",
+    "ask": "2016年，全国棉花单位面积产量比上年约：",
+    "options": [
+      "下降6.8%",
+      "下降3.9%",
+      "上升2.6%",
+      "上升7.2%"
+    ],
+    "answer": "D",
+    "analysis": {
+      "identify": "根据分子、分母的增长率是否好算来选择计算路径。本题产量与面积的同比增长率均容易粗估，因此先求两者的增长率，再求平均数增长率。",
+      "locate": "产量534.3万吨，较2015年减少26.0万吨；播种面积3376.1千公顷，较2015年减少420.5千公顷。",
+      "formulaTitle": "步骤一 · 估算产量和播种面积增长率",
+      "formula": "\\[\n\\begin{aligned}\nr_{\\text{产量}}\n&=\\frac{-26.0}{534.3+26.0}\\\\\n&\\approx-\\frac{26}{560}\\approx-5\\%\\\\[6pt]\nr_{\\text{面积}}\n&=\\frac{-420.5}{3376.1+420.5}\\\\\n&\\approx-\\frac{420}{3800}\\approx-11\\%\n\\end{aligned}\n\\]",
+      "quickTitle": "步骤二 · 计算平均数增长率",
+      "quick": "\\[\n\\begin{aligned}\nr_{\\text{单位面积}}\n&=\\frac{r_{\\text{产量}}-r_{\\text{面积}}}{1+r_{\\text{面积}}}\\\\\n&\\approx\\frac{-5\\%+11\\%}{1-11\\%}\\\\\n&=\\frac{6\\%}{0.89}\\\\\n&\\approx6.7\\%\n\\end{aligned}\n\\]\n最接近D（上升7.2%），选D。",
+      "trap": ""
+    }
+  },
+  {
+    "id": "data-2020-real-estate-development-funding-2019-increase",
+    "materialId": "data-material-2021-real-estate-development-funding",
+    "title": "2020年房地产开发企业到位资金同比增长量",
+    "category": "增速的拆分",
+    "type": "增长量",
+    "difficulty": "未知",
+    "stem": "2021年，房地产开发企业到位资金201132亿元，比上年增长4.2%，比2019年增长12.6%。",
+    "ask": "2020年房地产开发企业到位资金比2019年约多（  ）亿元。",
+    "options": [
+      "3456.7",
+      "11563.7",
+      "14399.8",
+      "22506.8"
+    ],
+    "answer": "C",
+    "important": true,
+    "analysis": {
+      "identify": "由2021年相对于2019年的累计增长率与2021年同比增长率，拆出2020年同比增长率；为跳过2020年绝对量的计算，先借用2021年数值估算增长量，再依据其比2019年偏大12.6%的关系修正。",
+      "locate": "2021年到位资金201132亿元；2021年同比增长4.2%；2021年相对于2019年增长12.6%。",
+      "formulaTitle": "步骤一 · 拆出2020年的同比增长率",
+      "formula": "\\[\n\\begin{aligned}\nr_{20/19}\n&=\\frac{12.6\\%-4.2\\%}{1+4.2\\%}\\\\\n&=\\frac{8.4\\%}{1.042}\\\\\n&\\approx8\\%\n\\end{aligned}\n\\]\n常规计算需要先求出2020年的绝对量，再通过2020年增长率求增长量：\n\\[\n\\begin{aligned}\n\\text{2020年资金}&=\\frac{201132}{1+4.2\\%}\\\\[4pt]\n\\text{增长量}&=\\frac{\\text{2020年资金}\\times r_{20/19}}{1+r_{20/19}}\n\\end{aligned}\n\\]",
+      "quickTitle": "步骤二 · 借用2021年的数值，按偏大比例修正",
+      "quick": "先用2021年的201132亿元代替2019年的数值，估算2019—2020年的增长量：\n\\[\n\\begin{aligned}\n\\Delta_{\\text{暂估}}\n&\\approx201132\\times8\\%\\\\\n&\\approx201100\\times8\\%\\\\\n&=16088\\text{亿元}\n\\end{aligned}\n\\]\n2021年的数值比2019年偏大12.6%，所以暂估增长量也相应偏大。直接将选项放大约12.6%，找接近16088的数。检验C：\n\\[\n\\begin{aligned}\n14399.8\\times(1+12.6\\%)\n&\\approx16214\\\\\n&\\approx16088\n\\end{aligned}\n\\]\n选C（14399.8亿元）。",
+      "trap": ""
+    }
   }
 ]

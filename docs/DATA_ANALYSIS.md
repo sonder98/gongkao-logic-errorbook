@@ -177,6 +177,12 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
 
 在 analysis.*、知识点 summary / patterns 等文本字段支持行内公式 \(\frac{A}{B}\)，独立公式 \[\frac{A-B}{B}\]，也支持 aligned 环境多行计算。在 JSON 中反斜杠必须正确转义（例如源文本内写两个反斜杠代表一个 LaTeX 反斜杠）；请先校验 JSON。公式引擎按需从固定版本 KaTeX CDN 加载，失败时显示原始 LaTeX 文本，不阻断答题。
 
+## 棉花单位面积产量与房地产到位资金：两题入库（2026-11-17）
+
+- 棉花题 `data-2016-national-cotton-yield-per-area-growth`，材料 `data-material-2016-national-cotton-output-sowing-area`；答案D。单位面积产量即产量/播种面积。本题按用户选择的路径：看分子分母的增长率是否好算→估算产量同比-26/560≈-5%、面积同比-420/3800≈-11%→平均数增长率(-5%+11%)/(1-11%)≈6.7%，选上升7.2%。保留用户实际步骤；另一条先算两年平均数的路径仅为方法选择对照，不擅自扩展计算。
+- 房地产题 `data-2020-real-estate-development-funding-2019-increase`，材料 `data-material-2021-real-estate-development-funding`；答案C，必须设置 `important:true`。用户给出的常规路径先算2020年绝对量再算增长量；重点速算为从累计12.6%和同比4.2%拆2020同比8%，暂借2021年资金201132亿元代替2019年，201100×8%=16088；借用值较2019真实值大12.6%，用选项反向验证：C 14399.8×1.126≈16214，与16088接近，选C。不引入其他速算路线。原段落数据完整入库，原图片不保存。
+- 仅新增两道习题、两份材料和第5课原有ID关联；知识正文保持既有层级，不改旧题及历史进度。
+
 ## 2018年社会消费品零售总额相对于2015年的倍数（2026-11-17）
 
 - 正式习题 `data-2018-social-retail-sales-2015-multiple`，材料 `data-material-2016-2018-social-retail-sales-monthly-cumulative`，归入第5课「增速的累积与拆分」既有知识点，选C（1.4倍）。

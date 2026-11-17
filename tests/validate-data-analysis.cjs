@@ -67,7 +67,7 @@ for(const word of ['同比增速a＞上月同比增速b','同比降低','同比�
 assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
 const prevMay=120,prevApr=100,curMay=144,curApr=110;
 assert.ok(Math.abs((curMay/curApr)/(prevMay/prevApr)-(1+0.2)/(1+0.1))<1e-12,'环比倍数跨年比值公式应正确');
-assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple'],'第5课须链接茶叶、测绘服务和社会消费品零售额三道正式习题');
+assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple','data-2016-national-cotton-yield-per-area-growth','data-2020-real-estate-development-funding-2019-increase'],'第5课应关联五道正式习题');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const teaMaterial=materials.find(m=>m.id==='data-material-2013-2018-tea-export-quantity-price');
 const teaQuestion=questions.find(q=>q.id==='data-2018-tea-export-value-growth-rate');
@@ -168,8 +168,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,16,'应有十六份真实材料');
-assert.equal(questions.length,16,'应有十六道真实题目');
+assert.equal(materials.length,18,'应有十八份真实材料');
+assert.equal(questions.length,18,'应有十八道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -518,5 +518,24 @@ assert.ok(socialRetail.analysis.formula.includes('12')&&socialRetail.analysis.fo
 assert.ok(socialRetail.analysis.quick.includes('23.9')&&socialRetail.analysis.quick.includes('36.3'),'第二步接续2017/2015增速');
 assert.ok(!JSON.stringify(socialRetail.analysis).includes('1.12\\\\times'),'不得自行添加同比倍数相乘方法');
 assert.ok(DA.explanationHtml(socialRetail).includes('data-da-tex'));
+const cottonQuestion=questions.find(q=>q.id==='data-2016-national-cotton-yield-per-area-growth');
+const cottonMaterial=materials.find(m=>m.id==='data-material-2016-national-cotton-output-sowing-area');
+assert.ok(cottonQuestion&&cottonMaterial,'棉花单位面积产量题与材料存在');
+assert.equal(cottonQuestion.answer,'D');
+assert.deepEqual(cottonQuestion.options,['下降6.8%','下降3.9%','上升2.6%','上升7.2%']);
+assert.ok(cottonQuestion.analysis.formula.includes('26')&&cottonQuestion.analysis.formula.includes('420'),'棉花题先算分子与分母增长率');
+assert.ok(cottonQuestion.analysis.quick.includes('0.89')&&cottonQuestion.analysis.quick.includes('6.7'),'棉花题依用户顺序算平均数增速');
+assert.equal(cottonQuestion.important,undefined,'只有房地产题标重点');
+assert.ok(DA.explanationHtml(cottonQuestion).includes('data-da-tex'));
+const estateQuestion=questions.find(q=>q.id==='data-2020-real-estate-development-funding-2019-increase');
+const estateMaterial=materials.find(m=>m.id==='data-material-2021-real-estate-development-funding');
+assert.ok(estateQuestion&&estateMaterial,'房地产增长量题与材料存在');
+assert.equal(estateQuestion.important,true,'房地产题必须重点标记');
+assert.deepEqual(estateQuestion.options,['3456.7','11563.7','14399.8','22506.8']);
+assert.equal(estateQuestion.answer,'C');
+assert.ok(estateQuestion.analysis.formula.includes('8.4')&&estateQuestion.analysis.formula.includes('1.042'),'先算2020年同比8%');
+assert.ok(estateQuestion.analysis.quick.includes('16088')&&estateQuestion.analysis.quick.includes('16214'),'借用2021年的值再做反向比例修正');
+assert.ok(DA.explanationHtml(estateQuestion).includes('data-da-tex'));
+assert.ok(Math.abs((201132/1.126)*((1.126/1.042)-1)-14399.8)<1,'房地产题真实增量与正确选项相符');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
