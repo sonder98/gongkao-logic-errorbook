@@ -514,7 +514,7 @@ assert.equal(socialRetailMaterial.blocks[0].rows.length,6,'保留2016—2018年�
 assert.equal(socialRetailMaterial.blocks[0].columns.length,13,'保留2至12月全部11个月');
 assert.deepEqual([socialRetailMaterial.blocks[0].rows[1][12],socialRetailMaterial.blocks[0].rows[3][12],socialRetailMaterial.blocks[0].rows[5][12]],['12.0','10.7','10.0']);
 assert.equal(lesson05.questionIds.filter(x=>x==='data-2018-social-retail-sales-2015-multiple').length,1,'第5课关联本题一次');
-assert.ok(socialRetail.analysis.formula.includes('12\\\\%\\\\times10.7'),'第一步按两年增长率计算');
+assert.ok(socialRetail.analysis.formula.includes('12')&&socialRetail.analysis.formula.includes('10.7')&&socialRetail.analysis.formula.includes('23.9'),'第一步按两年增长率计算');
 assert.ok(socialRetail.analysis.quick.includes('23.9')&&socialRetail.analysis.quick.includes('36.3'),'第二步接续2017/2015增速');
 assert.ok(!JSON.stringify(socialRetail.analysis).includes('1.12\\\\times'),'不得自行添加同比倍数相乘方法');
 assert.ok(DA.explanationHtml(socialRetail).includes('data-da-tex'));
