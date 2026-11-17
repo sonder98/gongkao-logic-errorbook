@@ -67,7 +67,7 @@ for(const word of ['同比增速a＞上月同比增速b','同比降低','同比�
 assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
 const prevMay=120,prevApr=100,curMay=144,curApr=110;
 assert.ok(Math.abs((curMay/curApr)/(prevMay/prevApr)-(1+0.2)/(1+0.1))<1e-12,'环比倍数跨年比值公式应正确');
-assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple'],'第5课须链接茶叶出口总额增长率及测绘服务倍数习题');
+assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple'],'第5课须链接茶叶、测绘服务和社会消费品零售额三道正式习题');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const teaMaterial=materials.find(m=>m.id==='data-material-2013-2018-tea-export-quantity-price');
 const teaQuestion=questions.find(q=>q.id==='data-2018-tea-export-value-growth-rate');
@@ -168,8 +168,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,15,'应有十五份真实材料');
-assert.equal(questions.length,15,'应有十五道真实题目');
+assert.equal(materials.length,16,'应有十六份真实材料');
+assert.equal(questions.length,16,'应有十六道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
