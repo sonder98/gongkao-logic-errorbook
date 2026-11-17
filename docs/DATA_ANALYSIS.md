@@ -177,6 +177,13 @@ blocks 支持：paragraph、table、chart（bar / line 单序列）、image。�
 
 在 analysis.*、知识点 summary / patterns 等文本字段支持行内公式 \(\frac{A}{B}\)，独立公式 \[\frac{A-B}{B}\]，也支持 aligned 环境多行计算。在 JSON 中反斜杠必须正确转义（例如源文本内写两个反斜杠代表一个 LaTeX 反斜杠）；请先校验 JSON。公式引擎按需从固定版本 KaTeX CDN 加载，失败时显示原始 LaTeX 文本，不阻断答题。
 
+## 第5课快速计算新增第4点：用同比增速速判环比增速的跨年变化（2026-11-17）
+
+在 `data-topic-course-05-growth-decomposition.contentSections[growth-quick-calculation]` 新增第4条，保持原三节层级和既有题目。
+- 设a为本年当月同比增长率，b为本年上月同比增长率；今年当月环比倍数÷去年同月环比倍数 = (1+a)/(1+b)。用户所述「两年环比的倍数之比 = r1/r2」成立的前提是r1、r2指**同比倍数**（1+a和1+b），不是同比增长率a、b。
+- 因此a>b：今年当月环比增长率高于去年同月；a<b：同比降低；a=b：同比不变。此处是跨年同月比较，**不意味着本年当月环比增长率高于本年上月**，也不意味着本年当月的环比必然为正。
+- 用现有结构化渲染和KaTeX展示，未编造新题、改写第5课前3点或改变已保存进度。增加结构化公式与网页冒烟断言。
+
 ## 第5课快速计算新增第3点：增速拆分复用快速估算（2026-11-17）
 
 在 `data-topic-course-05-growth-decomposition.contentSections[growth-quick-calculation]` 现有两个条目之后，增加「增速拆分的快速计算」，不新增章节或题目。

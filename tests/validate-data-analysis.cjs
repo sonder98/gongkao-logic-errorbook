@@ -44,7 +44,7 @@ assert.ok(growthSplit.description.includes('累计增长率')&&growthSplit.descr
 assert.ok(growthSplit.items[0].formula.includes('\\frac{r_1-r_2}{1+r_2}'),'拆分公式分子必须为r1-r2，分母必须为1+r2');
 const growthQuick=lesson05.contentSections[2];
 assert.equal(growthQuick.id,'growth-quick-calculation');
-assert.deepEqual(growthQuick.items.map(i=>i.title),['两段增长率同正或同负','交叉乘积的小数点位次','增速拆分的快速计算']);
+assert.deepEqual(growthQuick.items.map(i=>i.title),['两段增长率同正或同负','交叉乘积的小数点位次','增速拆分的快速计算','同比增速速判环比增速的跨年变化']);
 assert.ok(growthQuick.items[0].description.includes('同正或同负')&&growthQuick.items[0].description.includes('更大'),'必须保留同正负时增长率高于两项之和');
 assert.ok(growthQuick.items[1].description.includes('去掉百分号')&&growthQuick.items[1].description.includes('除以100'),'按数字计算交叉乘积，最后除以100');
 assert.ok(growthQuick.items[1].formula.includes('\\frac{r_1\\times r_2}{100}'),'检查百分数前数字的乘积位次');
@@ -58,6 +58,15 @@ assert.ok(splitQuick.caution.includes('接近常用百化分增速：份数思�
 assert.ok(splitQuick.caution.includes('不接近常用百化分增速：放缩估算'),'其他较大增速用放缩估算');
 assert.ok(splitQuick.caution.includes('绝对值较大的负增长率'),'大幅负增长避免份数法');
 assert.equal(splitQuick.example,undefined,'不得自编示例或新题');
+const yoyToMom=growthQuick.items[3];
+assert.ok(yoyToMom.description.includes('当月的同比增长率')&&yoyToMom.description.includes('上月的同比增长率'),'区分当月与上月同比率');
+assert.ok(yoyToMom.formula.includes('\\frac{1+a}{1+b}'),'同比增长率必须转成同比倍数后相除');
+assert.ok(yoyToMom.formula.includes('今年当月环比倍数')&&yoyToMom.formula.includes('去年同月环比倍数'),'公式左边必须是两年同月环比倍数之比');
+for(const word of ['同比增速a＞上月同比增速b','同比降低','同比不变','不代表今年当月环比增速高于或低于今年上月环比增速','不代表环比增速一定为正'])
+  assert.ok(yoyToMom.caution.includes(word),'速判应保留条件和比较对象：'+word);
+assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
+const prevMay=120,prevApr=100,curMay=144,curApr=110;
+assert.ok(Math.abs((curMay/curApr)/(prevMay/prevApr)-(1+0.2)/(1+0.1))<1e-12,'环比倍数跨年比值公式应正确');
 assert.deepEqual(lesson05.questionIds,[],'不能虚构习题');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
