@@ -409,7 +409,7 @@
       "formula": "2007年是2006年的：\n\\[1+11.0\\%=1.11\\text{倍}\\]\n2012年是2007年的：\n\\[\\begin{aligned}\n\\frac{74.92}{30.93}\n&\\approx\\frac{75}{31}\\\\\n&\\approx\\frac{72}{30}\\\\\n&=2.4\\text{倍}\n\\end{aligned}\\]",
       "quickTitle": "步骤二 · 两段倍数直接相乘",
       "quick": "\\[\\begin{aligned}\n\\frac{\\text{2012年总值}}{\\text{2006年总值}}\n&\\approx2.4\\times1.11\\\\\n&=2.664\\\\\n&\\approx2.7\\text{倍}\n\\end{aligned}\\]\n选C（2.7倍）。",
-      "trap": "本题求“倍数”，两段倍数直接相乘。2.4×1.11＝2.664，最接近2.7；乘积不是2.62。"
+      "trap": ""
     }
   }
 ]

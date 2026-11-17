@@ -680,6 +680,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await page.locator('.da-explanation').innerText(),/两段倍数直接相乘/);
   assert.match(await page.locator('.da-explanation').innerText(),/2.664/);
   assert.match(await page.locator('.da-explanation').innerText(),/2.7倍/);
+  assert.doesNotMatch(await page.locator('.da-explanation').innerText(),/2\.62|乘积不是|笔误|易错点/,'第15题不要将个人笔误当成题目易错点');
   await page.locator('#tabDataKnowledge').click();
   await page.locator('[data-knowledge-topic="data-topic-course-04-estimation"]').click();
   assert.equal(await page.locator('.kb-structured-group').count(),3,'第4课必须按三种方法分组');
