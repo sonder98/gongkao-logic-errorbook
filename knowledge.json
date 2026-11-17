@@ -630,7 +630,8 @@
             "unknown-norway-hyperemesis-maternal-genes-family-environment",
             "unknown-hmpv-gorilla-human-to-animal-transmission",
             "unknown-tiktaalik-fish-lungs-terrestrial-advantage",
-            "unknown-s-island-moai-quarry-work-areas-multiple-tribes"
+            "unknown-s-island-moai-quarry-work-areas-multiple-tribes",
+            "unknown-international-supermarket-opening-day-low-price-promotion"
           ],
           "examples": [
             {
@@ -680,7 +681,8 @@
             "unknown-megapode-egg-infection-lysozyme",
             "unknown-norway-hyperemesis-maternal-genes-family-environment",
             "2015-sichuan-obesity-social-contagion-habits",
-            "unknown-hmpv-gorilla-human-to-animal-transmission"
+            "unknown-hmpv-gorilla-human-to-animal-transmission",
+            "unknown-international-supermarket-opening-day-low-price-promotion"
           ],
           "recognize": [
             "题干已经观察到B，原解释把B归因于A；选项提出另一原因、基础条件或传播路径。"
@@ -1022,7 +1024,8 @@
             "unknown-chinese-western-medicine-lifespan-premise-selection",
             "unknown-mir205-hair-follicle-softening-premise",
             "unknown-tyrosinase-skin-commensal-whitening-low-toxicity",
-            "unknown-s-island-moai-quarry-work-areas-multiple-tribes"
+            "unknown-s-island-moai-quarry-work-areas-multiple-tribes",
+            "unknown-international-supermarket-opening-day-low-price-promotion"
           ],
           "examples": [],
           "recognize": [
