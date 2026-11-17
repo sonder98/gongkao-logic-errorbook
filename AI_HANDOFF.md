@@ -1,5 +1,8 @@
 # AI_HANDOFF.md — 新对话 / 新 AI 的完整接力说明
 
+> **2026-11-17 第5课新增第三节「快速计算」**：`data-topic-course-05-growth-decomposition.contentSections[growth-quick-calculation]`，与前两节并列。用户要求：(1) r1、r2同正负时，交叉乘积为正，乘积增长率高于r1+r2，此处不附加复杂讲解；(2) 快速确定乘积项小数点：暂时去掉百分号计算，交叉项乘积再除以100。用户提供的2013年2.08%、2014年6.45%示例写成(2.08+6.45+2.08×6.45/100)%≈8.66%。未编造练习题或其他方法，原有全部资料分析知识ID、题目、进度不变。
+
+
 > **2026-11-16 第5课新增第二节「增速的拆分」**：`data-topic-course-05-growth-decomposition.contentSections[growth-rate-decomposition]`，与首节「增长率累积· 乘积增长率/间隔增长率」并列。用户提供：累计增长率r1，一部分增长率r2，则另一部分增长率r=(r1−r2)/(1+r2)。不增编例题或其他方法，沿用既有KaTeX公式显示。题库及用户进度均不变。
 
 

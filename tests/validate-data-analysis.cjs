@@ -31,7 +31,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
-assert.deepEqual(lesson05.contentSections.map(s=>s.title),['增长率累积· 乘积增长率/间隔增长率','增速的拆分'],'第5课应由增长率累积与增速拆分两节组成');
+assert.deepEqual(lesson05.contentSections.map(s=>s.title),['增长率累积· 乘积增长率/间隔增长率','增速的拆分','快速计算'],'第5课应严格保留三个并列部分');
 assert.ok(lesson05.contentSections[0].description.includes('一回事'));
 assert.deepEqual(lesson05.contentSections[0].items.map(x=>x.title),['给出两段增长率','给出两段倍数']);
 assert.ok(lesson05.contentSections[0].items[0].formula.includes('r_1+r_2+r_1r_2'),'两段增长率公式必须包含乘积项');
@@ -42,6 +42,14 @@ assert.equal(growthSplit.id,'growth-rate-decomposition','拆分节须有稳定ID
 assert.equal(growthSplit.items.length,1,'用户只讲了一种拆分条件');
 assert.ok(growthSplit.description.includes('累计增长率')&&growthSplit.description.includes('r₂'),'保持用户变量定义');
 assert.ok(growthSplit.items[0].formula.includes('\\frac{r_1-r_2}{1+r_2}'),'拆分公式分子必须为r1-r2，分母必须为1+r2');
+const growthQuick=lesson05.contentSections[2];
+assert.equal(growthQuick.id,'growth-quick-calculation');
+assert.deepEqual(growthQuick.items.map(i=>i.title),['两段增长率同正或同负','交叉乘积的小数点位次']);
+assert.ok(growthQuick.items[0].description.includes('同正或同负')&&growthQuick.items[0].description.includes('更大'),'必须保留同正负时增长率高于两项之和');
+assert.ok(growthQuick.items[1].description.includes('去掉百分号')&&growthQuick.items[1].description.includes('除以100'),'按数字计算交叉乘积，最后除以100');
+assert.ok(growthQuick.items[1].formula.includes('\\frac{r_1\\times r_2}{100}'),'检查百分数前数字的乘积位次');
+assert.ok(growthQuick.items[1].example.includes('2.08\\times6.45')&&growthQuick.items[1].example.includes('8.66416'),'用户提供的2013、2014年增长率示例必须保留');
+assert.ok(Math.abs(2.08+6.45+2.08*6.45/100-8.66416)<1e-10,'两年复合增长率必须计算准确');
 assert.deepEqual(lesson05.questionIds,[],'不能虚构习题');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
