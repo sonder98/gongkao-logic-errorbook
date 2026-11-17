@@ -468,7 +468,9 @@
           "id": "data-topic-course-05-growth-decomposition",
           "title": "第5课 · 增速的累积与拆分",
           "summary": "增速的累积与拆分：两段增长率的乘积增长率（间隔增长率），由累计增长率拆分另一段增长率；快速计算包括同正负判断、乘积项位次处理、拆分估算，以及同比增速判断环比增速跨年升降。",
-          "questionIds": [],
+          "questionIds": [
+            "data-2018-tea-export-value-growth-rate"
+          ],
           "contentSections": [
             {
               "id": "compound-interval-growth",
