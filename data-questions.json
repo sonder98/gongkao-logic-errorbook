@@ -385,5 +385,31 @@
       "quick": "列式：\n\\[R=2.8\\%+r+2.8\\%\\times r\\]\n图中出口均价\\(4.5\\rightarrow4.9\\)，故：\n\\[0<r<10\\%\\]\n\\[\\begin{aligned}\n2.8\\%+r&<12.8\\%\\\\\n2.8\\%\\times r&<2.8\\%\\times10\\%=0.28\\%\\\\\nR&<13.08\\%\n\\end{aligned}\\]\n排除B（16%）、C（20%）、D（24%），选A。",
       "trap": "方法二的0.28%是交叉乘积的上界，13.08%是总增长率的上界。"
     }
+  },
+  {
+    "id": "data-2012-surveying-services-2006-multiple",
+    "materialId": "data-material-2007-2012-surveying-services-value-growth",
+    "title": "2012年测绘服务总值相当于2006年的倍数",
+    "category": "乘积增长率",
+    "type": "倍数",
+    "difficulty": "未知",
+    "stem": "根据2007—2012年测绘服务总值及同比增长速度图表回答。",
+    "ask": "2012年测绘服务总值约是2006年的（  ）倍。",
+    "options": [
+      "2.2",
+      "2.4",
+      "2.7",
+      "3.3"
+    ],
+    "answer": "C",
+    "analysis": {
+      "identify": "题目问“是2006年的几倍”，直接求倍数并相乘。",
+      "locate": "2007年测绘服务总值30.93亿元，同比增长11.0%；2012年测绘服务总值74.92亿元。",
+      "formulaTitle": "步骤一 · 求两段倍数（除法放缩）",
+      "formula": "2007年是2006年的：\n\\[1+11.0\\%=1.11\\text{倍}\\]\n2012年是2007年的：\n\\[\\begin{aligned}\n\\frac{74.92}{30.93}\n&\\approx\\frac{75}{31}\\\\\n&\\approx\\frac{72}{30}\\\\\n&=2.4\\text{倍}\n\\end{aligned}\\]",
+      "quickTitle": "步骤二 · 两段倍数直接相乘",
+      "quick": "\\[\\begin{aligned}\n\\frac{\\text{2012年总值}}{\\text{2006年总值}}\n&\\approx2.4\\times1.11\\\\\n&=2.664\\\\\n&\\approx2.7\\text{倍}\n\\end{aligned}\\]\n选C（2.7倍）。",
+      "trap": "本题求“倍数”，两段倍数直接相乘。2.4×1.11＝2.664，最接近2.7；乘积不是2.62。"
+    }
   }
 ]
