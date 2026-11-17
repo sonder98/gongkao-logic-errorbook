@@ -411,5 +411,31 @@
       "quick": "\\[\\begin{aligned}\n\\frac{\\text{2012年总值}}{\\text{2006年总值}}\n&\\approx2.4\\times1.11\\\\\n&=2.664\\\\\n&\\approx2.7\\text{倍}\n\\end{aligned}\\]\n选C（2.7倍）。",
       "trap": ""
     }
+  },
+  {
+    "id": "data-2018-social-retail-sales-2015-multiple",
+    "materialId": "data-material-2016-2018-social-retail-sales-monthly-cumulative",
+    "title": "2018年社会消费品零售总额相当于2015年的倍数",
+    "category": "间隔增长率",
+    "type": "倍数",
+    "difficulty": "未知",
+    "stem": "根据某地区2016—2018年社会消费品零售总额月度累计完成情况表作答。",
+    "ask": "该地区2018年完成社会消费品零售总额约是2015年的（  ）倍。",
+    "options": [
+      "1.0",
+      "1.2",
+      "1.4",
+      "1.6"
+    ],
+    "answer": "C",
+    "analysis": {
+      "identify": "已知连续三年的同比增长率，先求2017年相对于2015年的间隔增长率，再累计2018年的增长率，最后换算成倍数。",
+      "locate": "12月累计同比增长：2016年12.0%，2017年10.7%，2018年10.0%。",
+      "formulaTitle": "步骤一 · 2017年相对于2015年的间隔增长率",
+      "formula": "\\[\\begin{aligned}\nr_{17/15}\n&=12\\%+10.7\\%+12\\%\\times10.7\\%\\\\\n&\\approx22.7\\%+1.2\\%\\\\\n&=23.9\\%\n\\end{aligned}\\]",
+      "quickTitle": "步骤二 · 2018年相对于2015年的间隔增长率",
+      "quick": "\\[\\begin{aligned}\nr_{18/15}\n&\\approx23.9\\%+10\\%+23.9\\%\\times10\\%\\\\\n&\\approx33.9\\%+2.4\\%\\\\\n&=36.3\\%\n\\end{aligned}\\]\n\\[\\begin{aligned}\n\\text{倍数}&\\approx1+36.3\\%\\\\\n&=1.363\\approx1.4\n\\end{aligned}\\]\n选C。",
+      "trap": ""
+    }
   }
 ]

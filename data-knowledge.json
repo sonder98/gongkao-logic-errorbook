@@ -470,7 +470,8 @@
           "summary": "增速的累积与拆分：两段增长率的乘积增长率（间隔增长率），由累计增长率拆分另一段增长率；快速计算包括同正负判断、乘积项位次处理、拆分估算，以及同比增速判断环比增速跨年升降。",
           "questionIds": [
             "data-2018-tea-export-value-growth-rate",
-            "data-2012-surveying-services-2006-multiple"
+            "data-2012-surveying-services-2006-multiple",
+            "data-2018-social-retail-sales-2015-multiple"
           ],
           "contentSections": [
             {

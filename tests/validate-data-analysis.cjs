@@ -505,5 +505,18 @@ assert.equal(DA.rich('<img src=x>'),'&lt;img src=x&gt;');
 assert.throws(()=>DA.validate([{...fixtures[0],blocks:[{type:'image',src:'data:image/png;base64,abc',alt:'no'}]}],fixtureQuestions,fixtureBook),/图片/);
 assert.throws(()=>DA.validate(fixtures,[{...fixtureQuestions[0],materialId:'unknown'}],fixtureBook),/关联无效/);
 assert.throws(()=>DA.validate(fixtures,[fixtureQuestions[0],fixtureQuestions[0]],fixtureBook),/关联无效/);
+const socialRetail=questions.find(q=>q.id==='data-2018-social-retail-sales-2015-multiple');
+const socialRetailMaterial=materials.find(m=>m.id==='data-material-2016-2018-social-retail-sales-monthly-cumulative');
+assert.ok(socialRetail&&socialRetailMaterial,'社会消费品零售总额倍数题与材料必须存在');
+assert.equal(socialRetail.answer,'C');
+assert.deepEqual(socialRetail.options,['1.0','1.2','1.4','1.6']);
+assert.equal(socialRetailMaterial.blocks[0].rows.length,6,'保留2016—2018年绝对量及增速六行');
+assert.equal(socialRetailMaterial.blocks[0].columns.length,13,'保留2至12月全部11个月');
+assert.deepEqual([socialRetailMaterial.blocks[0].rows[1][12],socialRetailMaterial.blocks[0].rows[3][12],socialRetailMaterial.blocks[0].rows[5][12]],['12.0','10.7','10.0']);
+assert.equal(lesson05.questionIds.filter(x=>x==='data-2018-social-retail-sales-2015-multiple').length,1,'第5课关联本题一次');
+assert.ok(socialRetail.analysis.formula.includes('12\\\\%\\\\times10.7'),'第一步按两年增长率计算');
+assert.ok(socialRetail.analysis.quick.includes('23.9')&&socialRetail.analysis.quick.includes('36.3'),'第二步接续2017/2015增速');
+assert.ok(!JSON.stringify(socialRetail.analysis).includes('1.12\\\\times'),'不得自行添加同比倍数相乘方法');
+assert.ok(DA.explanationHtml(socialRetail).includes('data-da-tex'));
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
