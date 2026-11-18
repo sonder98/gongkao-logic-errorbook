@@ -541,7 +541,7 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先计算平均数增长率，再给增长率较低的一方补正，使补正项始终采用较大增长率减较小增长率。",
+          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除。",
           "questionIds": [],
           "contentSections": [
             {
@@ -570,6 +570,68 @@
                   "title": "r₁＜r₂｜分子增长率较低，补正分子",
                   "description": "当分子增长率r₁低于分母增长率r₂时，增长率差为r₂－r₁；将补正项放在分子，增长率差的分母为1＋r₁。",
                   "formula": "\\[\n\\begin{aligned}\n\\frac{a}{b}\n&=\\frac{\\dfrac{A}{1+r_1}}{\\dfrac{B}{1+r_2}}\\\\[4pt]\n&=\\frac{A}{B}\\times\\frac{1+r_2}{1+r_1}\\\\[4pt]\n&=\\frac{A}{B}\\times\\left(1+\\frac{r_2-r_1}{1+r_1}\\right)\n\\end{aligned}\n\\]"
+                }
+              ]
+            },
+            {
+              "id": "flatten-growth-calculation-order",
+              "title": "计算顺序｜先除后补 / 先补后除",
+              "description": "确定增长率较低的一方后，根据已知现期比 \\(A/B\\) 是否好算，选择运算顺序。两种顺序使用同一拉平增长率公式。",
+              "flowchart": {
+                "first": {
+                  "title": "第一步：比较 r₁ 与 r₂",
+                  "detail": "谁的增长率低，就给谁补正；始终大减小"
+                },
+                "decision": {
+                  "title": "第二步：现期比 A/B 是否好算？"
+                },
+                "branches": [
+                  {
+                    "condition": "好算",
+                    "title": "先除后补",
+                    "steps": [
+                      "先算现期比 A/B",
+                      "再补正增长率"
+                    ]
+                  },
+                  {
+                    "condition": "不好算",
+                    "title": "先补后除",
+                    "steps": [
+                      "先补正分子或分母",
+                      "再做除法"
+                    ]
+                  }
+                ]
+              },
+              "items": [
+                {
+                  "title": "方法一｜先除后补（现期比好算）",
+                  "description": "先计算现期比 \\(A/B\\)，再按照增长率大小，补正增长率较低的一方。",
+                  "subitems": [
+                    {
+                      "title": "r₁＜r₂｜补正分子",
+                      "formula": "\\[\n\\frac ab=\\underbrace{\\frac AB}_{\\text{先计算现期比}}\\times\\left(1+\\frac{r_2-r_1}{1+r_1}\\right)\n\\]"
+                    },
+                    {
+                      "title": "r₁＞r₂｜补正分母",
+                      "formula": "\\[\n\\frac ab=\\underbrace{\\frac AB}_{\\text{先计算现期比}}\\times\\frac{1}{1+\\dfrac{r_1-r_2}{1+r_2}}\n\\]"
+                    }
+                  ]
+                },
+                {
+                  "title": "方法二｜先补后除（现期比不好算）",
+                  "description": "先在增长率较低的一方完成补正，得到调整后的分子或分母，再进行除法。",
+                  "subitems": [
+                    {
+                      "title": "r₁＜r₂｜先补正分子，再除以 B",
+                      "formula": "\\[\n\\frac ab=\\frac{\\underbrace{A\\left(1+\\dfrac{r_2-r_1}{1+r_1}\\right)}_{\\text{先补正分子}}}{B}\n\\]"
+                    },
+                    {
+                      "title": "r₁＞r₂｜先补正分母，再用 A 去除",
+                      "formula": "\\[\n\\frac ab=\\frac{A}{\\underbrace{B\\left(1+\\dfrac{r_1-r_2}{1+r_2}\\right)}_{\\text{先补正分母}}}\n\\]"
+                    }
+                  ]
                 }
               ]
             }

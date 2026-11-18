@@ -33,7 +33,7 @@ assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
 assert.deepEqual(lesson06.questionIds,[],'新课未提供习题，不得虚构');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
-assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction']);
+assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
 assert.ok(lesson06.contentSections[0].items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
 assert.deepEqual(lesson06.contentSections[1].items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
@@ -46,6 +46,27 @@ for(const [a,b,r1,r2] of [[200,100,0.2,0.05],[200,100,0.03,0.18]]){
   const base=(a/(1+r1))/(b/(1+r2));
   const flattened=r1>r2?(a/b)/(1+(r1-r2)/(1+r2)):(a/b)*(1+(r2-r1)/(1+r1));
   assert.ok(Math.abs(base-flattened)<1e-12,'两支拉平增长率公式必须精确等价');
+}
+const flattenOrder=lesson06.contentSections.find(s=>s.id==='flatten-growth-calculation-order');
+assert.ok(flattenOrder,'第6课新增计算顺序必须保留在既有课程');
+assert.equal(flattenOrder.flowchart.first.title,'第一步：比较 r₁ 与 r₂');
+assert.ok(flattenOrder.flowchart.first.detail.includes('谁的增长率低'));
+assert.ok(flattenOrder.flowchart.decision.title.includes('A/B 是否好算'));
+assert.deepEqual(flattenOrder.flowchart.branches.map(b=>b.title),['先除后补','先补后除']);
+assert.deepEqual(flattenOrder.flowchart.branches.map(b=>b.condition),['好算','不好算']);
+assert.deepEqual(flattenOrder.items.map(item=>item.title),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
+assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,2]);
+const [beforeDivide,afterDivide]=flattenOrder.items;
+assert.ok(beforeDivide.subitems[0].formula.includes('underbrace')&&beforeDivide.subitems[0].formula.includes('r_2-r_1')&&beforeDivide.subitems[0].formula.includes('1+r_1'),'先除后补：分子补正');
+assert.ok(beforeDivide.subitems[1].formula.includes('r_1-r_2')&&beforeDivide.subitems[1].formula.includes('1+r_2'),'先除后补：分母补正');
+assert.ok(afterDivide.subitems[0].formula.includes('先补正分子')&&afterDivide.subitems[0].formula.includes('r_2-r_1'),'先补后除：先补正分子');
+assert.ok(afterDivide.subitems[1].formula.includes('先补正分母')&&afterDivide.subitems[1].formula.includes('r_1-r_2'),'先补后除：先补正分母');
+assert.ok(lesson06.contentSections.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'第6课不能编造例题或练习');
+for(const [A,B,r1,r2] of [[1200,310,0.08,0.14],[1200,310,0.21,0.09]]){
+ const baseline=(A/(1+r1))/(B/(1+r2));
+ const firstDivide=r1<r2?(A/B)*(1+(r2-r1)/(1+r1)):(A/B)/(1+(r1-r2)/(1+r2));
+ const firstCorrect=r1<r2?A*(1+(r2-r1)/(1+r1))/B:A/(B*(1+(r1-r2)/(1+r2)));
+ assert.ok(Math.abs(firstDivide-baseline)<1e-12&&Math.abs(firstCorrect-baseline)<1e-12,'两种运算顺序同值，补正方向保持一致');
 }
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');

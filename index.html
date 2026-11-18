@@ -505,6 +505,21 @@ function structuredKnowledgeDetailsHtml(item){
    '</section>').join('')+'</div>':'')+
   (item.caution?'<p class="kb-structured-caution">'+DataAnalysis.rich(item.caution)+'</p>':'');
 }
+function structuredKnowledgeFlowchartHtml(flow){
+ if(!flow?.first||!flow?.decision||!Array.isArray(flow.branches)||!flow.branches.length)return '';
+ const node=(title,detail,kind)=>'<div class="kb-flow-node '+kind+'"><strong>'+safe(title)+'</strong>'+
+  (detail?'<span>'+safe(detail)+'</span>':'')+'</div>';
+ const arrow='<div class="kb-flow-arrow" aria-hidden="true">↓</div>';
+ const branches=flow.branches.map(branch=>
+  '<div class="kb-flow-branch"><span class="kb-flow-branch-label">'+safe(branch.condition)+'</span>'+arrow+
+  node(branch.title,'','kb-flow-result')+
+  (branch.steps||[]).map(step=>arrow+'<div class="kb-flow-task">'+safe(step)+'</div>').join('')+
+  '</div>').join('');
+ return '<div class="kb-flowchart" role="group" aria-label="拉平增长率计算顺序流程图">'+
+  node(flow.first.title,flow.first.detail,'kb-flow-primary')+arrow+
+  node(flow.decision.title,flow.decision.detail,'kb-flow-decision')+arrow+
+  '<div class="kb-flow-branches">'+branches+'</div></div>';
+}
 function structuredKnowledgeHtml(topic){
  if(currentModule!=='data'||!Array.isArray(topic.contentSections)||!topic.contentSections.length)return '';
  const sections=topic.contentSections;
@@ -515,6 +530,7 @@ function structuredKnowledgeHtml(topic){
   '<section class="kb-structured-group" id="kb-structured-'+safe(section.id)+'">'+
    '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safe(section.title)+'</h3>'+
    (section.description?'<p>'+DataAnalysis.rich(section.description)+'</p>':'')+'</div></div>'+
+   (section.flowchart?structuredKnowledgeFlowchartHtml(section.flowchart):'')+
    (section.items||[]).map(item=>'<article class="kb-structured-item"><h4>'+safe(item.title)+'</h4>'+
     structuredKnowledgeDetailsHtml(item)+
     (item.subitems?.length?'<div class="kb-structured-subitems">'+item.subitems.map(sub=>

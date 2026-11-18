@@ -86,3 +86,17 @@
 .kb-structured-key-point strong{font-weight:850;color:#135e54;margin-right:5px}
 .kb-structured-key-point .da-inline-math{font-weight:600}
 @media(max-width:800px){.kb-structured-key-point{font-size:13px;line-height:1.8}}
+
+/* Lesson 6: responsive decision flow for choosing correction order. */
+.kb-flowchart{display:grid;justify-items:center;gap:0;margin:14px auto 22px;width:100%;max-width:690px}
+.kb-flow-node{box-sizing:border-box;width:100%;max-width:435px;border:1px solid #c7e4da;border-radius:12px;background:#f1faf6;padding:13px 18px;text-align:center;color:#245a53;display:grid;gap:5px}
+.kb-flow-node strong{font-size:14px;line-height:1.5}
+.kb-flow-node span{font-size:12px;line-height:1.65;color:#55716c}
+.kb-flow-decision{background:#fff;border-color:#b5d4cb}
+.kb-flow-arrow{height:28px;display:flex;justify-content:center;align-items:center;color:#5f9b8f;font-size:18px;font-weight:750;line-height:1}
+.kb-flow-branches{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.kb-flow-branch{min-width:0;padding:12px 16px 16px;border:1px solid #d6e8e1;border-radius:12px;background:#fafdfc;display:grid;justify-items:center;align-content:start}
+.kb-flow-branch-label{padding:3px 12px;background:#e8f5ef;border-radius:16px;color:#21665b;font-weight:750;font-size:12px}
+.kb-flow-branch .kb-flow-node{width:100%;padding:10px 12px}
+.kb-flow-task{box-sizing:border-box;width:100%;border:1px solid #e4eeea;background:#fff;border-radius:9px;padding:10px 7px;text-align:center;color:#3f625a;font-size:13px;line-height:1.55}
+@media(max-width:640px){.kb-flow-branches{grid-template-columns:minmax(0,1fr);gap:12px}.kb-flow-branch{padding:11px 13px 14px}.kb-flow-node{padding:12px 10px}.kb-flowchart{margin:10px auto 18px}}

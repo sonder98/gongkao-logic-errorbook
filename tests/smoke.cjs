@@ -738,6 +738,18 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#tabPractice').click();
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 
+  await page.locator('[data-knowledge-topic="data-topic-course-06-flatten-growth"]').click();
+  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),[
+    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除'
+  ],'第6课保留原有两节并在第三节展示速算顺序');
+  const orderSection=page.locator('#kb-structured-flatten-growth-calculation-order');
+  assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'第6课的计算顺序流程图必须显示');
+  assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
+  assert.match(await orderSection.locator('.kb-flowchart').innerText(),/A\/B 是否好算/);
+  assert.deepEqual(await orderSection.locator('.kb-structured-item h4').allInnerTexts(),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
+  assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');
+  assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4,'全部四种速算排版均应支持数学公式');
+
   // Reproduce early tab switching while data-knowledge.json has not finished loading.
   // The selected module must show its own loading state and repaint automatically.
   const raceContext=await browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block'});
