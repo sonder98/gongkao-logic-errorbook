@@ -747,6 +747,12 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
   assert.match(await orderSection.locator('.kb-flowchart').innerText(),/A\/B 是否好算/);
   assert.deepEqual(await orderSection.locator('.kb-structured-item h4').allInnerTexts(),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
+  assert.equal(await orderSection.locator('.kb-structured-tip').count(),1,'TIP必须贴近拉平增长率流程图');
+  assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/凑整/);
+  assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/倍数关系/);
+  assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/10%、25%、33%/);
+  assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
+
   assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');
   assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4,'全部四种速算排版均应支持数学公式');
 

@@ -55,6 +55,14 @@ assert.ok(flattenOrder.flowchart.decision.title.includes('A/B 是否好算'));
 assert.deepEqual(flattenOrder.flowchart.branches.map(b=>b.title),['先除后补','先补后除']);
 assert.deepEqual(flattenOrder.flowchart.branches.map(b=>b.condition),['好算','不好算']);
 assert.deepEqual(flattenOrder.items.map(item=>item.title),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
+assert.equal(flattenOrder.tip.title,'TIP｜如何选择计算顺序','新TIP须归属第6课计算顺序');
+assert.deepEqual(flattenOrder.tip.points.map(p=>p.label),['先除后补','先补后除'],'TIP必须保留两项选择依据');
+assert.ok(flattenOrder.tip.points[0].description.includes('凑整')&&flattenOrder.tip.points[0].description.includes('倍数关系')&&flattenOrder.tip.points[0].description.includes('A/B'),'先除后补：凑整或倍数关系明显');
+for(const s of ['10%','25%','33%','百化分']){
+ assert.ok(flattenOrder.tip.points[1].description.includes(s),'先补后除应保留用户列举的比例：'+s);
+}
+assert.equal(lesson06.contentSections.length,3,'TIP不另建章节');
+
 assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,2]);
 const [beforeDivide,afterDivide]=flattenOrder.items;
 assert.ok(beforeDivide.subitems[0].formula.includes('underbrace')&&beforeDivide.subitems[0].formula.includes('r_2-r_1')&&beforeDivide.subitems[0].formula.includes('1+r_1'),'先除后补：分子补正');

@@ -100,3 +100,11 @@
 .kb-flow-branch .kb-flow-node{width:100%;padding:10px 12px}
 .kb-flow-task{box-sizing:border-box;width:100%;border:1px solid #e4eeea;background:#fff;border-radius:9px;padding:10px 7px;text-align:center;color:#3f625a;font-size:13px;line-height:1.55}
 @media(max-width:640px){.kb-flow-branches{grid-template-columns:minmax(0,1fr);gap:12px}.kb-flow-branch{padding:11px 13px 14px}.kb-flow-node{padding:12px 10px}.kb-flowchart{margin:10px auto 18px}}
+
+/* Lesson 6 calculation-order TIP, placed immediately below the decision flow. */
+.kb-structured-tip{border:1px solid #d8e9e3;border-radius:11px;background:#f8fbfa;padding:14px 17px;margin:0 0 17px}
+.kb-structured-tip-title{font-size:13px;font-weight:850;line-height:1.5;color:#266e63;margin-bottom:8px}
+.kb-structured-tip ul{margin:0;padding-left:19px;display:grid;gap:7px}
+.kb-structured-tip li{font-size:13px;line-height:1.8;color:#334e59;padding-left:2px}
+.kb-structured-tip li strong{color:#225e55;margin-right:7px}
+@media(max-width:800px){.kb-structured-tip{padding:12px 13px}.kb-structured-tip li{font-size:13px}}
