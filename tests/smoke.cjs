@@ -750,6 +750,13 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');
   assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4,'全部四种速算排版均应支持数学公式');
 
+  assert.equal(await orderSection.locator('.kb-structured-worked-example').count(),2,'两道拉平增长率例题必须出现在各自的方法卡');
+  const ex1=orderSection.locator('.kb-structured-item').nth(1).locator('.kb-structured-subitem').first();
+  const ex2=orderSection.locator('.kb-structured-item').first().locator('.kb-structured-subitem').nth(1);
+  assert.match(await ex1.locator('.kb-structured-worked-example').innerText(),/7358/);
+  assert.match(await ex2.locator('.kb-structured-worked-example').innerText(),/1027/);
+  assert.equal(await orderSection.locator('.kb-structured-worked-example .kb-structured-formula [data-da-tex]').count(),4,'两道例题四段公式须能显示');
+
   // Reproduce early tab switching while data-knowledge.json has not finished loading.
   // The selected module must show its own loading state and repaint automatically.
   const raceContext=await browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block'});

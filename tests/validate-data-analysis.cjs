@@ -68,6 +68,20 @@ for(const [A,B,r1,r2] of [[1200,310,0.08,0.14],[1200,310,0.21,0.09]]){
  const firstCorrect=r1<r2?A*(1+(r2-r1)/(1+r1))/B:A/(B*(1+(r1-r2)/(1+r2)));
  assert.ok(Math.abs(firstDivide-baseline)<1e-12&&Math.abs(firstCorrect-baseline)<1e-12,'两种运算顺序同值，补正方向保持一致');
 }
+const lesson6ExampleFirst=afterDivide.subitems[0].workedExamples;
+const lesson6ExampleSecond=beforeDivide.subitems[1].workedExamples;
+assert.equal(lesson6ExampleFirst?.length,1,'先补后除必须有用户指定例题');
+assert.equal(lesson6ExampleSecond?.length,1,'先除后补必须有用户指定例题');
+assert.equal(lesson6ExampleFirst[0].title,'例题1｜先补正分子，再做除法');
+assert.equal(lesson6ExampleSecond[0].title,'例题2｜先计算现期比，再补正分母');
+assert.ok(lesson6ExampleFirst[0].formula.includes('7358')&&lesson6ExampleFirst[0].formula.includes('3909')&&lesson6ExampleFirst[0].formula.includes('7700')&&lesson6ExampleFirst[0].formula.includes('5.8'),'第1例必须保留先补分子与再除分母的顺序');
+assert.ok(lesson6ExampleSecond[0].formula.includes('1027')&&lesson6ExampleSecond[0].formula.includes('7475')&&lesson6ExampleSecond[0].formula.includes('7500')&&lesson6ExampleSecond[0].formula.includes('13.7')&&lesson6ExampleSecond[0].formula.includes('1+5'),'第2例必须先除现期比再补分母');
+assert.ok(!lesson6ExampleSecond[0].formula.includes('13.3'),'1027/7500应约为13.7%');
+const allLesson6Examples=lesson06.contentSections.flatMap(g=>(g.items||[]).flatMap(i=>[...(i.workedExamples||[]),...(i.subitems||[]).flatMap(s=>s.workedExamples||[])]));
+assert.equal(allLesson6Examples.length,2,'这两条是教材例题，不新增独立习题');
+assert.ok(Math.abs((7358/1.109)/(3909/1.167)-2)<.03,'第一例基期比约2');
+assert.ok(Math.abs((1027/1.293)/(7475/1.237)-.13)<.003,'第二例基期比约13%');
+assert.ok(Math.abs(1027/7500*100-13.7)<.1,'第二例乘数近似可保留小数精度');
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
