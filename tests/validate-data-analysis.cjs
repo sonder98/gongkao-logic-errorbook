@@ -609,7 +609,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
