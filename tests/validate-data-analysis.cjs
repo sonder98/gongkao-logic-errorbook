@@ -618,7 +618,7 @@ assert.ok(scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x
 assert.ok(!scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='精度与量级判断').keyPoint,'百分数乘法量级技巧应从除法放缩移出');
 assert.equal(autumnGrainQuestion.analysis.formulaTitle,'步骤一、二 · 拉平增长率，补正分母');
 assert.match(autumnGrainQuestion.analysis.formula,/432\\times6/,'应保留先算432×6再用1%标杆还原量级的实际心算');
-assert.match(autumnGrainQuestion.analysis.formula,/432\\times0\.6\\%=2\.592/);
+assert.match(autumnGrainQuestion.analysis.formula,/432\\times0\.6\\%&=2\.592/);
 assert.match(autumnGrainQuestion.analysis.formula,/小于4\.32/,'1%的作用是判断结果数量级');
 assert.match(autumnGrainQuestion.analysis.quickTitle,/步骤三 · 除法放缩/);
 assert.match(autumnGrainQuestion.analysis.quick,/4444=4\\times1111/,'先识别4444=4×1111');
