@@ -38,8 +38,8 @@ assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平�
 assert.ok(lesson06.contentSections[0].items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
 assert.deepEqual(lesson06.contentSections[1].items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
 const flattenDen=lesson06.contentSections[1].items[0],flattenNum=lesson06.contentSections[1].items[1];
-assert.ok(flattenDen.formula.includes('\\\\frac{1}{1+\\\\dfrac{r_1-r_2}{1+r_2}}'),'r1>r2时按截图用正差补分母');
-assert.ok(flattenNum.formula.includes('\\\\left(1+\\\\frac{r_2-r_1}{1+r_1}\\\\right)'),'r1<r2时按截图用正差补分子');
+assert.ok(flattenDen.formula.includes(String.raw`\frac{1}{1+\dfrac{r_1-r_2}{1+r_2}}`),'r1>r2时按截图用正差补分母');
+assert.ok(flattenNum.formula.includes(String.raw`\left(1+\frac{r_2-r_1}{1+r_1}\right)`),'r1<r2时按截图用正差补分子');
 assert.ok(lesson06.contentSections[1].description.includes('较低')&&lesson06.contentSections[1].description.includes('为正'),'保持补正增速低的一方和大减小的核心要点');
 assert.ok(lesson06.contentSections.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'不得编造第6课例题');
 for(const [a,b,r1,r2] of [[200,100,0.2,0.05],[200,100,0.03,0.18]]){
