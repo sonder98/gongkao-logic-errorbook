@@ -911,6 +911,7 @@ const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关�
 
 $('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle" aria-label="当前题目序号">${ix+1} / ${f.length}</span><button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
+${dataMode&&q.optionImage?`<figure class="da-option-image"><img src="${safe(q.optionImage)}" alt="${safe(q.optionImageAlt||'原题图形选项')}" decoding="async" loading="lazy"></figure>`:''}
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
 <div class="scratch-overlay" id="scratchOverlay" hidden>
  <canvas class="scratch-canvas" id="scratchCanvas" aria-label="透明书写草稿层"></canvas>

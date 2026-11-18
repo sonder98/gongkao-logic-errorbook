@@ -145,6 +145,7 @@
         !'ABCDE'.slice(0,q.options.length).includes(q.answer)||
         !q.analysis||!['identify','locate','formula','quick','trap'].every(k=>typeof q.analysis[k]==='string'))throw Error('资料分析题目格式或关联无效：'+(q&&q.id));
       if(q.important!==undefined&&typeof q.important!=='boolean')throw Error('重点题标记不合法：'+q.id);
+      if(q.optionImage!==undefined&&(!imagePath.test(q.optionImage)||typeof q.optionImageAlt!=='string'||!q.optionImageAlt.trim()))throw Error('题目选项图片须使用 assets/data-analysis 下的图片并注明内容：'+q.id);
       if(q.longDivision!==undefined&&(typeof q.longDivision!=='string'||q.longDivision.length>10000))throw Error('竖式内容格式错误：'+q.id);
       for(const label of ['formulaTitle','quickTitle'])if(q.analysis[label]!==undefined&&typeof q.analysis[label]!=='string')throw Error('解析标题格式错误：'+q.id);
       seenQ.add(q.id);

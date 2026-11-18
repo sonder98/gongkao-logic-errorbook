@@ -482,7 +482,8 @@
             "data-2018-social-retail-sales-2015-multiple",
             "data-2016-national-cotton-yield-per-area-growth",
             "data-2020-real-estate-development-funding-2019-increase",
-            "data-2016-may-imported-drug-mom-growth"
+            "data-2016-may-imported-drug-mom-growth",
+            "data-2022-q4-iron-ore-monthly-mom-trend"
           ],
           "contentSections": [
             {
@@ -553,7 +554,8 @@
           "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除。",
           "questionIds": [
             "data-2008-autumn-grain-share-of-total",
-            "data-2016-may-imported-drug-mom-growth"
+            "data-2016-may-imported-drug-mom-growth",
+            "data-2022-q4-iron-ore-monthly-mom-trend"
           ],
           "contentSections": [
             {

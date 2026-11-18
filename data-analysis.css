@@ -108,3 +108,8 @@
 .kb-structured-tip li{font-size:13px;line-height:1.8;color:#334e59;padding-left:2px}
 .kb-structured-tip li strong{color:#225e55;margin-right:7px}
 @media(max-width:800px){.kb-structured-tip{padding:12px 13px}.kb-structured-tip li{font-size:13px}}
+
+/* Scanned multiple-choice diagrams: preserve the original A–D sketches above the selectable answers. */
+.da-option-image{margin:10px 0 14px;padding:9px;border:1px solid #dbe7e5;border-radius:12px;background:#fff;overflow:hidden}
+.da-option-image img{width:100%;height:auto;display:block;max-width:950px;margin:0 auto;object-fit:contain}
+@media(max-width:600px){.da-option-image{padding:5px;margin:8px 0 12px}}

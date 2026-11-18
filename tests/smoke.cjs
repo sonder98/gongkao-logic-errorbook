@@ -767,6 +767,17 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await ex2.locator('.kb-structured-worked-example').innerText(),/1027/);
   assert.equal(await orderSection.locator('.kb-structured-worked-example .kb-structured-formula [data-da-tex]').count(),4,'两道例题四段公式须能显示');
 
+  // Scanned trend choices should remain visible, and selecting the A–D button still works.
+  await page.locator('#tabDataPractice').click();
+  await page.locator('[data-id="data-2022-q4-iron-ore-monthly-mom-trend"]').click();
+  const figure=page.locator('.da-option-image img');
+  assert.equal(await figure.count(),1,'铁矿石趋势题须展示原图选项');
+  assert.match(await figure.getAttribute('src'),/iron-ore-mom-options\.webp$/);
+  assert.equal(await page.locator('.choice[data-answer]').count(),4,'扫描图选项同时保留A-D选择按钮');
+  assert.equal(await figure.evaluate(img=>img.complete&&img.naturalWidth>0),true,'原始选项图必须成功加载');
+  await page.locator('.choice[data-answer="A"]').click();
+  assert.match(await page.locator('.choice[data-answer="A"]').getAttribute('class'),/chosen/);
+
   // Reproduce early tab switching while data-knowledge.json has not finished loading.
   // The selected module must show its own loading state and repaint automatically.
   const raceContext=await browser.newContext({viewport:{width:1280,height:900},serviceWorkers:'block'});

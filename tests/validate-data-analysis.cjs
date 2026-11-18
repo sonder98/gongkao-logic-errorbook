@@ -31,7 +31,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth'],'第6课关联秋粮基期比重及跨年环比速判两道正式习题');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend'],'第6课关联三道正式习题，包含跨年环比趋势比较');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
@@ -129,7 +129,7 @@ for(const word of ['同比增速a＞上月同比增速b','同比降低','同比�
 assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
 const prevMay=120,prevApr=100,curMay=144,curApr=110;
 assert.ok(Math.abs((curMay/curApr)/(prevMay/prevApr)-(1+0.2)/(1+0.1))<1e-12,'环比倍数跨年比值公式应正确');
-assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple','data-2016-national-cotton-yield-per-area-growth','data-2020-real-estate-development-funding-2019-increase','data-2016-may-imported-drug-mom-growth'],'第5课关联六道正式习题，包含跨年环比速判');
+assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple','data-2016-national-cotton-yield-per-area-growth','data-2020-real-estate-development-funding-2019-increase','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend'],'第5课关联七道正式习题，包含跨年环比趋势比较');
 assert.equal(lesson05.patterns,undefined,'第5课不得变成扁平规则列表');
 const teaMaterial=materials.find(m=>m.id==='data-material-2013-2018-tea-export-quantity-price');
 const teaQuestion=questions.find(q=>q.id==='data-2018-tea-export-value-growth-rate');
@@ -230,8 +230,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,20,'应有二十份真实材料');
-assert.equal(questions.length,20,'应有二十道真实题目');
+assert.equal(materials.length,21,'应有二十一份真实材料');
+assert.equal(questions.length,21,'应有二十一道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -652,5 +652,27 @@ assert.ok(importedDrugQuestion.analysis.quick.includes('54.5')&&importedDrugQues
 assert.ok(DA.explanationHtml(importedDrugQuestion).includes('data-da-tex'));
 const actualCrossYearMom=((27.8/1.545)/(18.8/1.122)-1)*100;
 assert.ok(actualCrossYearMom>0&&actualCrossYearMom<40,'原数据对应选项C');
+const ironOreQuestion=questions.find(q=>q.id==='data-2022-q4-iron-ore-monthly-mom-trend');
+const ironOreMaterial=materials.find(m=>m.id==='data-material-2023-iron-ore-monthly-output-yoy');
+assert.ok(ironOreQuestion&&ironOreMaterial,'铁矿石跨年环比趋势题和材料均须完整录入');
+assert.equal(ironOreQuestion.answer,'A');
+assert.deepEqual(ironOreQuestion.options,['图 A','图 B','图 C','图 D']);
+assert.equal(ironOreQuestion.optionImage,'assets/data-analysis/2022-q4-iron-ore-mom-options.webp');
+assert.ok(ironOreQuestion.optionImageAlt.includes('四幅原题折线图'));
+assert.equal(ironOreMaterial.blocks[0].type,'table');
+assert.equal(ironOreMaterial.blocks[0].rows.length,11);
+assert.deepEqual(ironOreMaterial.blocks[0].rows.slice(-4),[['9月','8437','-0.9'],['10月','8645','29.8'],['11月','8577','6.6'],['12月','8603','0.4']]);
+assert.equal(lesson05.questionIds.filter(x=>x==='data-2022-q4-iron-ore-monthly-mom-trend').length,1);
+assert.equal(lesson06.questionIds.filter(x=>x==='data-2022-q4-iron-ore-monthly-mom-trend').length,1);
+assert.ok(ironOreQuestion.analysis.formula.includes('8645')&&ironOreQuestion.analysis.formula.includes('8437')&&ironOreQuestion.analysis.formula.includes('8577')&&ironOreQuestion.analysis.formula.includes('8603'),'先看现期环比倍数均约为1');
+assert.ok(ironOreQuestion.analysis.quick.includes('23.2')&&ironOreQuestion.analysis.quick.includes('6.2')&&ironOreQuestion.analysis.quick.includes('10月：补正分母'),'保持用户的修正项判断顺序');
+assert.ok(DA.explanationHtml(ironOreQuestion).includes('data-da-tex'));
+assert.throws(()=>DA.validate(materials,[...questions.slice(0,-1),{...ironOreQuestion,optionImage:'data:image/webp;base64,AA'}],book),/选项图片/,'禁止选项图片内联Base64');
+const mom2022=[
+ (8645/1.298)/(8437/.991),
+ (8577/1.066)/(8645/1.298),
+ (8603/1.004)/(8577/1.066)
+];
+assert.ok(mom2022[1]>mom2022[2]&&mom2022[2]>mom2022[0],'10月低、11月高、12月居中，答案应为A');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
