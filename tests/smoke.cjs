@@ -757,6 +757,23 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/10%、25%、33%/);
   assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
   assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','第6课TIP不应继承左侧导航栏的吸顶样式');
+  // Sticky subsection headings are scoped to their section, unlike the TIP and intro.
+  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),3,'第6课三节均有独立的吸顶标题');
+  assert.equal(await page.locator('.kb-structured-head').first().evaluate(el=>getComputedStyle(el).position),'sticky','编号+小节标题应吸顶');
+  assert.equal(await page.locator('.kb-structured-intro').first().evaluate(el=>getComputedStyle(el).position),'static','说明文字应随正文滚动');
+  const correctionSection=page.locator('#kb-structured-flatten-growth-correction');
+  await correctionSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+155));
+  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-correction > .kb-structured-head').getBoundingClientRect().top)<5);
+  assert.ok(Math.abs(await correctionSection.locator('.kb-structured-head').evaluate(el=>el.getBoundingClientRect().top))<5,'当前节标题应贴在顶部');
+  await orderSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+160));
+  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-calculation-order > .kb-structured-head').getBoundingClientRect().top)<5);
+  assert.ok(await correctionSection.locator('.kb-structured-head').evaluate(el=>el.getBoundingClientRect().top)<-10,'下一节出现后，上一节标题必须离开');
+  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','TIP保持普通滚动');
+  await page.setViewportSize({width:390,height:844});
+  assert.equal(await orderSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','窄屏时章节标题仍吸顶');
+  await page.setViewportSize({width:1280,height:900});
+  await page.evaluate(()=>window.scrollTo(0,0));
+
   assert.equal(await page.locator('.knowledge-shell > aside').evaluate(el=>getComputedStyle(el).position),'sticky','桌面端知识目录仍需保留吸顶');
 
   assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');

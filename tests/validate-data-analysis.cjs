@@ -6,6 +6,13 @@ const htmlSource=fs.readFileSync(path.join(root,'index.html'),'utf8');
 assert.ok(htmlSource.includes('.shell>aside{padding:20px;position:sticky;top:18px}'),'吸顶样式仅应用到导航栏');
 assert.ok(htmlSource.includes('.shell>aside,.maincard,.stats{'),'通用导航卡片样式不得影响知识TIP');
 assert.ok(!htmlSource.includes('}aside{padding:20px;position:sticky;top:18px}'),'不得恢复全局aside吸顶样式');
+const dataStyleSource=fs.readFileSync(path.join(root,'data-analysis.css'),'utf8');
+assert.ok(dataStyleSource.includes('.kb-structured-head{position:sticky;top:0;'),'编号章节标题要吸顶');
+assert.ok(dataStyleSource.includes('.kb-structured-intro{'),'章节说明独立排版');
+assert.ok(htmlSource.includes("safe(section.title)+'</h3></div>'"),'吸顶标题只包含编号与标题');
+assert.ok(htmlSource.includes('class="kb-structured-intro"'),'章节说明不参与吸顶');
+assert.ok(!dataStyleSource.includes('.kb-structured-tip{position:sticky'),'避免TIP误吸顶');
+
 
 require('../data-analysis.js');
 const DA=globalThis.DataAnalysis;

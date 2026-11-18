@@ -535,8 +535,8 @@ function structuredKnowledgeHtml(topic){
  const comparison=topic.methodComparison?'<section class="kb-article-section kb-method-comparison"><h3>'+safe(topic.methodComparison.title||'方法对比')+'</h3>'+knowledgeTableMarkup(topic.methodComparison)+'</section>':'';
  return comparison+jump+'<div class="kb-structured">'+sections.map((section,i)=>
   '<section class="kb-structured-group" id="kb-structured-'+safe(section.id)+'">'+
-   '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><div><h3>'+safe(section.title)+'</h3>'+
-   (section.description?'<p>'+DataAnalysis.rich(section.description)+'</p>':'')+'</div></div>'+
+   '<div class="kb-structured-head"><span class="kb-structured-index">'+String(i+1).padStart(2,'0')+'</span><h3>'+safe(section.title)+'</h3></div>'+
+   (section.description?'<p class="kb-structured-intro">'+DataAnalysis.rich(section.description)+'</p>':'')+
    (section.flowchart?structuredKnowledgeFlowchartHtml(section.flowchart):'')+
    (section.tip?structuredKnowledgeTipHtml(section.tip):'')+
    (section.items||[]).map(item=>'<article class="kb-structured-item"><h4>'+safe(item.title)+'</h4>'+
