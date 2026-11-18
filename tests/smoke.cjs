@@ -774,7 +774,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await figure.count(),1,'铁矿石趋势题须展示原图选项');
   assert.match(await figure.getAttribute('src'),/iron-ore-mom-options\.webp$/);
   assert.equal(await page.locator('.choice[data-answer]').count(),4,'扫描图选项同时保留A-D选择按钮');
-  assert.equal(await figure.evaluate(img=>img.complete&&img.naturalWidth>0),true,'原始选项图必须成功加载');
+  await page.waitForFunction(()=>{const img=document.querySelector('.da-option-image img');return img&&img.complete&&img.naturalWidth>0},{timeout:12000});
+  assert.equal(await figure.evaluate(img=>img.naturalWidth),800,'原始选项图尺寸应为800px宽');
   await page.locator('.choice[data-answer="A"]').click();
   assert.match(await page.locator('.choice[data-answer="A"]').getAttribute('class'),/chosen/);
 
