@@ -756,6 +756,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/倍数关系/);
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/10%、25%、33%/);
   assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
+  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','第6课TIP不应继承左侧导航栏的吸顶样式');
+  assert.equal(await page.locator('.knowledge-shell > aside').evaluate(el=>getComputedStyle(el).position),'sticky','桌面端知识目录仍需保留吸顶');
 
   assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');
   assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4,'全部四种速算排版均应支持数学公式');

@@ -2,6 +2,11 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const root=path.join(__dirname,'..');
+const htmlSource=fs.readFileSync(path.join(root,'index.html'),'utf8');
+assert.ok(htmlSource.includes('.shell>aside{padding:20px;position:sticky;top:18px}'),'吸顶样式仅应用到导航栏');
+assert.ok(htmlSource.includes('.shell>aside,.maincard,.stats{'),'通用导航卡片样式不得影响知识TIP');
+assert.ok(!htmlSource.includes('}aside{padding:20px;position:sticky;top:18px}'),'不得恢复全局aside吸顶样式');
+
 require('../data-analysis.js');
 const DA=globalThis.DataAnalysis;
 const materials=JSON.parse(fs.readFileSync(path.join(root,'data-materials.json'),'utf8'));
