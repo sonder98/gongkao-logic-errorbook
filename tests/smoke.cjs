@@ -789,7 +789,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const comparisonSection=page.locator('#kb-structured-flatten-growth-base-comparison');
   assert.equal(await comparisonSection.count(),1,'第6课第四节基期比较须可访问');
   assert.equal(await comparisonSection.locator('.kb-structured-head h3').innerText(),'基期比较');
-  assert.deepEqual(await comparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜比较现期比与修正值']);
+  assert.deepEqual(await comparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜补正后直接除法，与1比较']);
   assert.ok(await comparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=2,'基期比较的公式推导必须正常排版');
   assert.match(await comparisonSection.innerText(),/现期比/);
   assert.equal(await comparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第四节标题保持吸顶');

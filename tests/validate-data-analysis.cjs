@@ -105,18 +105,20 @@ assert.ok(Math.abs(1027/7500*100-13.7)<.1,'第二例乘数近似可保留小数�
 const baseCompareSection=lesson06.contentSections[3];
 assert.equal(baseCompareSection.id,'flatten-growth-base-comparison','第四节基期比较保持在第6课内');
 assert.equal(baseCompareSection.title,'基期比较');
-assert.deepEqual(baseCompareSection.items.map(x=>x.title),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜比较现期比与修正值']);
+assert.deepEqual(baseCompareSection.items.map(x=>x.title),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜补正后直接除法，与1比较']);
 assert.ok(baseCompareSection.items[0].formula.includes('A>B')&&baseCompareSection.items[0].formula.includes('r_A<r_B'),'不同边直接比较现期大且增速小的量');
-assert.ok(baseCompareSection.items[1].formula.includes(String.raw`\frac{A}{B}`)&&baseCompareSection.items[1].formula.includes(String.raw`\frac{r_A-r_B}{1+r_B}`),'同边先对现期比进行修正比较');
-assert.ok(baseCompareSection.items[1].formula.includes('基期B')&&baseCompareSection.items[1].formula.includes('基期A'),'保留讲义中补正B后判断基期大小的推导');
-assert.ok(baseCompareSection.items[1].keyPoint.includes('A/B小于补正倍数'),'比较现期比和修正倍数的方向正确');
+assert.ok(baseCompareSection.items[1].formula.includes(String.raw`\frac{A}{B(1+r_{\text{补}})}`),'同边直接算A除以补正后的分母B');
+assert.ok(baseCompareSection.items[1].formula.includes(String.raw`\frac{r_A-r_B}{1+r_B}`),'按之前拉平增长率公式计算分母补正率');
+assert.ok(baseCompareSection.items[1].formula.includes('R>1')&&baseCompareSection.items[1].formula.includes('R<1'),'只判断补正后商与1的大小');
+assert.ok(baseCompareSection.items[1].keyPoint.includes('直接计算')&&baseCompareSection.items[1].keyPoint.includes('相对于1'),'严格保留补正后做除法再比较1的实际操作');
 assert.ok(baseCompareSection.items.every(x=>!x.workedExamples&&!x.example),'未提供教材例题，不得编造');
 for(const [A,B,rA,rB] of [[130,100,.03,.11],[130,100,.6,.03],[130,100,.1,.05]]){
  const baseA=A/(1+rA),baseB=B/(1+rB);
  if(rA<rB)assert.ok(baseA>baseB,'现期大、增速小对应基期大');
  else{
-  const correction=1+(rA-rB)/(1+rB);
-  assert.equal(Math.sign(baseA-baseB),Math.sign(A/B-correction),'同边：与现期比对照的修正必须同向确定基期大小');
+  const correctionRate=(rA-rB)/(1+rB);
+  const flattenedRatio=A/(B*(1+correctionRate));
+  assert.equal(Math.sign(baseA-baseB),Math.sign(flattenedRatio-1),'同边：先补正分母，再看商与1的大小');
  }
 }
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
