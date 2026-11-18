@@ -698,7 +698,7 @@ assert.equal(lesson06.questionIds.filter(x=>x==='data-2022-q4-iron-ore-monthly-m
 assert.ok(ironOreQuestion.analysis.formula.includes('8645')&&ironOreQuestion.analysis.formula.includes('8437')&&ironOreQuestion.analysis.formula.includes('8577')&&ironOreQuestion.analysis.formula.includes('8603'),'先看现期环比倍数均约为1');
 assert.ok(ironOreQuestion.analysis.quick.includes('23.2')&&ironOreQuestion.analysis.quick.includes('6.2')&&ironOreQuestion.analysis.quick.includes('10月：补正分母'),'保持用户的修正项判断顺序');
 assert.ok(DA.explanationHtml(ironOreQuestion).includes('data-da-tex'));
-assert.throws(()=>DA.validate(materials,[...questions.slice(0,-1),{...ironOreQuestion,optionImage:'data:image/webp;base64,AA'}],book),/选项图片/,'禁止选项图片内联Base64');
+assert.throws(()=>DA.validate(materials,[...questions.filter(q=>q.id!==ironOreQuestion.id),{...ironOreQuestion,optionImage:'data:image/webp;base64,AA'}],book),/选项图片/,'禁止选项图片内联Base64');
 const mom2022=[
  (8645/1.298)/(8437/.991),
  (8577/1.066)/(8645/1.298),
