@@ -542,6 +542,10 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('.kb-structured-group').count(),3,'放缩运算应有三个运算类别');
   assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['加减法放缩','除法放缩','乘法放缩']);
   assert.deepEqual(await page.locator('.kb-structured-group').first().locator('.kb-structured-item h4').allInnerTexts(),['加法｜有借有还','平均数｜削峰填谷','减法｜公平对待']);
+  assert.equal(await page.locator('#kb-structured-multiplication .kb-structured-item').count(),3,'百分数乘法量级判断应显示在乘法放缩');
+  assert.match(await page.locator('#kb-structured-multiplication').innerText(),/先用1%判断量级/);
+  assert.match(await page.locator('#kb-structured-division').innerText(),/1111/);
+
   assert.equal(await page.locator('.kb-structured-jump button').count(),3,'应提供三级结构的类别跳转');
   assert.equal(await page.locator('#knowledgeCard .kb-article-section>h3').filter({hasText:'结构与核心规则'}).count(),0,'不应再用流水账式规则列表');
   assert.equal(await page.locator('.kb-formula-table thead th').count(),4,'百化分表的四列表头');

@@ -187,7 +187,7 @@ assert.doesNotMatch(DA.explanationHtml(mappingQuestion),/易错点|2\.62|笔误/
 const scaling=courseTopics.find(t=>t.id==='data-topic-course-03-scaling');
 assert.ok(scaling,'放缩运算知识点 ID 必须保持稳定');
 assert.deepEqual(scaling.contentSections.map(s=>s.title),['加减法放缩','除法放缩','乘法放缩'],'第3课必须按运算类别划分');
-assert.deepEqual(scaling.contentSections.map(s=>s.items.length),[3,6,2],'第3课的方法层级和数量不能丢失');
+assert.deepEqual(scaling.contentSections.map(s=>s.items.length),[3,6,3],'第3课保持三类运算，新加入乘法量级判断');
 assert.ok(!scaling.patterns,'第3课不再采用按录入顺序堆积的规则列表');
 const addSub=scaling.contentSections[0],division=scaling.contentSections[1],multiplication=scaling.contentSections[2];
 assert.deepEqual(addSub.items.map(item=>item.title),['加法｜有借有还','平均数｜削峰填谷','减法｜公平对待']);
@@ -615,6 +615,20 @@ assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnG
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
 assert.ok(Math.abs((2268.6/1.019)/(4316.3/1.013)*100-52.2)<0.06,'2008年秋粮占比须接近52.2%');
 assert.ok(scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='分子补偿').keyPoint.includes('选项'));
-assert.ok(scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='精度与量级判断').keyPoint.includes('1%'));
+assert.ok(!scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='精度与量级判断').keyPoint,'百分数乘法量级技巧应从除法放缩移出');
+assert.equal(autumnGrainQuestion.analysis.formulaTitle,'步骤一、二 · 拉平增长率，补正分母');
+assert.match(autumnGrainQuestion.analysis.formula,/432\\times6/,'应保留先算432×6再用1%标杆还原量级的实际心算');
+assert.match(autumnGrainQuestion.analysis.formula,/432\\times0\.6\\%=2\.592/);
+assert.match(autumnGrainQuestion.analysis.formula,/小于4\.32/,'1%的作用是判断结果数量级');
+assert.match(autumnGrainQuestion.analysis.quickTitle,/步骤三 · 除法放缩/);
+assert.match(autumnGrainQuestion.analysis.quick,/4444=4\\times1111/,'先识别4444=4×1111');
+assert.match(autumnGrainQuestion.analysis.quick,/1\/1111\\approx9\/10000/,'借1111乘9错位相减');
+assert.match(autumnGrainQuestion.analysis.quick,/除法放缩时/,'选项百分比补分子只属于除法放缩');
+const smallPctMethod=multiplication.items.find(item=>item.title==='小百分数乘法｜先用1%判断量级');
+assert.ok(smallPctMethod,'百分数乘法量级判断应归入乘法章节');
+assert.match(smallPctMethod.description,/数量级标杆/);
+assert.match(smallPctMethod.formula,/432\\times6/);
+assert.ok(division.items.find(x=>x.title==='错位相减｜乘9').keyPoint.includes('1111'),'补充1111对应乘9的原方法入口');
+assert.match(division.items.find(x=>x.title==='分子补偿').keyPoint,/为了更方便计算除法/);
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
