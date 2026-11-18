@@ -744,8 +744,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   await page.locator('[data-knowledge-topic="data-topic-course-06-flatten-growth"]').click();
   assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),[
-    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除'
-  ],'第6课保留原有两节并在第三节展示速算顺序');
+    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除','基期比较'
+  ],'第6课保留原有三节并在第四节展示基期比较');
   const orderSection=page.locator('#kb-structured-flatten-growth-calculation-order');
   assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'第6课的计算顺序流程图必须显示');
   assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
@@ -758,7 +758,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
   assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','第6课TIP不应继承左侧导航栏的吸顶样式');
   // Sticky subsection headings are scoped to their section, unlike the TIP and intro.
-  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),3,'第6课三节均有独立的吸顶标题');
+  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),4,'第6课四节均有独立的吸顶标题');
   assert.equal(await page.locator('.kb-structured-head').first().evaluate(el=>getComputedStyle(el).position),'sticky','编号+小节标题应吸顶');
   assert.equal(await page.locator('.kb-structured-intro').first().evaluate(el=>getComputedStyle(el).position),'static','说明文字应随正文滚动');
   const correctionSection=page.locator('#kb-structured-flatten-growth-correction');
@@ -785,6 +785,14 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await ex1.locator('.kb-structured-worked-example').innerText(),/7358/);
   assert.match(await ex2.locator('.kb-structured-worked-example').innerText(),/1027/);
   assert.equal(await orderSection.locator('.kb-structured-worked-example .kb-structured-formula [data-da-tex]').count(),4,'两道例题四段公式须能显示');
+
+  const comparisonSection=page.locator('#kb-structured-flatten-growth-base-comparison');
+  assert.equal(await comparisonSection.count(),1,'第6课第四节基期比较须可访问');
+  assert.equal(await comparisonSection.locator('.kb-structured-head h3').innerText(),'基期比较');
+  assert.deepEqual(await comparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜比较现期比与修正值']);
+  assert.ok(await comparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=2,'基期比较的公式推导必须正常排版');
+  assert.match(await comparisonSection.innerText(),/现期比/);
+  assert.equal(await comparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第四节标题保持吸顶');
 
   // Scanned trend choices should remain visible, and selecting the A–D button still works.
   await page.locator('#tabDataPractice').click();

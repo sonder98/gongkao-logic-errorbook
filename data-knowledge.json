@@ -551,7 +551,7 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除。",
+          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除；比较两项基期大小时，先看现期大小与增速方向，必要时比较现期比与补正倍数。",
           "questionIds": [
             "data-2008-autumn-grain-share-of-total",
             "data-2016-may-imported-drug-mom-growth",
@@ -675,6 +675,24 @@
                   }
                 ]
               }
+            },
+            {
+              "id": "flatten-growth-base-comparison",
+              "title": "基期比较",
+              "description": "已知两个量A、B的现期值，以及对应增长率r_A、r_B，判断基期A和基期B的大小。先观察现期大小与增速方向；需要进一步比较时，把现期A/B当作比例，按拉平增长率查看补正幅度。",
+              "items": [
+                {
+                  "title": "现期大小与增速大小不同边｜直接判断",
+                  "description": "现期更大的量，增长率反而更小时，它对应的基期更大。",
+                  "formula": "\\[\n\\begin{aligned}\nA>B,\\qquad r_A<r_B\n\\quad\\Longrightarrow\\quad\n\\text{基期A}>\\text{基期B}\n\\end{aligned}\n\\]"
+                },
+                {
+                  "title": "现期大小与增速大小同边｜比较现期比与修正值",
+                  "description": "若A>B、r_A>r_B，则B的增速较低，给B补正。先计算现期比A/B，再比较它与补正倍数；若补正后的B超过A，则基期B更大。",
+                  "formula": "\\[\n\\begin{aligned}\nr_{\\text{补}}\n&=\\frac{r_A-r_B}{1+r_B}\\\\[4pt]\n\\frac{A}{B}\n&\\quad\\text{与}\\quad\n1+\\frac{r_A-r_B}{1+r_B}\n\\quad\\text{比较}\n\\end{aligned}\n\\]\n\\[\n\\begin{aligned}\nB\\left(1+\\frac{r_A-r_B}{1+r_B}\\right)>A\n&\\Longrightarrow\n\\text{基期B}\\,(1+r_B)\\left(1+\\frac{r_A-r_B}{1+r_B}\\right)\n>\\text{基期A}\\,(1+r_A)\\\\[4pt]\n&\\Longrightarrow\n\\text{基期B}\\,(1+r_A)>\\text{基期A}\\,(1+r_A)\\\\[4pt]\n&\\Longrightarrow\n\\boxed{\\text{基期B}>\\text{基期A}}\n\\end{aligned}\n\\]",
+                  "keyPoint": "当A/B小于补正倍数时，基期B更大；当A/B大于补正倍数时，基期A更大。"
+                }
+              ]
             }
           ]
         }

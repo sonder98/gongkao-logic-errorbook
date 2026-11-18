@@ -45,7 +45,7 @@ assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
 assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend'],'第6课关联三道正式习题，包含跨年环比趋势比较');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
-assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order']);
+assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order','flatten-growth-base-comparison']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
 assert.ok(lesson06.contentSections[0].items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
 assert.deepEqual(lesson06.contentSections[1].items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
@@ -73,7 +73,7 @@ assert.ok(flattenOrder.tip.points[0].description.includes('凑整')&&flattenOrde
 for(const s of ['10%','25%','33%','百化分']){
  assert.ok(flattenOrder.tip.points[1].description.includes(s),'先补后除应保留用户列举的比例：'+s);
 }
-assert.equal(lesson06.contentSections.length,3,'TIP不另建章节');
+assert.equal(lesson06.contentSections.length,4,'计算顺序TIP仍属于原第三节，第四节为基期比较');
 
 assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,2]);
 const [beforeDivide,afterDivide]=flattenOrder.items;
@@ -102,6 +102,23 @@ assert.equal(allLesson6Examples.length,2,'这两条是教材例题，不新增�
 assert.ok(Math.abs((7358/1.109)/(3909/1.167)-2)<.03,'第一例基期比约2');
 assert.ok(Math.abs((1027/1.293)/(7475/1.237)-.13)<.003,'第二例基期比约13%');
 assert.ok(Math.abs(1027/7500*100-13.7)<.1,'第二例乘数近似可保留小数精度');
+const baseCompareSection=lesson06.contentSections[3];
+assert.equal(baseCompareSection.id,'flatten-growth-base-comparison','第四节基期比较保持在第6课内');
+assert.equal(baseCompareSection.title,'基期比较');
+assert.deepEqual(baseCompareSection.items.map(x=>x.title),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜比较现期比与修正值']);
+assert.ok(baseCompareSection.items[0].formula.includes('A>B')&&baseCompareSection.items[0].formula.includes('r_A<r_B'),'不同边直接比较现期大且增速小的量');
+assert.ok(baseCompareSection.items[1].formula.includes(String.raw`\frac{A}{B}`)&&baseCompareSection.items[1].formula.includes(String.raw`\frac{r_A-r_B}{1+r_B}`),'同边先对现期比进行修正比较');
+assert.ok(baseCompareSection.items[1].formula.includes('基期B')&&baseCompareSection.items[1].formula.includes('基期A'),'保留讲义中补正B后判断基期大小的推导');
+assert.ok(baseCompareSection.items[1].keyPoint.includes('A/B小于补正倍数'),'比较现期比和修正倍数的方向正确');
+assert.ok(baseCompareSection.items.every(x=>!x.workedExamples&&!x.example),'未提供教材例题，不得编造');
+for(const [A,B,rA,rB] of [[130,100,.03,.11],[130,100,.6,.03],[130,100,.1,.05]]){
+ const baseA=A/(1+rA),baseB=B/(1+rB);
+ if(rA<rB)assert.ok(baseA>baseB,'现期大、增速小对应基期大');
+ else{
+  const correction=1+(rA-rB)/(1+rB);
+  assert.equal(Math.sign(baseA-baseB),Math.sign(A/B-correction),'同边：与现期比对照的修正必须同向确定基期大小');
+ }
+}
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
