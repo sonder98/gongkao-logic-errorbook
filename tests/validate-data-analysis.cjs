@@ -31,7 +31,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,[],'新课未提供习题，不得虚构');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total'],'第6课只关联本次新增的正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
@@ -230,8 +230,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,18,'应有十八份真实材料');
-assert.equal(questions.length,18,'应有十八道真实题目');
+assert.equal(materials.length,19,'应有十九份真实材料');
+assert.equal(questions.length,19,'应有十九道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -599,5 +599,22 @@ assert.ok(estateQuestion.analysis.formula.includes('8.4')&&estateQuestion.analys
 assert.ok(estateQuestion.analysis.quick.includes('16088')&&estateQuestion.analysis.quick.includes('16214'),'借用2021年的值再做反向比例修正');
 assert.ok(DA.explanationHtml(estateQuestion).includes('data-da-tex'));
 assert.ok(Math.abs((201132/1.126)*((1.126/1.042)-1)-14399.8)<1,'房地产题真实增量与正确选项相符');
+const autumnGrainQuestion=questions.find(q=>q.id==='data-2008-autumn-grain-share-of-total');
+const autumnGrainMaterial=materials.find(m=>m.id==='data-material-2009-grain-output-summer-autumn');
+assert.ok(autumnGrainQuestion&&autumnGrainMaterial,'秋粮基期比重习题及完整材料均已收录');
+assert.equal(autumnGrainQuestion.category,'拉平增长率');
+assert.equal(autumnGrainQuestion.answer,'D');
+assert.deepEqual(autumnGrainQuestion.options,['53.4%','53.1%','52.5%','52.2%']);
+assert.equal(autumnGrainMaterial.blocks.length,1);
+assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
+for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
+ assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total']);
+assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
+assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
+assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
+assert.ok(Math.abs((2268.6/1.019)/(4316.3/1.013)*100-52.2)<0.06,'2008年秋粮占比须接近52.2%');
+assert.ok(scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='分子补偿').keyPoint.includes('选项'));
+assert.ok(scaling.contentSections.find(s=>s.title==='除法放缩').items.find(x=>x.title==='精度与量级判断').keyPoint.includes('1%'));
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
