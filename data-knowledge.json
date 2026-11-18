@@ -541,11 +541,39 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "对应课程第6课《拉平增长率》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
-          "recognize": [],
-          "patterns": [],
-          "pitfalls": [],
-          "questionIds": []
+          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先计算平均数增长率，再给增长率较低的一方补正，使补正项始终采用较大增长率减较小增长率。",
+          "questionIds": [],
+          "contentSections": [
+            {
+              "id": "flatten-growth-basics",
+              "title": "适用场景与第一步｜平均数增长率",
+              "description": "拉平增长率用于由现期比计算基期比。通常已知现期分子A、分母B，以及它们各自的增长率r₁、r₂；基期分子为a，基期分母为b。",
+              "items": [
+                {
+                  "title": "计算平均数增长率",
+                  "description": "沿用第5课已经学习的平均数增长率公式。",
+                  "formula": "\\[r=\\frac{r_1-r_2}{1+r_2}\\]"
+                }
+              ]
+            },
+            {
+              "id": "flatten-growth-correction",
+              "title": "第二步｜给增长率较低的一方补正",
+              "description": "比较r₁与r₂：哪一方增长率较低，就给哪一方补正。补正时始终拿大的增长率减小的增长率，使补正项为正。",
+              "items": [
+                {
+                  "title": "r₁＞r₂｜分母增长率较低，补正分母",
+                  "description": "当分子增长率r₁高于分母增长率r₂时，增长率差为r₁－r₂；将补正项放在分母，增长率差的分母为1＋r₂。",
+                  "formula": "\\[\n\\begin{aligned}\n\\frac{a}{b}\n&=\\frac{\\dfrac{A}{1+r_1}}{\\dfrac{B}{1+r_2}}\\\\[4pt]\n&=\\frac{A}{B}\\times\\frac{1+r_2}{1+r_1}\\\\[4pt]\n&=\\frac{A}{B}\\times\\frac{1}{1+\\dfrac{r_1-r_2}{1+r_2}}\n\\end{aligned}\n\\]"
+                },
+                {
+                  "title": "r₁＜r₂｜分子增长率较低，补正分子",
+                  "description": "当分子增长率r₁低于分母增长率r₂时，增长率差为r₂－r₁；将补正项放在分子，增长率差的分母为1＋r₁。",
+                  "formula": "\\[\n\\begin{aligned}\n\\frac{a}{b}\n&=\\frac{\\dfrac{A}{1+r_1}}{\\dfrac{B}{1+r_2}}\\\\[4pt]\n&=\\frac{A}{B}\\times\\frac{1+r_2}{1+r_1}\\\\[4pt]\n&=\\frac{A}{B}\\times\\left(1+\\frac{r_2-r_1}{1+r_1}\\right)\n\\end{aligned}\n\\]"
+                }
+              ]
+            }
+          ]
         }
       ]
     },

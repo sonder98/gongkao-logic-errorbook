@@ -28,6 +28,25 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
   '第12课 · 容斥问题','第13课 · 假设代入'
 ]);
 
+const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
+assert.ok(lesson06,'第6课知识ID保持稳定');
+assert.equal(lesson06.title,'第6课 · 拉平增长率');
+assert.deepEqual(lesson06.questionIds,[],'新课未提供习题，不得虚构');
+assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
+assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction']);
+assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
+assert.ok(lesson06.contentSections[0].items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
+assert.deepEqual(lesson06.contentSections[1].items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
+const flattenDen=lesson06.contentSections[1].items[0],flattenNum=lesson06.contentSections[1].items[1];
+assert.ok(flattenDen.formula.includes('\\\\frac{1}{1+\\\\dfrac{r_1-r_2}{1+r_2}}'),'r1>r2时按截图用正差补分母');
+assert.ok(flattenNum.formula.includes('\\\\left(1+\\\\frac{r_2-r_1}{1+r_1}\\\\right)'),'r1<r2时按截图用正差补分子');
+assert.ok(lesson06.contentSections[1].description.includes('较低')&&lesson06.contentSections[1].description.includes('为正'),'保持补正增速低的一方和大减小的核心要点');
+assert.ok(lesson06.contentSections.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'不得编造第6课例题');
+for(const [a,b,r1,r2] of [[200,100,0.2,0.05],[200,100,0.03,0.18]]){
+  const base=(a/(1+r1))/(b/(1+r2));
+  const flattened=r1>r2?(a/b)/(1+(r1-r2)/(1+r2)):(a/b)*(1+(r2-r1)/(1+r1));
+  assert.ok(Math.abs(base-flattened)<1e-12,'两支拉平增长率公式必须精确等价');
+}
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');
