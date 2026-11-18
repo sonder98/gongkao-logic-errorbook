@@ -43,7 +43,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend'],'第6课关联三道正式习题，包含跨年环比趋势比较');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order','flatten-growth-base-comparison']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
@@ -261,8 +261,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,21,'应有二十一份真实材料');
-assert.equal(questions.length,21,'应有二十一道真实题目');
+assert.equal(materials.length,22,'应有二十二份真实材料');
+assert.equal(questions.length,22,'应有二十二道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -640,7 +640,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
@@ -705,5 +705,25 @@ const mom2022=[
  (8603/1.004)/(8577/1.066)
 ];
 assert.ok(mom2022[1]>mom2022[2]&&mom2022[2]>mom2022[0],'10月低、11月高、12月居中，答案应为A');
+const jiangsuBaseQuestion=questions.find(q=>q.id==='data-2012-jiangsu-export-regions-base-comparison');
+const jiangsuBaseMaterial=materials.find(m=>m.id==='data-material-2013-jiangsu-exports-destinations');
+assert.ok(jiangsuBaseQuestion&&jiangsuBaseMaterial,'江苏省基期出口额比较正式习题与材料必须存在');
+assert.equal(jiangsuBaseQuestion.category,'拉平增长率');
+assert.equal(jiangsuBaseQuestion.type,'基期比较');
+assert.equal(jiangsuBaseQuestion.answer,'A');
+assert.deepEqual(jiangsuBaseQuestion.options,['美国、欧盟、中国香港、日本','美国、欧盟、日本、中国香港','欧盟、美国、中国香港、日本','欧盟、美国、日本、中国香港']);
+assert.equal(jiangsuBaseQuestion.important,undefined,'本题未要求标记为重点');
+assert.equal(jiangsuBaseMaterial.blocks.length,1);
+assert.equal(jiangsuBaseMaterial.blocks[0].type,'paragraph');
+for(const s of ['5508.4','0.5%','3288.5','0.1%','2219.9','1.1%','571.2','654.3','312.4','368.3','-9.7%','2.6%','1.3%','9.2%'])
+ assert.ok(jiangsuBaseMaterial.blocks[0].text.includes(s),'完整保留材料数据：'+s);
+assert.equal(lesson06.questionIds.filter(x=>x==='data-2012-jiangsu-export-regions-base-comparison').length,1,'本题仅关联第6课一次');
+assert.ok(jiangsuBaseQuestion.analysis.formula.includes('312')&&jiangsuBaseQuestion.analysis.formula.includes('368')&&jiangsuBaseQuestion.analysis.formula.includes('8\\%'),'先比较日本与中国香港，并补正日本');
+assert.ok(jiangsuBaseQuestion.analysis.quick.includes('12.3')&&jiangsuBaseQuestion.analysis.quick.includes('9.7')&&jiangsuBaseQuestion.analysis.quick.includes('13.5'),'欧盟修正率先化除为乘');
+assert.ok(jiangsuBaseQuestion.analysis.quick.includes('571}{8}')&&jiangsuBaseQuestion.analysis.quick.includes('71+6=77')&&jiangsuBaseQuestion.analysis.quick.includes('648<654'),'利用八分之一与1%补正欧盟后比较美国');
+assert.ok(!jiangsuBaseQuestion.analysis.formula.includes('2012年出口额='),'不得另加基期公式硬算路径');
+assert.ok(DA.explanationHtml(jiangsuBaseQuestion).includes('data-da-tex'),'题解公式须可由网页渲染');
+const base2012={us:654.3/1.026,eu:571.2/.903,hk:368.3/1.092,jp:312.4/1.013};
+assert.ok(base2012.us>base2012.eu&&base2012.eu>base2012.hk&&base2012.hk>base2012.jp,'原题数据应选美国、欧盟、中国香港、日本');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
