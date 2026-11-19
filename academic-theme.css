@@ -283,4 +283,5 @@ header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-heig
  .shell>aside .module-group .site-tab{display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:33px;padding:6px 5px;font-size:10px;font-weight:750}
  .shell>aside .module-group .site-tab[aria-selected="true"]{background:var(--academic-green);color:white}
 }
+#practiceView>.auth-panel{margin:8px 0 24px;max-width:100%;grid-column:1/-1}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
