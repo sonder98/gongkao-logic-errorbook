@@ -42,7 +42,7 @@ header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index
 .kb-search,.question-search{border:1px solid #dfe4dc;background:#fffefa;border-radius:8px;min-height:41px;padding:10px 12px;color:var(--ink);font-size:12px;outline-offset:2px;box-shadow:none}
 .kb-search::placeholder,.question-search::placeholder{color:#9ba79d}
 .kb-search:focus,.question-search:focus{outline:2px solid #afccbb;border-color:var(--academic-green)}
-.kb-nav{max-height:none;overflow-y:visible;margin:20px 0 0;padding-right:4px}
+.kb-nav{max-height:400px;overflow-y:auto;overflow-x:hidden;margin:20px 0 0;padding-right:4px;scrollbar-width:thin;scrollbar-color:#c8d6c9 transparent}
 .kb-chapter{font-size:10px;letter-spacing:1.4px;color:#9aa69a;font-weight:850;margin:25px 0 12px}
 .kb-chapter:first-child{margin-top:4px}
 .kb-group{border:0;background:transparent!important;color:#41584a!important;font-size:12px;font-weight:800;padding:11px 7px;margin:5px 0 4px;gap:9px;position:relative}
@@ -233,7 +233,7 @@ header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index
  .shell,.knowledge-shell{grid-template-columns:minmax(0,1fr);padding:3px 11px 32px;gap:15px;margin:0 auto 45px}
  .shell>aside:not(.academic-reading-rail){position:static;max-height:none;overflow:visible;border-right:0;padding:11px 0 9px;border-bottom:1px solid var(--line)}
  .knowledge-shell>aside:not(.academic-reading-rail){max-height:245px;overflow:auto;overscroll-behavior:contain}
- .kb-nav{max-height:none;overflow-y:visible}
+ .kb-nav{max-height:210px;overflow-y:auto}
  .kb-nav-item{padding:8px 9px}
  #practiceView>aside{max-height:none}
  #practiceView .question-list{max-height:155px}
@@ -268,4 +268,8 @@ header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index
  .da-layout{gap:15px}
  .kb-footer-nav .btn{padding:10px 9px}
 }
+/* The fixed academic masthead must not cover mobile exercise paging / knowledge anchors. */
+#card,#knowledgeCard{scroll-margin-top:94px}
+.kb-structured-group,.kb-article-section,.kb-structured-subtopic,.kb-footer{scroll-margin-top:108px}
+@media(max-width:800px){#card,#knowledgeCard{scroll-margin-top:78px}.kb-structured-group,.kb-article-section,.kb-structured-subtopic,.kb-footer{scroll-margin-top:79px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
