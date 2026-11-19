@@ -43,7 +43,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison'],'第6课应包含基期比较正式习题');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-base-comparison','flatten-growth-increment-comparison','flatten-growth-base-sum-difference'],'原前三节合并成一级基期比，其余三节顺延');
 assert.deepEqual(lesson06.contentSections.map(x=>x.title),['基期比','基期比较','增量比较','基期和差']);
@@ -175,7 +175,7 @@ const incrementExample=incrementComparisonSection.items[1].workedExamples?.[0];
 assert.ok(incrementExample,'方法二必须有用户给出的真实教材例题');
 for(const s of ['41.96','28.63','18.77','9.91','1.5','2.75','1.47','1.89','8.1','2.57'])
  assert.ok(incrementExample.formula.includes(s),'教材例题数值缺失：'+s);
-assert.equal(lesson06.questionIds.length,4,'新增教育支出题作为教材例题，不得新增正式习题关联');
+assert.equal(lesson06.questionIds.length,6,'本次新增两道基期比较正式习题，教材例题仍不计入');
 const deltaA=41.96*.1877/(1+.1877),deltaB=28.63*.0991/(1+.0991);
 const ratioViaFlatten=((41.96/28.63)/(1+(.1877-.0991)/(1+.0991)))*(.1877/.0991);
 assert.ok(Math.abs(deltaA/deltaB-ratioViaFlatten)<1e-12,'拉平后基期比乘增速比须等于原增长量之比');
@@ -352,8 +352,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,22,'应有二十二份真实材料');
-assert.equal(questions.length,22,'应有二十二道真实题目');
+assert.equal(materials.length,24,'应有二十四份真实材料');
+assert.equal(questions.length,24,'应有二十四道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -731,7 +731,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
@@ -816,5 +816,41 @@ assert.ok(!jiangsuBaseQuestion.analysis.formula.includes('2012年出口额='),'�
 assert.ok(DA.explanationHtml(jiangsuBaseQuestion).includes('data-da-tex'),'题解公式须可由网页渲染');
 const base2012={us:654.3/1.026,eu:571.2/.903,hk:368.3/1.092,jp:312.4/1.013};
 assert.ok(base2012.us>base2012.eu&&base2012.eu>base2012.hk&&base2012.hk>base2012.jp,'原题数据应选美国、欧盟、中国香港、日本');
+const industryBaseQuestion=questions.find(q=>q.id==='data-2020-industrial-enterprise-profit-smallest-by-type');
+const industryBaseMaterial=materials.find(m=>m.id==='data-material-2021-industrial-profit-economic-type');
+assert.ok(industryBaseQuestion&&industryBaseMaterial,'工业利润基期比较题目及材料必须存在');
+assert.equal(industryBaseQuestion.answer,'A');
+assert.equal(industryBaseQuestion.type,'基期比较');
+assert.equal(industryBaseQuestion.category,'拉平增长率');
+assert.deepEqual(industryBaseQuestion.options,['国有控股企业','股份制企业','外商及港澳台商投资企业','私营企业']);
+assert.equal(industryBaseMaterial.blocks[0].type,'paragraph');
+for(const value of ['87092','34.3%','22770','56.0%','62702','40.2%','22846','21.1%','29150','27.6%'])
+ assert.ok(industryBaseMaterial.blocks[0].text.includes(value),'工业利润材料数据缺失：'+value);
+assert.match(industryBaseQuestion.analysis.identify,/现期最小、增速最大/,'第一题应使用不同边直接判断');
+assert.ok(DA.explanationHtml(industryBaseQuestion).includes('data-da-tex'));
+const industryValues=[['A',22770,.56],['B',62702,.402],['C',22846,.211],['D',29150,.276]];
+assert.equal(industryValues.map(([option,amount,r])=>[option,amount/(1+r)]).sort((a,b)=>a[1]-b[1])[0][0],'A','工业利润基期最小选A');
+
+const congestionBaseQuestion=questions.find(q=>q.id==='data-2019-city-congestion-highest-from-2020');
+const congestionBaseMaterial=materials.find(m=>m.id==='data-material-2020-major-cities-congestion-traffic');
+assert.ok(congestionBaseQuestion&&congestionBaseMaterial,'拥堵指数基期比较题目及材料必须存在');
+assert.equal(congestionBaseQuestion.answer,'C');
+assert.deepEqual(congestionBaseQuestion.options,['北京','上海','重庆','南京']);
+assert.equal(congestionBaseMaterial.blocks[0].type,'table');
+assert.equal(congestionBaseMaterial.blocks[0].rows.length,19,'保留交通状况完整19个城市的数据');
+assert.equal(congestionBaseMaterial.blocks[0].columns.length,7);
+for(const row of congestionBaseMaterial.blocks[0].rows)assert.equal(row.length,7,'所有城市行列数一致');
+const congestionRows=congestionBaseMaterial.blocks[0].rows;
+for(const [city,index,yoy] of [['北京','2.063','1.15'],['上海','1.932','11.08'],['重庆','2.260','4.40'],['南京','1.822','6.84']]){
+ const row=congestionRows.find(r=>r[0]===city);
+ assert.ok(row&&row[2]===index&&row[3]===yoy,'拥堵指数主要选项数据：'+city);
+}
+assert.ok(congestionBaseQuestion.analysis.formula.includes('上海')&&congestionBaseQuestion.analysis.formula.includes('南京'),'先用不同边规则排除上海南京');
+for(const s of ['3.25','3.2','2.06','2.26','10%'])assert.ok(congestionBaseQuestion.analysis.quick.includes(s),'北京补正与现期10%差距速判：'+s);
+assert.ok(!congestionBaseQuestion.analysis.quick.includes('2.129'),'保留用户要求的差距粗估而非补完后精算');
+assert.ok(DA.explanationHtml(congestionBaseQuestion).includes('data-da-tex'));
+const congestionBaseValues=[['北京',2.063,.0115],['上海',1.932,.1108],['重庆',2.260,.044],['南京',1.822,.0684]];
+assert.equal(congestionBaseValues.map(([city,amount,r])=>[city,amount/(1+r)]).sort((a,b)=>b[1]-a[1])[0][0],'重庆','2019年拥堵指数最大是重庆');
+assert.equal(lesson06.questionIds.filter(id=>id==='data-2020-industrial-enterprise-profit-smallest-by-type'||id==='data-2019-city-congestion-highest-from-2020').length,2,'两题应各自关联第6课一次');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
