@@ -24,7 +24,7 @@ for(const selector of ['.kb-heading','.kb-summary','.kb-structured-jump',
  assert.ok(css.includes(selector),'Missing styling '+selector);
 assert.match(css,/prefers-reduced-motion/);
 assert.match(css,/safe-area-inset-top/);
-assert.match(css,/\\.kb-structured-head\\{position:sticky/,'Structured lesson main headings must keep sticky behavior');
+assert.ok(css.includes('.kb-structured-head{position:sticky'),'Structured lesson main headings must keep sticky behavior');
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
  .map(match=>match[1]).filter(Boolean);
 for(const script of scripts)assert.doesNotThrow(()=>new Function(script),'App scripts must parse');
