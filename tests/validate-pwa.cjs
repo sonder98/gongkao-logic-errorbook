@@ -9,6 +9,12 @@ const html = read('index.html');
 const manifest = JSON.parse(read('manifest.webmanifest'));
 const sw = read('sw.js');
 const scratch = read('scratch-overlay.js');
+const academic=read('academic-theme.css');
+assert.ok(html.includes('href="academic-theme.css"'));
+assert.ok(sw.includes("'./academic-theme.css'"));
+assert.ok(academic.includes('.academic-topbar'));
+assert.ok(academic.includes('.kb-structured-jump'));
+
 
 assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/);
 assert.match(html, /name="apple-mobile-web-app-capable" content="yes"/);
