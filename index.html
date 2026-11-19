@@ -940,7 +940,8 @@ function navigatePracticeQuestion(id){
  requestAnimationFrame(()=>{
   if(currentView!=='practice'||active!==id)return;
   if(window.matchMedia('(max-width:800px)').matches){
-   const top=window.scrollY+$('card').getBoundingClientRect().top-12;
+   const stickyHeight=document.querySelector('header.academic-topbar')?.getBoundingClientRect().height||0;
+   const top=window.scrollY+$('card').getBoundingClientRect().top-stickyHeight-12;
    window.scrollTo({top:Math.max(0,top),behavior:'auto'});
   }else{
    window.scrollTo({top:0,behavior:'smooth'});
