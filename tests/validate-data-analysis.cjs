@@ -176,15 +176,26 @@ assert.ok(Math.abs(deltaA/deltaB-2.57)<.01,'较高精度算得增长量比约2.5
 const baseSumDifferenceSection=lesson06.contentSections[5];
 assert.equal(baseSumDifferenceSection.id,'flatten-growth-base-sum-difference');
 assert.equal(baseSumDifferenceSection.title,'基期和差');
-assert.ok(baseSumDifferenceSection.description.includes('现期量A或B'),'基期和差直接补正现期量，不能当成现期比');
-assert.deepEqual(baseSumDifferenceSection.items.map(x=>x.title),['r₁＞r₂｜补正B，再计算基期差','r₂＞r₁｜补正A，再计算基期差']);
-const highR1=baseSumDifferenceSection.items[0],highR2=baseSumDifferenceSection.items[1];
+assert.ok(baseSumDifferenceSection.description.includes('增长量是否方便直接计算'),'两条计算路径以增长量是否容易算为分界');
+assert.deepEqual(baseSumDifferenceSection.items.map(x=>x.title),['增长量容易计算｜现期和差减去增长量和差','r₁＞r₂｜补正B，再计算基期差','r₂＞r₁｜补正A，再计算基期差']);
+const easyIncrementBase=baseSumDifferenceSection.items[0];
+assert.ok(easyIncrementBase.description.includes('a、b专指增长量'),'新公式变量不得和旧基期a、b混淆');
+assert.ok(easyIncrementBase.formula.includes(String.raw`(A-B)-(a-b)`),'基期差应为现期差减增量差');
+assert.ok(easyIncrementBase.formula.includes(String.raw`(A+B)-(a+b)`),'基期和应为现期和减增量和');
+assert.ok(easyIncrementBase.keyPoint.includes('代表增量'),'新方法需明确小写a、b含义');
+assert.equal(easyIncrementBase.workedExamples,undefined,'不得自编教材例题');
+const highR1=baseSumDifferenceSection.items[1],highR2=baseSumDifferenceSection.items[2];
 assert.ok(highR1.formula.includes(String.raw`\frac{A-B\left(1+\dfrac{r_1-r_2}{1+r_2}\right)}{1+r_1}`),'r1>r2时须补正B并统一除以1+r1');
 assert.ok(highR2.formula.includes(String.raw`\frac{A\left(1+\dfrac{r_2-r_1}{1+r_1}\right)-B}{1+r_2}`),'r2>r1时须补正A并统一除以1+r2');
 assert.ok(highR1.keyPoint.includes('补正B本身')&&highR2.keyPoint.includes('补正A本身'),'两个方向都直接补正低增速现期量');
 assert.ok(baseSumDifferenceSection.tip.points[0].description.includes('加法'),'题型涉及基期和，应说明沿用同一补正顺序');
 assert.ok(baseSumDifferenceSection.items.every(x=>!x.workedExamples&&!x.example),'用户没有提供数值例题，不得编造');
 for(const [A,B,r1,r2] of [[280,160,.3,.1],[280,160,.06,.23],[160,280,.18,.05]]){
+ const increaseA=A*r1/(1+r1),increaseB=B*r2/(1+r2);
+ const directDifference=(A-B)-(increaseA-increaseB);
+ const directSum=(A+B)-(increaseA+increaseB);
+ assert.ok(Math.abs(directDifference-(A/(1+r1)-B/(1+r2)))<1e-12,'现期差扣增长量差须得到基期差');
+ assert.ok(Math.abs(directSum-(A/(1+r1)+B/(1+r2)))<1e-12,'现期和扣增长量和须得到基期和');
  const baseline=A/(1+r1)-B/(1+r2);
  const fixed=r1>r2?(A-B*(1+(r1-r2)/(1+r2)))/(1+r1):
   (A*(1+(r2-r1)/(1+r1))-B)/(1+r2);
