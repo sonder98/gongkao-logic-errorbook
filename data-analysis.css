@@ -123,3 +123,10 @@
 .kb-structured-subtopic .kb-structured-item{margin:12px 0;background:#fff}
 .kb-structured-subtopic .kb-structured-item>h5{font-size:15px;line-height:1.55;color:#24615e;font-weight:850;margin:0 0 7px}
 @media(max-width:800px){.kb-structured-subtopic{padding:11px 10px;margin:12px 0 18px}.kb-structured-subtopic-heading{font-size:16px}.kb-structured-subtopic .kb-structured-item>h5{font-size:14px}}
+
+/* Merged lesson 6 base ratio: nested historical steps remain readable without extra sticky headers. */
+.kb-structured-subtopic .kb-structured-subitems{margin-top:13px}
+.kb-structured-subtopic .kb-structured-subitem h6{font-size:14px;line-height:1.45;font-weight:800;color:#1f6860;margin:0 0 9px}
+.kb-structured-subtopic .kb-flowchart{margin:12px auto 19px}
+.kb-structured-subtopic .kb-structured-tip{margin-bottom:15px}
+@media(max-width:800px){.kb-structured-subtopic .kb-structured-subitem h6{font-size:13px}}

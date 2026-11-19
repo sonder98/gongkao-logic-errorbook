@@ -743,88 +743,88 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 
   await page.locator('[data-knowledge-topic="data-topic-course-06-flatten-growth"]').click();
-  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),[
-    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除','基期比较','增量比较','基期和差'
-  ],'第6课保留原有五节并在第六节新增基期和差');
+  assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['基期比','基期比较','增量比较','基期和差'],'第6课应只显示4个主节');
+  assert.deepEqual(await page.locator('.kb-structured-jump button').allInnerTexts(),['基期比','基期比较','增量比较','基期和差'],'节内导航也应只有4项');
+  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),4,'四个主节编号标题仍可吸顶');
+  const baseRatioSection=page.locator('#kb-structured-flatten-growth-basics');
+  assert.deepEqual(await baseRatioSection.locator(':scope > .kb-structured-subtopic > .kb-structured-subtopic-heading').allInnerTexts(),[
+    '适用场景与第一步｜平均数增长率',
+    '第二步｜给增长率较低的一方补正',
+    '计算顺序｜先除后补 / 先补后除'
+  ],'三个原小节完整保留在基期比下');
+  assert.equal(await baseRatioSection.locator('.kb-structured-subtopic').count(),3,'基期比中必须包含原有三组子知识');
+  assert.match(await baseRatioSection.locator('.kb-structured-subtopic').first().innerText(),/平均数增长率/);
+  const correctionSection=page.locator('#kb-structured-flatten-growth-correction');
+  assert.deepEqual(await correctionSection.locator('.kb-structured-item > h5').allInnerTexts(),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
   const orderSection=page.locator('#kb-structured-flatten-growth-calculation-order');
-  assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'第6课的计算顺序流程图必须显示');
+  assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'原决策流程图须保留在计算顺序子知识下');
   assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
-  assert.match(await orderSection.locator('.kb-flowchart').innerText(),/A\/B 是否好算/);
-  assert.deepEqual(await orderSection.locator('.kb-structured-item h4').allInnerTexts(),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
-  assert.equal(await orderSection.locator('.kb-structured-tip').count(),1,'TIP必须贴近拉平增长率流程图');
+  assert.match(await orderSection.locator('.kb-flowchart').innerText(),/A\\/B 是否好算/);
+  assert.deepEqual(await orderSection.locator('.kb-structured-item > h5').allInnerTexts(),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
+  assert.equal(await orderSection.locator('.kb-structured-tip').count(),1,'TIP必须跟随原计算顺序方法');
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/凑整/);
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/倍数关系/);
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/10%、25%、33%/);
-  assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
-  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','第6课TIP不应继承左侧导航栏的吸顶样式');
-  // Sticky subsection headings are scoped to their section, unlike the TIP and intro.
-  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),6,'第6课六节均有独立的吸顶标题');
-  assert.equal(await page.locator('.kb-structured-head').first().evaluate(el=>getComputedStyle(el).position),'sticky','编号+小节标题应吸顶');
-  assert.equal(await page.locator('.kb-structured-intro').first().evaluate(el=>getComputedStyle(el).position),'static','说明文字应随正文滚动');
-  const correctionSection=page.locator('#kb-structured-flatten-growth-correction');
-  await correctionSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+155));
-  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-correction > .kb-structured-head').getBoundingClientRect().top)<5);
-  assert.ok(Math.abs(await correctionSection.locator('.kb-structured-head').evaluate(el=>el.getBoundingClientRect().top))<5,'当前节标题应贴在顶部');
-  await orderSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+160));
-  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-calculation-order > .kb-structured-head').getBoundingClientRect().top)<5);
-  assert.ok(await correctionSection.locator('.kb-structured-head').evaluate(el=>el.getBoundingClientRect().top)<-10,'下一节出现后，上一节标题必须离开');
-  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','TIP保持普通滚动');
+  assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2);
+  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','TIP不可误吸顶');
+  assert.equal(await page.locator('.kb-structured-head').first().evaluate(el=>getComputedStyle(el).position),'sticky','基期比主标题须吸顶');
+  assert.equal(await baseRatioSection.locator('.kb-structured-intro').first().evaluate(el=>getComputedStyle(el).position),'static','说明随正文滚动');
+  assert.equal(await orderSection.locator('.kb-structured-subtopic-heading').evaluate(el=>getComputedStyle(el).position),'static','子知识标题不应占用额外吸顶空间');
+  const comparisonSection=page.locator('#kb-structured-flatten-growth-base-comparison');
+  await baseRatioSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+155));
+  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-basics > .kb-structured-head').getBoundingClientRect().top)<5);
+  await comparisonSection.evaluate(el=>window.scrollTo(0,window.scrollY+el.getBoundingClientRect().top+160));
+  await page.waitForFunction(()=>Math.abs(document.querySelector('#kb-structured-flatten-growth-base-comparison > .kb-structured-head').getBoundingClientRect().top)<5);
+  assert.ok(await baseRatioSection.locator(':scope > .kb-structured-head').evaluate(el=>el.getBoundingClientRect().top)<-10,'下一主节到来后基期比标题不再吸顶');
   await page.setViewportSize({width:390,height:844});
-  assert.equal(await orderSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','窄屏时章节标题仍吸顶');
+  assert.equal(await baseRatioSection.locator(':scope > .kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','窄屏主标题仍吸顶');
+  assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static');
   await page.setViewportSize({width:1280,height:900});
   await page.evaluate(()=>window.scrollTo(0,0));
-
-  assert.equal(await page.locator('.knowledge-shell > aside').evaluate(el=>getComputedStyle(el).position),'sticky','桌面端知识目录仍需保留吸顶');
-
-  assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'两种顺序各要保留两种补正方向');
-  assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4,'全部四种速算排版均应支持数学公式');
-
-  assert.equal(await orderSection.locator('.kb-structured-worked-example').count(),2,'两道拉平增长率例题必须出现在各自的方法卡');
+  assert.equal(await page.locator('.knowledge-shell > aside').evaluate(el=>getComputedStyle(el).position),'sticky','桌面端左侧目录依旧吸顶');
+  assert.equal(await orderSection.locator('.kb-structured-subitem').count(),4,'计算顺序的四种修正方向均须保留');
+  assert.equal(await orderSection.locator('.kb-structured-subitem .kb-structured-formula [data-da-tex]').count(),4);
+  assert.equal(await orderSection.locator('.kb-structured-worked-example').count(),2,'原两道例题须保留');
   const ex1=orderSection.locator('.kb-structured-item').nth(1).locator('.kb-structured-subitem').first();
   const ex2=orderSection.locator('.kb-structured-item').first().locator('.kb-structured-subitem').nth(1);
   assert.match(await ex1.locator('.kb-structured-worked-example').innerText(),/7358/);
   assert.match(await ex2.locator('.kb-structured-worked-example').innerText(),/1027/);
-  assert.equal(await orderSection.locator('.kb-structured-worked-example .kb-structured-formula [data-da-tex]').count(),4,'两道例题四段公式须能显示');
+  assert.equal(await orderSection.locator('.kb-structured-worked-example .kb-structured-formula [data-da-tex]').count(),4);
 
-  const comparisonSection=page.locator('#kb-structured-flatten-growth-base-comparison');
-  assert.equal(await comparisonSection.count(),1,'第6课第四节基期比较须可访问');
   assert.equal(await comparisonSection.locator('.kb-structured-head h3').innerText(),'基期比较');
   assert.deepEqual(await comparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['现期大小与增速大小不同边｜直接判断','现期大小与增速大小同边｜补正后直接除法，与1比较']);
-  assert.ok(await comparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=2,'基期比较的公式推导必须正常排版');
+  assert.ok(await comparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=2);
   assert.match(await comparisonSection.innerText(),/现期比/);
-  assert.equal(await comparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第四节标题保持吸顶');
+  assert.equal(await comparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky');
 
   const growthComparisonSection=page.locator('#kb-structured-flatten-growth-increment-comparison');
-  assert.equal(await growthComparisonSection.count(),1,'第五节增量比较须在知识页面展示');
   assert.equal(await growthComparisonSection.locator('.kb-structured-head h3').innerText(),'增量比较');
-  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic-heading').allInnerTexts(),['增量倍数比较','增量大小比较'],'第五节内应该呈现两个并列子知识点');
-  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic').first().locator('.kb-structured-item>h5').allInnerTexts(),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比'],'已有倍数方法不变，只增加子知识层级');
+  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic-heading').allInnerTexts(),['增量倍数比较','增量大小比较']);
+  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic').first().locator('.kb-structured-item>h5').allInnerTexts(),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比']);
   assert.deepEqual(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison .kb-structured-item>h5').allInnerTexts(),['方法一｜现期与增速同边：大大则大','方法二｜现期与增速不同边：比较基期比与增速比']);
   assert.match(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison').innerText(),/补正分子/);
-  assert.ok(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison [data-da-tex]').count()>=2,'增量大小比较两方法的公式应可正常渲染');
-
-  assert.equal(await growthComparisonSection.locator('.kb-structured-worked-example').count(),2,'第五节方法一、方法二各一用户提供的教材例题');
-  assert.ok(await growthComparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=4,'两种方法及各自例题的数学公式须渲染');
+  assert.ok(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison [data-da-tex]').count()>=2);
+  assert.equal(await growthComparisonSection.locator('.kb-structured-worked-example').count(),2);
+  assert.ok(await growthComparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=4);
   assert.match(await growthComparisonSection.locator('.kb-structured-worked-example').innerText(),/41.96/);
   const directExample=growthComparisonSection.locator('.kb-structured-item').first().locator('.kb-structured-worked-example');
-  assert.equal(await directExample.count(),1,'新增预算支出例题必须在方法一下面');
+  assert.equal(await directExample.count(),1);
   assert.match(await directExample.innerText(),/教育支出同比增量/);
   assert.match(await directExample.innerText(),/6.03/);
   assert.match(await directExample.innerText(),/2.28/);
   assert.match(await directExample.innerText(),/最接近B/);
-  assert.ok(await directExample.locator('[data-da-tex]').count()>=1,'新增份数法例题必须正确渲染公式');
-  assert.equal(await growthComparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第五节小节标题沿用吸顶');
+  assert.ok(await directExample.locator('[data-da-tex]').count()>=1);
+  assert.equal(await growthComparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky');
 
   const baseSumDiffSection=page.locator('#kb-structured-flatten-growth-base-sum-difference');
-  assert.equal(await baseSumDiffSection.count(),1,'第六节基期和差应显示');
   assert.equal(await baseSumDiffSection.locator('.kb-structured-head h3').innerText(),'基期和差');
   assert.deepEqual(await baseSumDiffSection.locator('.kb-structured-item h4').allInnerTexts(),['增长量容易计算｜现期和差减去增长量和差','r₁＞r₂｜补正B，再计算基期差','r₂＞r₁｜补正A，再计算基期差']);
-  assert.ok(await baseSumDiffSection.locator('.kb-structured-formula [data-da-tex]').count()>=3,'增量直算公式与两组拉平公式需正确排版');
+  assert.ok(await baseSumDiffSection.locator('.kb-structured-formula [data-da-tex]').count()>=3);
   assert.match(await baseSumDiffSection.locator('.kb-structured-item').first().innerText(),/增长量a、b/);
   assert.match(await baseSumDiffSection.innerText(),/补正B本身/);
   assert.match(await baseSumDiffSection.innerText(),/补正A本身/);
-  assert.equal(await baseSumDiffSection.locator('.kb-structured-worked-example').count(),0,'第六节不编造例题');
-  assert.equal(await baseSumDiffSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第六节标题吸顶');
+  assert.equal(await baseSumDiffSection.locator('.kb-structured-worked-example').count(),0);
+  assert.equal(await baseSumDiffSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky');
 
   // Scanned trend choices should remain visible, and selecting the A–D button still works.
   await page.locator('#tabDataPractice').click();
