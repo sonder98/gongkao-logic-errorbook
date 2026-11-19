@@ -138,8 +138,18 @@ button,a{-webkit-tap-highlight-color:transparent}
  .site-tab,.btn,.auth-panel button{min-height:44px}
  .nav-item{min-height:44px}
 }
-</style><link rel="stylesheet" href="data-analysis.css"></head><body>
-<header><div class="eyebrow">CIVIL SERVICE STUDY / 知识复习 · 错题实战</div><h1>公考学习 · 知识体系与错题本</h1><p><span id="questionCount">…</span> 道原题完整收录｜知识体系持续更新｜答题与笔记支持云端同步</p></header>
+</style><link rel="stylesheet" href="data-analysis.css"><link rel="stylesheet" href="academic-theme.css"></head><body>
+<header class="academic-topbar">
+ <div class="academic-brand" aria-label="Exam 学习系统">
+  <div class="academic-brand-mark" aria-hidden="true">E</div>
+  <div><div class="academic-brand-name">EXAM<span class="academic-brand-dot">.</span></div><div class="academic-brand-sub">THE STUDY DESK</div></div>
+ </div>
+ <nav class="academic-view-switch" aria-label="学习方式">
+  <button type="button" id="academicKnowledgeMode" class="academic-mode" aria-pressed="false">知识体系</button>
+  <button type="button" id="academicPracticeMode" class="academic-mode" aria-pressed="true">习题练习</button>
+ </nav>
+ <div class="academic-top-meta"><span class="academic-top-count"><span id="questionCount">…</span> 道收录</span><span class="academic-top-seal" aria-hidden="true">研</span></div>
+</header>
 <nav class="site-tabs" role="tablist" aria-label="选择学习模块与学习模式">
  <div class="module-group" aria-label="论证逻辑">
   <strong class="module-label">论证逻辑</strong>
@@ -200,6 +210,7 @@ button,a{-webkit-tap-highlight-color:transparent}
   <article class="maincard" id="knowledgeCard" aria-live="polite"><div class="kb-load-state">正在加载知识笔记…</div></article>
   <div class="bottom-help">知识和真题可以双向跳转。笔记保留核心规则、常见陷阱与配套练习，后续学习会持续更新。</div>
  </main>
+ <aside class="academic-reading-rail" id="academicReadingRail" aria-label="本节阅读导航"></aside>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="data-analysis.js"></script>
@@ -577,6 +588,64 @@ function structuredKnowledgeHtml(topic){
   (section.subtopics||[]).map(structuredKnowledgeSubtopicHtml).join('')+
   '</section>').join('')+'</div>';
 }
+// Right-hand academic reading guide is derived from the current real lesson, never hard-coded.
+function renderAcademicReadingRail(topic,position){
+ const rail=$('academicReadingRail');
+ if(!rail)return;
+ rail.textContent='';
+ if(!topic)return;
+ const root=$('knowledgeCard');
+ const sections=Array.from(root.querySelectorAll('.kb-structured-group,.kb-article-section'));
+ const label=document.createElement('div');
+ label.className='academic-rail-label';
+ label.textContent='ON THIS PAGE / 本节目录';
+ rail.append(label);
+ const links=document.createElement('div');
+ links.className='academic-rail-links';
+ sections.forEach((section,index)=>{
+  if(!section.id)section.id='academic-reading-section-'+index;
+  const title=section.querySelector('h3')?.textContent||'知识内容';
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='academic-rail-link'+(index===0?' is-active':'');
+  button.setAttribute('aria-label','跳转到 '+title);
+  const count=document.createElement('span');
+  count.className='academic-rail-num';
+  count.textContent=String(index+1).padStart(2,'0');
+  button.append(count,document.createTextNode(title));
+  button.onclick=()=>{
+   links.querySelectorAll('button').forEach(link=>link.classList.remove('is-active'));
+   button.classList.add('is-active');
+   section.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  links.append(button);
+ });
+ rail.append(links);
+ const meta=document.createElement('div');
+ meta.className='academic-rail-label';
+ meta.textContent='READING POSITION / 目录进度';
+ rail.append(meta);
+ const stats=document.createElement('div');
+ stats.className='academic-reading-stats';
+ const total=knowledgeTopics.length;
+ const percent=total?Math.round((position+1)/total*100):0;
+ stats.innerHTML='<div class="academic-reading-stats-head"><span>当前知识点</span><strong>'+ (position+1)+' / '+total+'</strong></div>'+
+  '<div class="academic-progress-track"><span class="academic-progress-fill" style="width:'+percent+'%"></span></div>'+
+  '<div class="academic-reading-small">当前所处章节位置，不代表已掌握程度</div>';
+ rail.append(stats);
+ if(root.querySelector('.kb-related-link')){
+  const related=document.createElement('button');
+  related.type='button';
+  related.className='academic-related-btn';
+  related.textContent='前往配套真题 ↗';
+  related.onclick=()=>root.querySelector('.kb-footer')?.scrollIntoView({behavior:'smooth',block:'start'});
+  rail.append(related);
+ }
+ const foot=document.createElement('p');
+ foot.className='academic-rail-foot';
+ foot.textContent='以章节组织理解，以练习校验方法。';
+ rail.append(foot);
+}
 function renderKnowledge(){
  if(!KNOWLEDGE){
   $('knowledgeCount').textContent='—';
@@ -654,7 +723,9 @@ function renderKnowledge(){
  const relatedHtml=related.length?'<section class="kb-footer"><div class="kb-breadcrumb">配套真题 · '+related.length+' 道</div><div class="kb-related-list">'+
    related.map(q=>'<button type="button" class="kb-related-link" data-open-question="'+safe(q.id)+'"><span>'+safe(q.title)+'</span><span class="kb-related-sub" aria-hidden="true">→</span></button>').join('')+
    '</div><div class="kb-footer-note">点击题目可直接进入错题练习；答题区也能返回关联知识点。</div></section>':'<section class="kb-footer"><div class="kb-footer-note">这个知识点暂时没有收录的配套真题，后续会持续补充。</div></section>';
+ const moduleLatin=currentModule==='data'?'DATA ANALYSIS':currentModule==='formal'?'FORMAL LOGIC':'ARGUMENTATIVE LOGIC';
  $('knowledgeCard').innerHTML='<div class="kb-breadcrumb">'+safe(group.chapter)+' / '+safe(group.title)+'</div>'+
+  '<div class="academic-eyebrow">'+moduleLatin+' / ACADEMIC NOTES</div>'+
   '<h2 class="kb-heading">'+safe(topic.title)+'</h2>'+mindmapHtml+'<p class="kb-summary">'+(currentModule==='data'?DataAnalysis.rich(topic.summary):safe(topic.summary))+'</p>'+
   (topic.contentSections?.length?structuredKnowledgeHtml(topic):
    sectionHtml('快速识别',topic.recognize)+sectionHtml('结构与核心规则',topic.patterns)+
@@ -676,6 +747,7 @@ function renderKnowledge(){
   if(rect.top<area.top)nav.scrollTop-=area.top-rect.top+4;
   else if(rect.bottom>area.bottom)nav.scrollTop+=rect.bottom-area.bottom+4;
  }
+ renderAcademicReadingRail(topic,topicIndex);
 }
 function activateModule(next){
  if(next===currentModule)return;
@@ -723,6 +795,8 @@ function switchView(view,updateHash=true){
  }
  $('knowledgeView').setAttribute('aria-labelledby','tab'+selected+'Knowledge');
  $('practiceView').setAttribute('aria-labelledby','tab'+selected+'Practice');
+ $('academicKnowledgeMode').setAttribute('aria-pressed',String(currentView==='knowledge'));
+ $('academicPracticeMode').setAttribute('aria-pressed',String(currentView==='practice'));
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
 }
@@ -1056,6 +1130,8 @@ function normalizeImportedRecord(item){
   attempts:Number.isFinite(Number(item.attempts))?Math.max(0,Math.floor(Number(item.attempts))):0
  };
 }
+$('academicKnowledgeMode').onclick=()=>switchView('knowledge');
+$('academicPracticeMode').onclick=()=>switchView('practice');
 $('exportBackup').onclick=()=>downloadBackup();
 $('importBackup').onchange=async e=>{
  const file=e.target.files?.[0];if(!file)return;
