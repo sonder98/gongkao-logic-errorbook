@@ -127,7 +127,7 @@ assert.equal(incrementComparisonSection.title,'增量比较');
 assert.deepEqual(incrementComparisonSection.items.map(x=>x.title),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比'],'仅有用户教授的两种比较路径');
 assert.ok(incrementComparisonSection.items[0].description.includes('化除为乘')&&incrementComparisonSection.items[0].description.includes('份数法'),'直接速算应复用已有知识');
 assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\frac{x}{y}`)&&incrementComparisonSection.items[1].formula.includes(String.raw`\frac{r_1}{r_2}`),'增量比必须拆为基期比乘增长率之比');
-assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\frac{r_1-r_2}{1+r_2}`),'基期比使用此前的分母拉平补正');
+assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\dfrac{r_1-r_2}{1+r_2}`),'基期比使用此前的分母拉平补正');
 assert.equal(incrementComparisonSection.items[0].workedExamples,undefined,'不为方法一凭空编造例题');
 const incrementExample=incrementComparisonSection.items[1].workedExamples?.[0];
 assert.ok(incrementExample,'方法二必须有用户给出的真实教材例题');
