@@ -8,11 +8,7 @@ const ids=['academicKnowledgeMode','academicPracticeMode','academicReadingRail',
  'tabKnowledge','tabPractice','tabFormalKnowledge','tabFormalPractice',
  'tabDataKnowledge','tabDataPractice','knowledgeNav','knowledgeCard','questionList',
  'card','scratchCanvas','saveNote','saveCloudConfig','review','show','replaceAnalysis'];
-for(const id of ids){
- if(['saveNote','review','show','replaceAnalysis','scratchCanvas'].includes(id)){
-  assert.ok(html.includes('id="')||html.includes('id=\\"'),id+' should still be renderable');
- }else assert.ok(html.includes('id="'+id+'"'),'Missing UI control '+id);
-}
+for(const id of ids)assert.ok(html.includes('id="'+id+'"'),'Missing UI control '+id);
 assert.ok(html.includes('href="academic-theme.css"'),'Academic theme must load after data-analysis.css');
 assert.ok(sw.includes("'./academic-theme.css'"),'PWA must cache the approved theme for offline use');
 assert.match(html,/academic-brand-name/);
