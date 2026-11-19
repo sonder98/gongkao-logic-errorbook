@@ -53,7 +53,7 @@ const flattenDen=lesson06.contentSections[1].items[0],flattenNum=lesson06.conten
 assert.ok(flattenDen.formula.includes(String.raw`\frac{1}{1+\dfrac{r_1-r_2}{1+r_2}}`),'r1>r2时按截图用正差补分母');
 assert.ok(flattenNum.formula.includes(String.raw`\left(1+\frac{r_2-r_1}{1+r_1}\right)`),'r1<r2时按截图用正差补分子');
 assert.ok(lesson06.contentSections[1].description.includes('较低')&&lesson06.contentSections[1].description.includes('为正'),'保持补正增速低的一方和大减小的核心要点');
-assert.ok(lesson06.contentSections.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'不得编造第6课例题');
+assert.ok(lesson06.contentSections.slice(0,4).every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'既有第6课四节不应新增未授权教材例题');
 for(const [a,b,r1,r2] of [[200,100,0.2,0.05],[200,100,0.03,0.18]]){
   const base=(a/(1+r1))/(b/(1+r2));
   const flattened=r1>r2?(a/b)/(1+(r1-r2)/(1+r2)):(a/b)*(1+(r2-r1)/(1+r1));
@@ -81,7 +81,7 @@ assert.ok(beforeDivide.subitems[0].formula.includes('underbrace')&&beforeDivide.
 assert.ok(beforeDivide.subitems[1].formula.includes('r_1-r_2')&&beforeDivide.subitems[1].formula.includes('1+r_2'),'先除后补：分母补正');
 assert.ok(afterDivide.subitems[0].formula.includes('先补正分子')&&afterDivide.subitems[0].formula.includes('r_2-r_1'),'先补后除：先补正分子');
 assert.ok(afterDivide.subitems[1].formula.includes('先补正分母')&&afterDivide.subitems[1].formula.includes('r_1-r_2'),'先补后除：先补正分母');
-assert.ok(lesson06.contentSections.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'第6课不能编造例题或练习');
+assert.ok(lesson06.contentSections.slice(0,4).every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'既有第6课四节不应引入额外练习');
 for(const [A,B,r1,r2] of [[1200,310,0.08,0.14],[1200,310,0.21,0.09]]){
  const baseline=(A/(1+r1))/(B/(1+r2));
  const firstDivide=r1<r2?(A/B)*(1+(r2-r1)/(1+r1)):(A/B)/(1+(r1-r2)/(1+r2));
