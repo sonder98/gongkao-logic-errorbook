@@ -41,6 +41,18 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 ]);
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
+assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
+const mapAssetPath=path.join(root,lesson06.mindmapImage);
+assert.ok(fs.existsSync(mapAssetPath),'第6课思维导图文件必须在仓库中');
+const mindmapSvg=fs.readFileSync(mapAssetPath,'utf8');
+assert.ok(mindmapSvg.startsWith('<svg ')&&mindmapSvg.includes('</svg>'),'思维导图必须是可浏览的完整SVG图片');
+for(const heading of ['基期比','基期比较','增量比较','基期和差','先除后补','先补后除','做题'])
+ assert.ok(mindmapSvg.includes(heading),'导图缺少主干或方法：'+heading);
+assert.ok(htmlSource.includes('class="kb-lesson-mindmap"'),'课程标题下应该显示导图');
+assert.ok(htmlSource.includes("+'</h2>'+mindmapHtml+'<p class=\"kb-summary\""),'导图必须放在第6课标题和既有简介之间');
+assert.ok(dataStyleSource.includes('.kb-lesson-mindmap{'),'导图需要响应式缩放');
+assert.ok(!mindmapSvg.includes('<script'),'SVG必须保持静态不包含脚本');
+
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
 assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020'],'第6课应包含基期比较正式习题');

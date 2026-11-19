@@ -743,6 +743,15 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('.nav-item').count(),expectedQuestions);
 
   await page.locator('[data-knowledge-topic="data-topic-course-06-flatten-growth"]').click();
+  const mindmap=page.locator('#knowledgeCard .kb-lesson-mindmap');
+  assert.equal(await mindmap.count(),1,'第6课须在最前面放置导图');
+  assert.ok(await mindmap.evaluate(el=>el.compareDocumentPosition(document.querySelector('#knowledgeCard .kb-summary')) & Node.DOCUMENT_POSITION_FOLLOWING),'导图应在知识简介前');
+  assert.ok(await mindmap.evaluate(el=>el.compareDocumentPosition(document.querySelector('#knowledgeCard .kb-structured-jump')) & Node.DOCUMENT_POSITION_FOLLOWING),'导图应在四节导航前');
+  const mindmapImg=mindmap.locator('img');
+  assert.match(await mindmapImg.getAttribute('src'),/lesson-06-flatten-growth-mindmap\.svg$/);
+  await page.waitForFunction(()=>{const img=document.querySelector('#knowledgeCard .kb-lesson-mindmap img');return img&&img.complete&&img.naturalWidth>0});
+  assert.equal(await mindmap.locator('a').getAttribute('target'),'_blank','点击导图应可查看原尺寸');
+
   assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),['基期比','基期比较','增量比较','基期和差'],'第6课应只显示4个主节');
   assert.deepEqual(await page.locator('.kb-structured-jump button').allInnerTexts(),['基期比','基期比较','增量比较','基期和差'],'节内导航也应只有4项');
   assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),4,'四个主节编号标题仍可吸顶');

@@ -130,3 +130,10 @@
 .kb-structured-subtopic .kb-flowchart{margin:12px auto 19px}
 .kb-structured-subtopic .kb-structured-tip{margin-bottom:15px}
 @media(max-width:800px){.kb-structured-subtopic .kb-structured-subitem h6{font-size:13px}}
+
+/* Lesson overview diagram: directly under the lesson title, before the chapter summary and contents. */
+.kb-lesson-mindmap{margin:16px 0 22px;padding:8px;border:1px solid #dce6e6;border-radius:14px;background:#fff;overflow:hidden}
+.kb-lesson-mindmap a{display:block;cursor:zoom-in;outline-offset:4px}
+.kb-lesson-mindmap img{width:100%;height:auto;display:block;object-fit:contain;border-radius:8px}
+.kb-lesson-mindmap a:focus-visible{outline:2px solid #138777;border-radius:9px}
+@media(max-width:800px){.kb-lesson-mindmap{padding:4px;margin:12px 0 16px;border-radius:10px}}
