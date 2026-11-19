@@ -30,6 +30,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('header.academic-topbar .academic-brand-name').innerText(),'EXAM.');
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('#academicKnowledgeMode').getAttribute('aria-pressed'),'false');
+  assert.equal(await page.locator('#practiceView > aside > .site-tabs').count(),1,
+    'Desktop course picker must live inside the study library');
   const academicPaper=await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor);
   assert.equal(academicPaper,'rgb(246, 245, 241)','Approved academic background');
   const expectedQuestions = Number((await page.locator('#navCount').innerText()).split('/')[1].trim().split(' ')[0]);
@@ -482,6 +484,9 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.doesNotMatch(authStatus, /未配置 Supabase|连接配置异常/);
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForFunction(()=>document.querySelector('.site-tabs')?.parentElement===document.body);
+  assert.equal(await page.locator('#practiceView > #authPanel').count(),1,
+    'Mobile account panel must follow the exercise instead of blocking the question');
   await page.locator('#tabKnowledge').click();
   assert.equal(await page.locator('#knowledgeView').isVisible(),true);
   assert.equal(await page.locator('#knowledgeCard h2').isVisible(),true);
