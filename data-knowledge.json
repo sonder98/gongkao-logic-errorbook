@@ -551,7 +551,7 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除；比较两项基期大小时，先看现期大小与增速方向，需要修正时直接算补正后的比值，判断是否大于1。",
+          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除；比较两项基期大小时，直接算补正后的比值与1比较；比较增长量大小时，可沿用化除为乘/份数法分别求增长量，或通过「基期比×增长率之比」结合拉平增长率速算。",
           "questionIds": [
             "data-2008-autumn-grain-share-of-total",
             "data-2016-may-imported-drug-mom-growth",
@@ -692,6 +692,31 @@
                   "description": "若A>B，且r_A>r_B，分母B增长率较低。先按拉平增长率补正分母B，再直接计算A除以补正后的分母，判断结果大于1还是小于1。",
                   "formula": "\\[\n\\begin{aligned}\nr_{\\text{补}}\n&=\\frac{r_A-r_B}{1+r_B}\\\\[6pt]\nR&=\\frac{A}{B(1+r_{\\text{补}})}\\\\[4pt]\n&=\\frac{A}{B\\left(1+\\dfrac{r_A-r_B}{1+r_B}\\right)}\n\\end{aligned}\n\\]\n\\[\n\\begin{cases}\nR>1 &\\Longrightarrow\\ \\text{基期A}>\\text{基期B}\\\\[4pt]\nR<1 &\\Longrightarrow\\ \\text{基期A}<\\text{基期B}\n\\end{cases}\n\\]",
                   "keyPoint": "给增长率较低的分母B补正后，直接计算 A/[B×(1+r补)]，只需判断商相对于1的大小。"
+                }
+              ]
+            },
+            {
+              "id": "flatten-growth-increment-comparison",
+              "title": "增量比较",
+              "description": "已知两个现期量A、B及各自增长率r₁、r₂，比较对应增长量ΔA、ΔB。依据增长率是否容易速算，选择分别求增长量，或把增长量之比拆成「基期比×增长率之比」。",
+              "items": [
+                {
+                  "title": "方法一｜分别计算增长量",
+                  "description": "当增长率较小，或接近百化分常用比例时，沿用已经学习的「化除为乘」或「份数法」，分别计算两个增长量，再直接比较大小。",
+                  "formula": "\\[\n\\begin{aligned}\n\\Delta A&=\\frac{A\\,r_1}{1+r_1}\\\\\n\\Delta B&=\\frac{B\\,r_2}{1+r_2}\n\\end{aligned}\n\\]"
+                },
+                {
+                  "title": "方法二｜基期比 × 增长率之比",
+                  "description": "当增长率不便直接计算时，将增长量比拆成「基期比×增长率之比」。其中基期比按本课前面的方法，用现期比拉平修正得到；先粗估，再按题目精度决定是否提高各比值的计算精度。",
+                  "formula": "设现期为A、B，对应基期为x、y，增长率为r₁、r₂：\n\\[\n\\begin{aligned}\n\\frac{\\Delta A}{\\Delta B}\n&=\\frac{x\\times r_1}{y\\times r_2}\\\\[4pt]\n&=\\underbrace{\\frac{x}{y}}_{\\text{基期比}}\\times\n\\underbrace{\\frac{r_1}{r_2}}_{\\text{增长率之比}}\n\\end{aligned}\n\\]\n本例中r₁＞r₂，分母增速更低，给基期比的分母补正：\n\\[\n\\frac{x}{y}=\\frac{\\dfrac AB}{1+\\dfrac{r_1-r_2}{1+r_2}}\n\\]",
+                  "workedExamples": [
+                    {
+                      "title": "例题｜41.96、28.63的增长量比较",
+                      "description": "现期A＝41.96、增长率18.77%；现期B＝28.63、增长率9.91%。两项增长量均为正，用基期比乘增长率之比估算它们的倍数。",
+                      "formula": "先将现期比与增长率之比粗估：\n\\[\n\\begin{aligned}\n\\frac AB&=\\frac{41.96}{28.63}\\approx\\frac{42}{28}=1.5\\\\[4pt]\n\\frac{r_1}{r_2}&=\\frac{18.77\\%}{9.91\\%}\\approx2\\\\[4pt]\n1.5\\times2&=3\n\\end{aligned}\n\\]\n此时尚未补正基期比。由于r₁＞r₂，需要补正分母，粗估修正约9%：\n\\[\n\\begin{aligned}\nr_{\\text{补}}\n&=\\frac{18.77\\%-9.91\\%}{1+9.91\\%}\\\\\n&\\approx9\\%\\quad(\\text{粗估})\\\\[4pt]\n\\frac{\\Delta A}{\\Delta B}\n&\\approx\\frac{3}{1+9\\%}\\approx2.75\n\\end{aligned}\n\\]\n若选项较接近，沿用同一计算顺序，同时提高前面两个比值和补正项的精度：\n\\[\n\\begin{aligned}\n\\frac AB&\\approx1.47\\\\\n\\frac{r_1}{r_2}&\\approx1.89\\\\\nr_{\\text{补}}&\\approx8.1\\%\\\\[4pt]\n\\frac{\\Delta A}{\\Delta B}\n&\\approx\\frac{1.47\\times1.89}{1+8.1\\%}\\\\\n&\\approx2.57\n\\end{aligned}\n\\]"
+                    }
+                  ],
+                  "keyPoint": "粗估可快速判断增长量的倍数范围；若答案间距很小，前面的现期比、增长率之比和拉平补正项都要提高精度。"
                 }
               ]
             }
