@@ -54,7 +54,7 @@ assert.equal(baseRatioSection.id,'flatten-growth-basics','第一节稳定ID保�
 assert.ok(baseRatioSection.subtopics[1].legacySection&&baseRatioSection.subtopics[2].legacySection,'原第二、三节链接仍应访问新的子知识点');
 const [flattenBasics,flattenCorrection,flattenOrder]=baseRatioSection.subtopics;
 assert.deepEqual(flattenBasics.items.map(x=>x.title),['计算平均数增长率']);
-assert.ok(flattenBasics.items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
+assert.ok(flattenBasics.items[0].formula.includes('r_1-r_2')&&flattenBasics.items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
 assert.deepEqual(flattenCorrection.items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
 const flattenDen=flattenCorrection.items[0],flattenNum=flattenCorrection.items[1];
 assert.ok(flattenDen.formula.includes(String.raw`\frac{1}{1+\dfrac{r_1-r_2}{1+r_2}}`),'r1>r2时按截图用正差补分母');

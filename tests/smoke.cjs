@@ -759,7 +759,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const orderSection=page.locator('#kb-structured-flatten-growth-calculation-order');
   assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'原决策流程图须保留在计算顺序子知识下');
   assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
-  assert.match(await orderSection.locator('.kb-flowchart').innerText(),/A\\/B 是否好算/);
+  assert.ok((await orderSection.locator('.kb-flowchart').innerText()).includes('A/B 是否好算'));
   assert.deepEqual(await orderSection.locator('.kb-structured-item > h5').allInnerTexts(),['方法一｜先除后补（现期比好算）','方法二｜先补后除（现期比不好算）']);
   assert.equal(await orderSection.locator('.kb-structured-tip').count(),1,'TIP必须跟随原计算顺序方法');
   assert.match(await orderSection.locator('.kb-structured-tip').innerText(),/凑整/);
