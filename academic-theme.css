@@ -12,7 +12,7 @@ html{scroll-padding-top:104px}
 body{font-family:var(--academic-sans);font-size:14px;line-height:1.85;letter-spacing:.05px;-webkit-font-smoothing:antialiased}
 button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #b6cdbc;outline-offset:2px}
 button{transition:background .16s,color .16s,border-color .16s}
-header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:max(7px,env(safe-area-inset-top,0px)) clamp(22px,4.1vw,76px) 7px;background:#fbfcf8;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 3px 12px rgba(30,48,40,.018)}
+header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-height:calc(74px + env(safe-area-inset-top,0px));position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(7px + env(safe-area-inset-top,0px)) clamp(22px,4.1vw,76px) 7px;background:#fbfcf8;color:var(--ink);border-bottom:1px solid var(--line);box-shadow:0 3px 12px rgba(30,48,40,.018)}
 .academic-brand{display:flex;align-items:center;gap:13px;flex:0 1 240px;min-width:0}
 .academic-brand-mark{flex:none;display:grid;place-items:center;width:37px;height:37px;border-radius:50%;background:var(--academic-green);font:600 22px/1 var(--academic-serif);color:#f4f8f3}
 .academic-brand-name{font:700 25px/1 var(--academic-serif);color:#243d35;letter-spacing:1.8px;white-space:nowrap}
@@ -218,7 +218,7 @@ header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index
  .academic-brand{flex-basis:150px}
 }
 @media(max-width:800px){
- header.academic-topbar{height:65px;min-height:65px;padding:max(5px,env(safe-area-inset-top,0px)) 13px 5px;gap:8px}
+ header.academic-topbar{height:calc(65px + env(safe-area-inset-top,0px));min-height:calc(65px + env(safe-area-inset-top,0px));padding:calc(5px + env(safe-area-inset-top,0px)) 13px 5px;gap:8px}
  .academic-brand{flex:0 1 auto;gap:8px}
  .academic-brand-mark{width:31px;height:31px;font-size:19px}
  .academic-brand-name{font-size:20px;letter-spacing:.9px}
