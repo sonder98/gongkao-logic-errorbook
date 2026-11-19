@@ -551,7 +551,7 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "由现期分子A、分母B及各自增长率r₁、r₂求基期比a/b。先比较增长率，给增长率较低的一方补正（始终大减小），再根据现期比A/B是否好算选择先除后补或先补后除；比较两项基期大小时，直接算补正后的比值与1比较；比较增长量大小时，可沿用化除为乘/份数法分别求增长量，或通过「基期比×增长率之比」结合拉平增长率速算。",
+          "summary": "拉平增长率：由现期比求基期比，给增速较低的一方补正；按现期比是否好算选择先除后补或先补后除；比较基期大小时看补正后比值是否超过1；增量比较分为倍数比较与大小比较，大小比较同边大大则大，不同边比较基期比与增速比，必要时修正。",
           "questionIds": [
             "data-2008-autumn-grain-share-of-total",
             "data-2016-may-imported-drug-mom-growth",
@@ -698,7 +698,7 @@
             {
               "id": "flatten-growth-increment-comparison",
               "title": "增量比较",
-              "description": "已知两个现期量A、B及各自增长率r₁、r₂，比较对应增长量ΔA、ΔB。依据增长率是否容易速算，选择分别求增长量，或把增长量之比拆成「基期比×增长率之比」。",
+              "description": "已知现期A、B和增长率r₁、r₂，分成两类问题：增量倍数比较要求估算两项增长量的倍数；增量大小比较只判断谁大谁小。两者共用已学的增长量速算、基期比与增速比关系。",
               "items": [
                 {
                   "title": "方法一｜分别计算增长量",
@@ -725,6 +725,27 @@
                     }
                   ],
                   "keyPoint": "粗估可快速判断增长量的倍数范围；若答案间距很小，前面的现期比、增长率之比和拉平补正项都要提高精度。"
+                }
+              ],
+              "itemsTitle": "增量倍数比较",
+              "subtopics": [
+                {
+                  "id": "increment-size-comparison",
+                  "title": "增量大小比较",
+                  "description": "本题型只要求判断两项增长量谁大谁小，不必求具体倍数。先看现期与增速大小方向；若不同边，仍沿用本节前面「基期比×增速比」的方法粗判，必要时修正基期比。",
+                  "items": [
+                    {
+                      "title": "方法一｜现期与增速同边：大大则大",
+                      "description": "当两项均为正增长，现期更大、增长率也更大，则对应增长量更大。",
+                      "formula": "\\[\n\\Delta A\n=\\frac{A}{1+r_1}\\times r_1\n=\\frac{A}{\\dfrac1{r_1}+1}\n\\]\n\\[\nA>B,\\quad r_1>r_2>0\n\\quad\\Longrightarrow\\quad\n\\boxed{\\Delta A>\\Delta B}\n\\]"
+                    },
+                    {
+                      "title": "方法二｜现期与增速不同边：比较基期比与增速比",
+                      "description": "假设A>B、0<r₁<r₂。先算现期比A/B，再算反向增速比r₂/r₁，粗略比较大小（必要时用大的除小的）。若比较结果接近，或某个增长率较大，再按第6课拉平增长率修正A/B后判断，无须求具体增长量。",
+                      "formula": "由前面已学过的增长量比值：\n\\[\n\\frac{\\Delta A}{\\Delta B}\n=\\underbrace{\\frac{\\text{基期A}}{\\text{基期B}}}_{\\text{基期比}}\n\\times\\frac{r_1}{r_2}\n\\]\n先粗看两个数：\n\\[\n\\boxed{\n\\underbrace{\\frac AB}_{\\text{现期比}}\n\\quad\\text{与}\\quad\n\\underbrace{\\frac{r_2}{r_1}}_{\\text{增速比}}\n}\n\\]\n如果需要修正，因 \\(r_1<r_2\\)，分子A增速较低，给现期比的分子补正：\n\\[\n\\begin{aligned}\nr_{\\text{补}}\n&=\\frac{r_2-r_1}{1+r_1}\\\\[4pt]\n\\frac{\\text{基期A}}{\\text{基期B}}\n&=\\frac{A\\left(1+r_{\\text{补}}\\right)}{B}\n\\end{aligned}\n\\]\n最终仅看两项增长量的比是否大于1：\n\\[\nR=\n\\frac{\\dfrac{A\\left(1+r_{\\text{补}}\\right)}{B}}{\\dfrac{r_2}{r_1}}\n\\qquad\n\\begin{cases}\nR>1&\\Longrightarrow\\Delta A>\\Delta B\\\\\nR<1&\\Longrightarrow\\Delta A<\\Delta B\n\\end{cases}\n\\]",
+                      "keyPoint": "若现期比与增速比差距明显，可先粗判；若接近或增速偏大，就补正基期比。这里r₁＜r₂，增速较低的是分子A，按本课既有规则补正分子。"
+                    }
+                  ]
                 }
               ]
             }

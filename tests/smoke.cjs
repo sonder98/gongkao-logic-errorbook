@@ -797,7 +797,12 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   const growthComparisonSection=page.locator('#kb-structured-flatten-growth-increment-comparison');
   assert.equal(await growthComparisonSection.count(),1,'第五节增量比较须在知识页面展示');
   assert.equal(await growthComparisonSection.locator('.kb-structured-head h3').innerText(),'增量比较');
-  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比']);
+  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic-heading').allInnerTexts(),['增量倍数比较','增量大小比较'],'第五节内应该呈现两个并列子知识点');
+  assert.deepEqual(await growthComparisonSection.locator('.kb-structured-subtopic').first().locator('.kb-structured-item>h5').allInnerTexts(),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比'],'已有倍数方法不变，只增加子知识层级');
+  assert.deepEqual(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison .kb-structured-item>h5').allInnerTexts(),['方法一｜现期与增速同边：大大则大','方法二｜现期与增速不同边：比较基期比与增速比']);
+  assert.match(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison').innerText(),/补正分子/);
+  assert.ok(await growthComparisonSection.locator('#kb-structured-subtopic-increment-size-comparison [data-da-tex]').count()>=2,'增量大小比较两方法的公式应可正常渲染');
+
   assert.equal(await growthComparisonSection.locator('.kb-structured-worked-example').count(),2,'第五节方法一、方法二各一用户提供的教材例题');
   assert.ok(await growthComparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=4,'两种方法及各自例题的数学公式须渲染');
   assert.match(await growthComparisonSection.locator('.kb-structured-worked-example').innerText(),/41.96/);

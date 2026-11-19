@@ -125,6 +125,29 @@ const incrementComparisonSection=lesson06.contentSections[4];
 assert.equal(incrementComparisonSection.id,'flatten-growth-increment-comparison','第五节需归入原第6课');
 assert.equal(incrementComparisonSection.title,'增量比较');
 assert.deepEqual(incrementComparisonSection.items.map(x=>x.title),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比'],'仅有用户教授的两种比较路径');
+assert.equal(incrementComparisonSection.itemsTitle,'增量倍数比较','既有两种方法归属于增量倍数比较');
+assert.equal(incrementComparisonSection.subtopics?.length,1,'增量大小比较应为第五节内的子知识点，而非第六节');
+const sizeCompareSubtopic=incrementComparisonSection.subtopics[0];
+assert.equal(sizeCompareSubtopic.id,'increment-size-comparison');
+assert.equal(sizeCompareSubtopic.title,'增量大小比较');
+assert.deepEqual(sizeCompareSubtopic.items.map(x=>x.title),['方法一｜现期与增速同边：大大则大','方法二｜现期与增速不同边：比较基期比与增速比']);
+assert.ok(sizeCompareSubtopic.items[0].description.includes('正增长'),'同边判断应明确适用正增长');
+assert.ok(sizeCompareSubtopic.items[0].formula.includes(String.raw`\dfrac1{r_1}+1`),'同边大大则大的增长量公式需正确呈现');
+assert.ok(sizeCompareSubtopic.items[1].formula.includes(String.raw`\frac{r_2}{r_1}`)&&sizeCompareSubtopic.items[1].formula.includes(String.raw`\frac AB`),'不同边先比较现期比与增速比');
+assert.ok(sizeCompareSubtopic.items[1].keyPoint.includes('补正分子'),'r1<r2必须补正分子A，不能反向补分母');
+assert.ok(sizeCompareSubtopic.items[1].formula.includes(String.raw`\frac{r_2-r_1}{1+r_1}`),'不同边修正差额应使用r2-r1以及1+r1');
+assert.ok(sizeCompareSubtopic.items[1].formula.includes('R>1')&&sizeCompareSubtopic.items[1].formula.includes('R<1'),'最终只需判断增量比是否大于1');
+assert.ok(sizeCompareSubtopic.items.every(item=>!item.workedExamples&&!item.example),'用户未给增量大小题的数字例题，不得编造');
+assert.equal(lesson06.contentSections.length,5,'增量大小比较只能是第五节的子知识点');
+for(const [A,B,r1,r2] of [[150,100,.3,.1],[130,100,.15,.25],[140,100,.2,.29]]){
+  const growthA=A*r1/(1+r1),growthB=B*r2/(1+r2);
+  if(r1>r2){assert.ok(growthA>growthB,'同边正增长大大则大');continue;}
+  const rawRatio=A/B,rateRatio=r2/r1;
+  const correction=1+(r2-r1)/(1+r1);
+  const sizeRatio=rawRatio*correction/rateRatio;
+  assert.equal(Math.sign(sizeRatio-1),Math.sign(growthA-growthB),'不同边补分子后比较结果必须等价于实际增长量');
+}
+
 assert.ok(incrementComparisonSection.items[0].description.includes('化除为乘')&&incrementComparisonSection.items[0].description.includes('份数法'),'直接速算应复用已有知识');
 assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\frac{x}{y}`)&&incrementComparisonSection.items[1].formula.includes(String.raw`\frac{r_1}{r_2}`),'增量比必须拆为基期比乘增长率之比');
 assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\dfrac{r_1-r_2}{1+r_2}`),'基期比使用此前的分母拉平补正');
