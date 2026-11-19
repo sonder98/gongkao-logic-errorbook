@@ -10,7 +10,7 @@
 - [ ] 习题页保留题目导航、分类、重点题、答题提交、解析收起、笔记保存同步、笔记替换解析以及 Pencil 草稿；账号面板移至侧栏次要区域。
 - [ ] 390px / 320px 无横向页面溢出；移动端切题后题目卡片定位于粘性顶栏下方，章节知识锚点不会被顶栏挡住。
 - [ ] PWA 离线缓存包含 academic-theme.css。更新视觉不能修改题库 JSON、Supabase 结构、用户已保存笔记、个人解析或草稿的存取逻辑。
-- [ ] 自动化校验运行 `node tests/validate-academic-ui.cjs`；有条件时运行真实浏览器 smoke 测试和 iPad/iPhone 设备验收。
+- [ ] 自动化校验运行 `node tests/validate-academic-ui.cjs`；通过 GitHub Actions `Academic UI browser smoke` 执行 `tests/academic-ui-browser.cjs`；复杂学科内容的完整 `tests/smoke.cjs` 可单独执行，iPad/iPhone 实机仍需设备验收。
 
 
 ## 资料分析模块（2026-11-07）
