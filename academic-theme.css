@@ -162,7 +162,7 @@ header.academic-topbar{height:74px;min-height:74px;position:sticky;top:0;z-index
 .auth-panel input{border-radius:5px;background:#fffefa}
 #practiceView>aside{display:flex;flex-direction:column}
 #practiceView .auth-panel{order:25;border-top:1px solid var(--line)}
-#practiceView .question-list{max-height:min(47vh,480px);margin-bottom:18px}
+#practiceView .question-list{max-height:380px;margin-bottom:18px}
 #practiceView .nav-heading{order:0}
 #practiceView #questionSearch{order:1}
 #practiceView #filters{order:2}
