@@ -551,7 +551,7 @@
         {
           "id": "data-topic-course-06-flatten-growth",
           "title": "第6课 · 拉平增长率",
-          "summary": "拉平增长率：由现期比求基期比，给增速较低的一方补正；按现期比是否好算选择先除后补或先补后除；比较基期大小时看补正后比值是否超过1；增量比较分为倍数比较与大小比较，大小比较同边大大则大，不同边比较基期比与增速比，必要时修正。",
+          "summary": "拉平增长率：由现期比求基期比，给增速较低的一方补正；按现期比是否好算选择计算顺序；比较基期大小时看补正后的比值是否超过1；增量比较含倍数比较和大小比较；计算基期和差时，直接补正低增速的现期量A或B，统一增长率后加减。",
           "questionIds": [
             "data-2008-autumn-grain-share-of-total",
             "data-2016-may-imported-drug-mom-growth",
@@ -748,6 +748,34 @@
                   ]
                 }
               ]
+            },
+            {
+              "id": "flatten-growth-base-sum-difference",
+              "title": "基期和差",
+              "description": "已知现期A、B和对应增长率r₁、r₂，计算对应基期a、b的和或差（较常见的是差）。仍给增长率较低的一方补正；与基期比不同，这里直接补正现期量A或B，然后在统一的增长率下加减。",
+              "items": [
+                {
+                  "title": "r₁＞r₂｜补正B，再计算基期差",
+                  "description": "B的增长率较低。先计算补正增长率，再将B乘以补正倍数，与A作差，最后除以1+r₁。",
+                  "formula": "\\[\n\\begin{aligned}\na-b\n&=\\frac{A}{1+r_1}-\\frac{B}{1+r_2}\\\\[4pt]\n&=\\frac{A}{1+r_1}-\n\\frac{B\\times\\dfrac{1+r_1}{1+r_2}}{1+r_1}\\\\[5pt]\n&=\\frac{A-B\\left(1+\\dfrac{r_1-r_2}{1+r_2}\\right)}{1+r_1}\n\\end{aligned}\n\\]",
+                  "keyPoint": "r₁＞r₂时，先补正B本身：B×[1+(r₁−r₂)/(1+r₂)]；再用A减去补正后的B，最后除以1+r₁。"
+                },
+                {
+                  "title": "r₂＞r₁｜补正A，再计算基期差",
+                  "description": "A的增长率较低。先计算补正增长率，再将A乘以补正倍数，减去B，最后除以1+r₂。",
+                  "formula": "\\[\n\\begin{aligned}\na-b\n&=\\frac{A}{1+r_1}-\\frac{B}{1+r_2}\\\\[4pt]\n&=\\frac{A\\times\\dfrac{1+r_2}{1+r_1}}{1+r_2}-\\frac{B}{1+r_2}\\\\[5pt]\n&=\\frac{A\\left(1+\\dfrac{r_2-r_1}{1+r_1}\\right)-B}{1+r_2}\n\\end{aligned}\n\\]",
+                  "keyPoint": "r₂＞r₁时，先补正A本身：A×[1+(r₂−r₁)/(1+r₁)]；再减去B，最后除以1+r₂。"
+                }
+              ],
+              "tip": {
+                "title": "基期求和的处理",
+                "points": [
+                  {
+                    "label": "同一补正顺序",
+                    "description": "如果求的是基期a+b，仍然先补正增长率较低的现期量，再将统一分子中的减法换成加法，最后除以较大的增长率对应的1+r。"
+                  }
+                ]
+              }
             }
           ]
         }

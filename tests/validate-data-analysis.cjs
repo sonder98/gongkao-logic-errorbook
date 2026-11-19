@@ -45,7 +45,7 @@ assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
 assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
-assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order','flatten-growth-base-comparison','flatten-growth-increment-comparison']);
+assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-correction','flatten-growth-calculation-order','flatten-growth-base-comparison','flatten-growth-increment-comparison','flatten-growth-base-sum-difference']);
 assert.deepEqual(lesson06.contentSections[0].items.map(x=>x.title),['计算平均数增长率']);
 assert.ok(lesson06.contentSections[0].items[0].formula.includes('r_1-r_2')&&lesson06.contentSections[0].items[0].formula.includes('1+r_2'),'第一步沿用原平均数增长率公式');
 assert.deepEqual(lesson06.contentSections[1].items.map(x=>x.title),['r₁＞r₂｜分母增长率较低，补正分母','r₁＜r₂｜分子增长率较低，补正分子']);
@@ -73,7 +73,7 @@ assert.ok(flattenOrder.tip.points[0].description.includes('凑整')&&flattenOrde
 for(const s of ['10%','25%','33%','百化分']){
  assert.ok(flattenOrder.tip.points[1].description.includes(s),'先补后除应保留用户列举的比例：'+s);
 }
-assert.equal(lesson06.contentSections.length,5,'计算顺序TIP仍属于第三节，第四节基期比较，第五节增量比较');
+assert.equal(lesson06.contentSections.length,6,'第五节仍为增量比较，第六节基期和差');
 
 assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,2]);
 const [beforeDivide,afterDivide]=flattenOrder.items;
@@ -138,7 +138,7 @@ assert.ok(sizeCompareSubtopic.items[1].keyPoint.includes('补正分子'),'r1<r2�
 assert.ok(sizeCompareSubtopic.items[1].formula.includes(String.raw`\frac{r_2-r_1}{1+r_1}`),'不同边修正差额应使用r2-r1以及1+r1');
 assert.ok(sizeCompareSubtopic.items[1].formula.includes('R>1')&&sizeCompareSubtopic.items[1].formula.includes('R<1'),'最终只需判断增量比是否大于1');
 assert.ok(sizeCompareSubtopic.items.every(item=>!item.workedExamples&&!item.example),'用户未给增量大小题的数字例题，不得编造');
-assert.equal(lesson06.contentSections.length,5,'增量大小比较只能是第五节的子知识点');
+assert.equal(lesson06.contentSections[4].subtopics.length,1,'增量大小比较仍应是第五节的子知识点，不另建节');
 for(const [A,B,r1,r2] of [[150,100,.3,.1],[130,100,.15,.25],[140,100,.2,.29]]){
   const growthA=A*r1/(1+r1),growthB=B*r2/(1+r2);
   if(r1>r2){assert.ok(growthA>growthB,'同边正增长大大则大');continue;}
@@ -173,6 +173,27 @@ const deltaA=41.96*.1877/(1+.1877),deltaB=28.63*.0991/(1+.0991);
 const ratioViaFlatten=((41.96/28.63)/(1+(.1877-.0991)/(1+.0991)))*(.1877/.0991);
 assert.ok(Math.abs(deltaA/deltaB-ratioViaFlatten)<1e-12,'拉平后基期比乘增速比须等于原增长量之比');
 assert.ok(Math.abs(deltaA/deltaB-2.57)<.01,'较高精度算得增长量比约2.57');
+const baseSumDifferenceSection=lesson06.contentSections[5];
+assert.equal(baseSumDifferenceSection.id,'flatten-growth-base-sum-difference');
+assert.equal(baseSumDifferenceSection.title,'基期和差');
+assert.ok(baseSumDifferenceSection.description.includes('现期量A或B'),'基期和差直接补正现期量，不能当成现期比');
+assert.deepEqual(baseSumDifferenceSection.items.map(x=>x.title),['r₁＞r₂｜补正B，再计算基期差','r₂＞r₁｜补正A，再计算基期差']);
+const highR1=baseSumDifferenceSection.items[0],highR2=baseSumDifferenceSection.items[1];
+assert.ok(highR1.formula.includes(String.raw`\frac{A-B\left(1+\dfrac{r_1-r_2}{1+r_2}\right)}{1+r_1}`),'r1>r2时须补正B并统一除以1+r1');
+assert.ok(highR2.formula.includes(String.raw`\frac{A\left(1+\dfrac{r_2-r_1}{1+r_1}\right)-B}{1+r_2}`),'r2>r1时须补正A并统一除以1+r2');
+assert.ok(highR1.keyPoint.includes('补正B本身')&&highR2.keyPoint.includes('补正A本身'),'两个方向都直接补正低增速现期量');
+assert.ok(baseSumDifferenceSection.tip.points[0].description.includes('加法'),'题型涉及基期和，应说明沿用同一补正顺序');
+assert.ok(baseSumDifferenceSection.items.every(x=>!x.workedExamples&&!x.example),'用户没有提供数值例题，不得编造');
+for(const [A,B,r1,r2] of [[280,160,.3,.1],[280,160,.06,.23],[160,280,.18,.05]]){
+ const baseline=A/(1+r1)-B/(1+r2);
+ const fixed=r1>r2?(A-B*(1+(r1-r2)/(1+r2)))/(1+r1):
+  (A*(1+(r2-r1)/(1+r1))-B)/(1+r2);
+ assert.ok(Math.abs(baseline-fixed)<1e-12,'两个增速大小情形的基期差拉平公式应精确等价');
+ const sum=A/(1+r1)+B/(1+r2);
+ const fixedSum=r1>r2?(A+B*(1+(r1-r2)/(1+r2)))/(1+r1):
+  (A*(1+(r2-r1)/(1+r1))+B)/(1+r2);
+ assert.ok(Math.abs(sum-fixedSum)<1e-12,'基期求和只改变统一分子里的加减号');
+}
 const lesson05=courseTopics.find(t=>t.id==='data-topic-course-05-growth-decomposition');
 assert.ok(lesson05,'第5课稳定知识ID必须保留');
 assert.equal(lesson05.title,'第5课 · 增速的累积与拆分');

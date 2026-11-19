@@ -744,8 +744,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   await page.locator('[data-knowledge-topic="data-topic-course-06-flatten-growth"]').click();
   assert.deepEqual(await page.locator('.kb-structured-head h3').allInnerTexts(),[
-    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除','基期比较','增量比较'
-  ],'第6课保留原有四节并在第五节新增增量比较');
+    '适用场景与第一步｜平均数增长率','第二步｜给增长率较低的一方补正','计算顺序｜先除后补 / 先补后除','基期比较','增量比较','基期和差'
+  ],'第6课保留原有五节并在第六节新增基期和差');
   const orderSection=page.locator('#kb-structured-flatten-growth-calculation-order');
   assert.equal(await orderSection.locator('.kb-flowchart').count(),1,'第6课的计算顺序流程图必须显示');
   assert.deepEqual(await orderSection.locator('.kb-flow-branch .kb-flow-result strong').allInnerTexts(),['先除后补','先补后除']);
@@ -758,7 +758,7 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await orderSection.locator('.kb-structured-tip li').count(),2,'TIP有两条判断依据');
   assert.equal(await orderSection.locator('.kb-structured-tip').evaluate(el=>getComputedStyle(el).position),'static','第6课TIP不应继承左侧导航栏的吸顶样式');
   // Sticky subsection headings are scoped to their section, unlike the TIP and intro.
-  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),5,'第6课五节均有独立的吸顶标题');
+  assert.equal(await page.locator('.kb-structured-group > .kb-structured-head').count(),6,'第6课六节均有独立的吸顶标题');
   assert.equal(await page.locator('.kb-structured-head').first().evaluate(el=>getComputedStyle(el).position),'sticky','编号+小节标题应吸顶');
   assert.equal(await page.locator('.kb-structured-intro').first().evaluate(el=>getComputedStyle(el).position),'static','说明文字应随正文滚动');
   const correctionSection=page.locator('#kb-structured-flatten-growth-correction');
@@ -814,6 +814,16 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.match(await directExample.innerText(),/最接近B/);
   assert.ok(await directExample.locator('[data-da-tex]').count()>=1,'新增份数法例题必须正确渲染公式');
   assert.equal(await growthComparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第五节小节标题沿用吸顶');
+
+  const baseSumDiffSection=page.locator('#kb-structured-flatten-growth-base-sum-difference');
+  assert.equal(await baseSumDiffSection.count(),1,'第六节基期和差应显示');
+  assert.equal(await baseSumDiffSection.locator('.kb-structured-head h3').innerText(),'基期和差');
+  assert.deepEqual(await baseSumDiffSection.locator('.kb-structured-item h4').allInnerTexts(),['r₁＞r₂｜补正B，再计算基期差','r₂＞r₁｜补正A，再计算基期差']);
+  assert.ok(await baseSumDiffSection.locator('.kb-structured-formula [data-da-tex]').count()>=2,'两组基期差公式需正确排版');
+  assert.match(await baseSumDiffSection.innerText(),/补正B本身/);
+  assert.match(await baseSumDiffSection.innerText(),/补正A本身/);
+  assert.equal(await baseSumDiffSection.locator('.kb-structured-worked-example').count(),0,'第六节不编造例题');
+  assert.equal(await baseSumDiffSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第六节标题吸顶');
 
   // Scanned trend choices should remain visible, and selecting the A–D button still works.
   await page.locator('#tabDataPractice').click();
