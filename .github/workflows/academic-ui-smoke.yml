@@ -4,7 +4,7 @@ on:
     paths:
       - 'index.html'
       - 'academic-theme.css'
-      - 'tests/smoke.cjs'
+      - 'tests/academic-ui-browser.cjs'
       - '.github/workflows/academic-ui-smoke.yml'
   workflow_dispatch:
 jobs:
@@ -18,8 +18,8 @@ jobs:
           node-version: '22'
       - name: Install Playwright driver
         run: npm install --no-save --no-package-lock playwright@1.58.2
-      - name: Run smoke tests against this branch
+      - name: Run focused Academic Edition browser checks
         run: |
           python3 -m http.server 8000 --bind 127.0.0.1 >/tmp/exam-browser.log 2>&1 &
           sleep 2
-          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/smoke.cjs
+          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/academic-ui-browser.cjs
