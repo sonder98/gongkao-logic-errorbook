@@ -153,18 +153,18 @@ button,a{-webkit-tap-highlight-color:transparent}
 <nav class="site-tabs" role="tablist" aria-label="选择学习模块与学习模式">
  <div class="module-group" aria-label="论证逻辑">
   <strong class="module-label">论证逻辑</strong>
-  <button type="button" class="site-tab" id="tabKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
-  <button type="button" class="site-tab" id="tabPractice" role="tab" aria-selected="true" aria-controls="practiceView">✍️ 错题练习</button>
+  <button type="button" class="site-tab" id="tabKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">知识</button>
+  <button type="button" class="site-tab" id="tabPractice" role="tab" aria-selected="true" aria-controls="practiceView">练习</button>
  </div>
  <div class="module-group" aria-label="形式逻辑">
   <strong class="module-label">形式逻辑</strong>
-  <button type="button" class="site-tab" id="tabFormalKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
-  <button type="button" class="site-tab" id="tabFormalPractice" role="tab" aria-selected="false" aria-controls="practiceView">✍️ 错题练习</button>
+  <button type="button" class="site-tab" id="tabFormalKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">知识</button>
+  <button type="button" class="site-tab" id="tabFormalPractice" role="tab" aria-selected="false" aria-controls="practiceView">练习</button>
  </div>
  <div class="module-group" aria-label="资料分析">
   <strong class="module-label">资料分析</strong>
-  <button type="button" class="site-tab" id="tabDataKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">📖 知识体系</button>
-  <button type="button" class="site-tab" id="tabDataPractice" role="tab" aria-selected="false" aria-controls="practiceView">✍️ 错题练习</button>
+  <button type="button" class="site-tab" id="tabDataKnowledge" role="tab" aria-selected="false" aria-controls="knowledgeView">知识</button>
+  <button type="button" class="site-tab" id="tabDataPractice" role="tab" aria-selected="false" aria-controls="practiceView">练习</button>
  </div>
 </nav>
 <div class="shell" id="practiceView" role="tabpanel" aria-labelledby="tabPractice"><aside><section class="auth-panel" id="authPanel" aria-busy="false">
@@ -785,10 +785,25 @@ function updateViewHash(){
  const prefix=currentModule==='formal'?'formal/':currentModule==='data'?'data/':'';
  history.replaceState(null,'','#'+prefix+currentView+(id?'/'+encodeURIComponent(id):''));
 }
+// Desktop: live subject selectors live inside the left study library.
+ // Mobile: keep the same selectors visible in the top horizontal course bar.
+function academicPlaceTabs(){
+ const tabs=document.querySelector('.site-tabs');
+ if(!tabs)return;
+ if(window.matchMedia('(min-width:801px)').matches){
+  const host=$(currentView==='knowledge'?'knowledgeView':'practiceView').querySelector('aside');
+  if(host&&tabs.parentElement!==host)host.prepend(tabs);
+ }else{
+  const host=$('practiceView');
+  if(tabs.nextElementSibling!==host||tabs.parentElement!==document.body)document.body.insertBefore(tabs,host);
+ }
+}
+window.addEventListener('resize',academicPlaceTabs);
 function switchView(view,updateHash=true){
  currentView=view==='knowledge'?'knowledge':'practice';
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
+ academicPlaceTabs();
  const selected=currentModule==='formal'?'Formal':currentModule==='data'?'Data':'';
  for(const key of ['Knowledge','Practice','FormalKnowledge','FormalPractice','DataKnowledge','DataPractice']){
   $('tab'+key).setAttribute('aria-selected',String(key===selected+(currentView==='knowledge'?'Knowledge':'Practice')));
@@ -1168,6 +1183,7 @@ $('reset').onclick=async()=>{
 };
 document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
+ academicPlaceTabs();
  const res=await fetch('questions.json',{cache:'no-cache'});
  if(!res.ok)throw new Error('题库请求失败：HTTP '+res.status);
  const data=await res.json();
