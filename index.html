@@ -790,12 +790,17 @@ function updateViewHash(){
 function academicPlaceTabs(){
  const tabs=document.querySelector('.site-tabs');
  if(!tabs)return;
+ const auth=$('authPanel');
+ const practice=$('practiceView');
  if(window.matchMedia('(min-width:801px)').matches){
   const host=$(currentView==='knowledge'?'knowledgeView':'practiceView').querySelector('aside');
   if(host&&tabs.parentElement!==host)host.prepend(tabs);
+  const practiceSidebar=practice.querySelector('aside');
+  if(auth.parentElement!==practiceSidebar)practiceSidebar.append(auth);
  }else{
-  const host=$('practiceView');
-  if(tabs.nextElementSibling!==host||tabs.parentElement!==document.body)document.body.insertBefore(tabs,host);
+  if(tabs.nextElementSibling!==practice||tabs.parentElement!==document.body)document.body.insertBefore(tabs,practice);
+  // Keep question reading immediately after the mobile catalog; put account management below the exercise.
+  if(auth.parentElement!==practice)practice.append(auth);
  }
 }
 window.addEventListener('resize',academicPlaceTabs);
