@@ -272,4 +272,15 @@ header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-heig
 #card,#knowledgeCard{scroll-margin-top:94px}
 .kb-structured-group,.kb-article-section,.kb-structured-subtopic,.kb-footer{scroll-margin-top:108px}
 @media(max-width:800px){#card,#knowledgeCard{scroll-margin-top:78px}.kb-structured-group,.kb-article-section,.kb-structured-subtopic,.kb-footer{scroll-margin-top:79px}}
+/* Desktop subject switcher belongs to the study-library sidebar, as in the accepted DEMO. */
+@media(min-width:801px){
+ .shell>aside .site-tabs{display:flex!important;flex-direction:column;align-items:stretch;gap:5px!important;margin:0 0 26px!important;padding:4px 0 25px!important;min-height:0;border-bottom:1px solid var(--line);overflow:visible;width:100%}
+ .shell>aside .site-tabs::before{content:'STUDY LIBRARY';display:block;font-size:10px;font-weight:850;letter-spacing:2.2px;color:#9aa69b;margin:0 0 11px;padding-left:4px}
+ .shell>aside .module-group{width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:2px;padding:5px 7px;border-color:transparent;background:transparent;border-radius:8px}
+ .shell>aside .module-group:has(.site-tab[aria-selected="true"]){background:#e8efe9;border-color:#dbe7df}
+ .shell>aside .module-group .module-label{min-width:0;padding:0 4px;font-size:13px;letter-spacing:.1px;color:#52685c;overflow:hidden;text-overflow:ellipsis}
+ .shell>aside .module-group:has(.site-tab[aria-selected="true"]) .module-label{color:#244c39}
+ .shell>aside .module-group .site-tab{display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:33px;padding:6px 5px;font-size:10px;font-weight:750}
+ .shell>aside .module-group .site-tab[aria-selected="true"]{background:var(--academic-green);color:white}
+}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
