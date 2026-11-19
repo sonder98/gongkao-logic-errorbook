@@ -702,8 +702,16 @@
               "items": [
                 {
                   "title": "方法一｜分别计算增长量",
-                  "description": "当增长率较小，或接近百化分常用比例时，沿用已经学习的「化除为乘」或「份数法」，分别计算两个增长量，再直接比较大小。",
-                  "formula": "\\[\n\\begin{aligned}\n\\Delta A&=\\frac{A\\,r_1}{1+r_1}\\\\\n\\Delta B&=\\frac{B\\,r_2}{1+r_2}\n\\end{aligned}\n\\]"
+                  "description": "增长率较小时沿用「化除为乘」；增长率较大但接近常用百化分比例时，优先用「份数法」分别算出增长量，再直接比较。",
+                  "formula": "\\[\n\\begin{aligned}\n\\Delta A&=\\frac{A\\,r_1}{1+r_1}\\\\\n\\Delta B&=\\frac{B\\,r_2}{1+r_2}\n\\end{aligned}\n\\]",
+                  "workedExamples": [
+                    {
+                      "title": "例题｜教育支出同比增量约为医疗卫生的多少倍",
+                      "description": "2016年该市本级主要预算支出中，教育支出6.03亿元，同比增长51.7%；医疗卫生支出2.28亿元，同比增长14.4%。问教育支出同比增量约是医疗卫生的多少倍？选项：A. 4倍；B. 7倍；C. 10倍；D. 14倍。",
+                      "formula": "两项增长率都接近常用百化分，优先用份数法直接求增长量。\n\\[\n\\begin{aligned}\n51.7\\%&\\approx50\\%=\\frac12\\\\\n14.4\\%&\\approx14.3\\%=\\frac17\n\\end{aligned}\n\\]\n按份数法，增长率接近 \\(1/n\\) 时，增长量约等于现期量除以 \\(n+1\\)：\n\\[\n\\begin{aligned}\n\\Delta_{\\text{教育}}\n&\\approx\\frac{6.03}{3}\\approx2\\\\[6pt]\n\\Delta_{\\text{医疗卫生}}\n&\\approx\\frac{2.28}{8}\\approx0.28\n\\end{aligned}\n\\]\n\\[\n\\frac{\\Delta_{\\text{教育}}}{\\Delta_{\\text{医疗卫生}}}\n\\approx\\frac{2}{0.28}\\approx7.1\n\\]\n最接近B（7倍）。",
+                      "note": "增长率较大、又接近常用百化分比例时，分别用份数法求增长量，往往比拆成基期比再补正更容易心算。"
+                    }
+                  ]
                 },
                 {
                   "title": "方法二｜基期比 × 增长率之比",

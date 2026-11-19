@@ -98,7 +98,7 @@ assert.ok(lesson6ExampleFirst[0].formula.includes('7358')&&lesson6ExampleFirst[0
 assert.ok(lesson6ExampleSecond[0].formula.includes('1027')&&lesson6ExampleSecond[0].formula.includes('7475')&&lesson6ExampleSecond[0].formula.includes('7500')&&lesson6ExampleSecond[0].formula.includes('13.7')&&lesson6ExampleSecond[0].formula.includes('1+5'),'第2例必须先除现期比再补分母');
 assert.ok(!lesson6ExampleSecond[0].formula.includes('13.3'),'1027/7500应约为13.7%');
 const allLesson6Examples=lesson06.contentSections.flatMap(g=>(g.items||[]).flatMap(i=>[...(i.workedExamples||[]),...(i.subitems||[]).flatMap(s=>s.workedExamples||[])]));
-assert.equal(allLesson6Examples.length,3,'原有两道教材例题及第五节新例题都属于教材，不新增习题');
+assert.equal(allLesson6Examples.length,4,'原有两道例题、第五节方法一与方法二各一例均属于教材，不新增习题');
 assert.ok(Math.abs((7358/1.109)/(3909/1.167)-2)<.03,'第一例基期比约2');
 assert.ok(Math.abs((1027/1.293)/(7475/1.237)-.13)<.003,'第二例基期比约13%');
 assert.ok(Math.abs(1027/7500*100-13.7)<.1,'第二例乘数近似可保留小数精度');
@@ -128,12 +128,24 @@ assert.deepEqual(incrementComparisonSection.items.map(x=>x.title),['方法一｜
 assert.ok(incrementComparisonSection.items[0].description.includes('化除为乘')&&incrementComparisonSection.items[0].description.includes('份数法'),'直接速算应复用已有知识');
 assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\frac{x}{y}`)&&incrementComparisonSection.items[1].formula.includes(String.raw`\frac{r_1}{r_2}`),'增量比必须拆为基期比乘增长率之比');
 assert.ok(incrementComparisonSection.items[1].formula.includes(String.raw`\dfrac{r_1-r_2}{1+r_2}`),'基期比使用此前的分母拉平补正');
-assert.equal(incrementComparisonSection.items[0].workedExamples,undefined,'不为方法一凭空编造例题');
+assert.equal(incrementComparisonSection.items[0].workedExamples?.length,1,'方法一应收录用户提供的预算支出份数法例题');
+const budgetExample=incrementComparisonSection.items[0].workedExamples?.[0];
+assert.ok(budgetExample&&budgetExample.title.includes('教育支出同比增量'),'预算支出例题必须归入方法一');
+assert.ok(budgetExample.description.includes('6.03亿元')&&budgetExample.description.includes('2.28亿元'),'教材例题必须有原题相关金额与单位');
+assert.ok(budgetExample.description.includes('51.7%')&&budgetExample.description.includes('14.4%'),'教材例题必须保留原题两项增长率');
+for(const s of ['A. 4倍','B. 7倍','C. 10倍','D. 14倍'])assert.ok(budgetExample.description.includes(s),'教材例题保留原选项：'+s);
+for(const s of [String.raw`\frac12`,String.raw`\frac17`,String.raw`\frac{6.03}{3}`,String.raw`\frac{2.28}{8}`,String.raw`\frac{2}{0.28}`])
+ assert.ok(budgetExample.formula.includes(s),'教材例题必须沿用用户份数法顺序：'+s);
+assert.ok(budgetExample.formula.includes('7.1')&&budgetExample.formula.includes('最接近B'),'份数法求比值应选B');
+assert.ok(budgetExample.note.includes('增长率较大')&&budgetExample.note.includes('百化分'),'保留例题强调的大增速接近百化分适用条件');
+assert.ok(incrementComparisonSection.items[0].description.includes('化除为乘')&&incrementComparisonSection.items[0].description.includes('份数法'),'方法一兼顾小增速化除为乘与较大增速份数法');
+const educationGrowth=6.03*.517/(1+.517),medicalGrowth=2.28*.144/(1+.144);
+assert.ok(Math.abs(educationGrowth/medicalGrowth-7.16)<.02,'原题实际增长量倍数约7.16，符合B选项');
 const incrementExample=incrementComparisonSection.items[1].workedExamples?.[0];
 assert.ok(incrementExample,'方法二必须有用户给出的真实教材例题');
 for(const s of ['41.96','28.63','18.77','9.91','1.5','2.75','1.47','1.89','8.1','2.57'])
  assert.ok(incrementExample.formula.includes(s),'教材例题数值缺失：'+s);
-assert.equal(lesson06.questionIds.length,4,'本次只增加知识体系，不得新加正式习题');
+assert.equal(lesson06.questionIds.length,4,'新增教育支出题作为教材例题，不得新增正式习题关联');
 const deltaA=41.96*.1877/(1+.1877),deltaB=28.63*.0991/(1+.0991);
 const ratioViaFlatten=((41.96/28.63)/(1+(.1877-.0991)/(1+.0991)))*(.1877/.0991);
 assert.ok(Math.abs(deltaA/deltaB-ratioViaFlatten)<1e-12,'拉平后基期比乘增速比须等于原增长量之比');

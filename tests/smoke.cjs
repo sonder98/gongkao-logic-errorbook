@@ -798,9 +798,16 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await growthComparisonSection.count(),1,'第五节增量比较须在知识页面展示');
   assert.equal(await growthComparisonSection.locator('.kb-structured-head h3').innerText(),'增量比较');
   assert.deepEqual(await growthComparisonSection.locator('.kb-structured-item h4').allInnerTexts(),['方法一｜分别计算增长量','方法二｜基期比 × 增长率之比']);
-  assert.equal(await growthComparisonSection.locator('.kb-structured-worked-example').count(),1,'第五节只收录用户提供的一道教材例题');
-  assert.ok(await growthComparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=3,'两种方法及例题数学公式须渲染');
+  assert.equal(await growthComparisonSection.locator('.kb-structured-worked-example').count(),2,'第五节方法一、方法二各一用户提供的教材例题');
+  assert.ok(await growthComparisonSection.locator('.kb-structured-formula [data-da-tex]').count()>=4,'两种方法及各自例题的数学公式须渲染');
   assert.match(await growthComparisonSection.locator('.kb-structured-worked-example').innerText(),/41.96/);
+  const directExample=growthComparisonSection.locator('.kb-structured-item').first().locator('.kb-structured-worked-example');
+  assert.equal(await directExample.count(),1,'新增预算支出例题必须在方法一下面');
+  assert.match(await directExample.innerText(),/教育支出同比增量/);
+  assert.match(await directExample.innerText(),/6.03/);
+  assert.match(await directExample.innerText(),/2.28/);
+  assert.match(await directExample.innerText(),/最接近B/);
+  assert.ok(await directExample.locator('[data-da-tex]').count()>=1,'新增份数法例题必须正确渲染公式');
   assert.equal(await growthComparisonSection.locator('.kb-structured-head').evaluate(el=>getComputedStyle(el).position),'sticky','第五节小节标题沿用吸顶');
 
   // Scanned trend choices should remain visible, and selecting the A–D button still works.
