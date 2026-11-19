@@ -27,6 +27,11 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   assert.equal(await page.locator('#tabPractice').getAttribute('aria-selected'),'true');
 
   assert.equal(await page.title(), 'Exam');
+  assert.equal(await page.locator('header.academic-topbar .academic-brand-name').innerText(),'EXAM.');
+  assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#academicKnowledgeMode').getAttribute('aria-pressed'),'false');
+  const academicPaper=await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor);
+  assert.equal(academicPaper,'rgb(246, 245, 241)','Approved academic background');
   const expectedQuestions = Number((await page.locator('#navCount').innerText()).split('/')[1].trim().split(' ')[0]);
   assert.ok(expectedQuestions >= 8, 'Question count must be at least eight');
   assert.equal(await page.locator('.nav-item').count(), expectedQuestions);
@@ -103,6 +108,16 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
 
   // Knowledge tab: searchable navigation, structured notes, and both-way links.
   await page.locator('#tabKnowledge').click();
+  assert.equal(await page.locator('#academicKnowledgeMode').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'false');
+  assert.equal(await page.locator('#academicReadingRail').count(),1);
+  assert.equal(await page.locator('#knowledgeCard .academic-eyebrow').count(),1);
+  assert.match(await page.locator('#knowledgeCard .academic-eyebrow').innerText(),/ACADEMIC NOTES/);
+  await page.setViewportSize({width:1500,height:950});
+  assert.equal(await page.locator('#academicReadingRail').isVisible(),true);
+  assert.ok((await page.locator('#academicReadingRail .academic-rail-link').count())>0);
+  assert.match(await page.locator('#academicReadingRail .academic-reading-stats').innerText(),/当前知识点/);
+  await page.setViewportSize({width:1280,height:900});
   assert.equal(await page.locator('#knowledgeView').isVisible(),true);
   assert.equal(await page.locator('#practiceView').isVisible(),false);
   const knowledgeResponse=await page.request.get(new URL('knowledge.json',url).href);
@@ -482,7 +497,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#next').click();
   await page.waitForFunction(()=>{
     const top=document.getElementById('card').getBoundingClientRect().top;
-    return top>=0&&top<=35;
+    const header=document.querySelector('header.academic-topbar').getBoundingClientRect().height;
+    return top>=header+3&&top<=header+30;
   });
   const secondQuestionId=await page.locator('.nav-item.active').getAttribute('data-id');
   assert.notEqual(secondQuestionId,firstQuestionId);
@@ -490,7 +506,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#prev').click();
   await page.waitForFunction(()=>{
     const top=document.getElementById('card').getBoundingClientRect().top;
-    return top>=0&&top<=35;
+    const header=document.querySelector('header.academic-topbar').getBoundingClientRect().height;
+    return top>=header+3&&top<=header+30;
   });
   assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),firstQuestionId);
   const mobileLayout = await page.evaluate(() => ({
@@ -517,7 +534,8 @@ const browserChannel = process.env.BROWSER_CHANNEL || 'chrome';
   await page.locator('#next').click();
   await page.waitForFunction(()=>{
     const top=document.getElementById('card').getBoundingClientRect().top;
-    return top>=0&&top<=35;
+    const header=document.querySelector('header.academic-topbar').getBoundingClientRect().height;
+    return top>=header+3&&top<=header+30;
   });
   assert.equal(await page.locator('.nav-item.active').getAttribute('data-id'),secondQuestionId);
   const narrowMobileLayout = await page.evaluate(() => ({
