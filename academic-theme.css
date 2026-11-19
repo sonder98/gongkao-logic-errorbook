@@ -93,7 +93,7 @@ header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-heig
 .kb-structured-jump button:hover,.kb-structured-jump button:focus-visible{border-color:#749e89;background:#f0f6f0}
 .kb-structured{margin-top:18px}
 .kb-structured-group{padding-top:32px;margin-top:26px;border-top:1px solid #e8eae2;scroll-margin-top:112px}
-.kb-structured-head{position:relative;top:auto;z-index:auto;padding:0 0 13px;margin:0 0 11px;background:transparent;border-bottom:0;border-radius:0;gap:14px}
+.kb-structured-head{position:sticky;top:calc(74px + env(safe-area-inset-top,0px));z-index:4;padding:13px 0;margin:0 0 11px;background:var(--paper);border-bottom:1px solid var(--line);border-radius:0;gap:14px}
 .kb-structured-index{font:600 16px Georgia,serif;color:var(--academic-rust);background:none;padding:0}
 .kb-structured-head h3{font:650 26px/1.5 var(--academic-serif);color:#273a31;margin:0;letter-spacing:.4px}
 .kb-structured-intro{font-size:14px;line-height:2.05;color:#6a786e;margin:0 0 21px}
@@ -242,6 +242,7 @@ header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-heig
  .kb-summary{font-size:13px;line-height:2;padding:45px 20px 18px 23px}
  .kb-summary::before{left:23px}
  .kb-structured-head h3{font-size:23px}
+ .kb-structured-head{top:calc(65px + env(safe-area-inset-top,0px))}
  .kb-structured-jump{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
  .kb-structured-jump button{min-height:96px;padding:36px 9px 12px;font-size:13px}
  .kb-structured-item{padding:18px 16px}
