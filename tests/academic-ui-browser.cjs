@@ -77,6 +77,30 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
 
   await page.locator('#academicPracticeMode').click();
   await page.locator('.choice').first().waitFor({state:'visible'});
+  // Regression: the flex sidebar used to shrink the catalog to one row when
+  // Data Analysis presented many multi-line category filters.
+  for(const moduleTab of ['#tabPractice','#tabFormalPractice','#tabDataPractice']){
+   await page.locator(moduleTab).click();
+   await page.locator('#questionList .nav-item').first().waitFor({state:'visible'});
+   const catalog=await page.locator('#questionList').evaluate(el=>{
+    const item=el.querySelector('.nav-item');
+    return {height:el.getBoundingClientRect().height,
+      rowHeight:item.getBoundingClientRect().height,
+      flexShrink:getComputedStyle(el).flexShrink,
+      scrollable:el.scrollHeight>el.clientHeight,
+      count:el.querySelectorAll('.nav-item').length,
+      asideScroll:getComputedStyle(el.closest('aside')).overflowY};
+   });
+   assert.ok(catalog.height>=280,'Question catalog collapsed in '+moduleTab+': '+JSON.stringify(catalog));
+   assert.ok(catalog.height>=catalog.rowHeight*5,'At least five question rows should fit in '+moduleTab);
+   assert.equal(catalog.flexShrink,'0','Catalog must not shrink below allocated height');
+   assert.equal(catalog.asideScroll,'auto','Sidebar itself must stay scrollable when filters grow');
+   if(catalog.count>=10)assert.equal(catalog.scrollable,true,'Catalog should scroll independently');
+  }
+  await page.locator('#tabDataPractice').click();
+  await page.locator('#questionList').evaluate(el=>{el.scrollTop=el.scrollHeight});
+  assert.ok(await page.locator('#questionList').evaluate(el=>el.scrollTop>0),'Catalog can scroll to its end');
+
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   await page.locator('#show').click();
   assert.equal(await page.locator('.result').count(),1,'Explanation still opens');
@@ -85,6 +109,8 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.setViewportSize({width:390,height:844});
   await page.waitForFunction(()=>document.querySelector('.site-tabs')?.parentElement===document.body);
   assert.equal(await page.locator('#practiceView > #authPanel').count(),1);
+  const mobileCatalog=await page.locator('#questionList').evaluate(el=>el.getBoundingClientRect().height);
+  assert.ok(mobileCatalog>=150&&mobileCatalog<=165,'Mobile catalog keeps its compact independent list');
   const navFont=await page.locator('#practiceView .nav-title').first()
     .evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
   assert.ok(navFont>=14,'Mobile question catalog title must remain readable');
