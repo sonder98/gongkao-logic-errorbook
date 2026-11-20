@@ -701,5 +701,31 @@
       "quick": "\\[\n\\begin{aligned}\n245\\times(1+10\\%)&\\approx270\\\\[5pt]\n\\frac{700}{270}&\\approx2.6\n\\end{aligned}\n\\]\n基期倍数约为2.6，选B。",
       "trap": ""
     }
+  },
+  {
+    "id": "data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple",
+    "materialId": "data-material-2021-s-city-retail-sales-by-sector",
+    "title": "批发零售业同比增量约为住宿餐饮业的多少倍",
+    "category": "拉平增长率",
+    "type": "增长量比较",
+    "difficulty": "未知",
+    "stem": "根据2021年上半年S市社会消费品零售总额及分行业零售额情况回答。",
+    "ask": "2021年上半年，S市批发和零售业零售额同比增量约是住宿和餐饮业的多少倍？",
+    "options": [
+      "3",
+      "5",
+      "7",
+      "9"
+    ],
+    "answer": "C",
+    "analysis": {
+      "identify": "增量倍数比较。28.4%不方便直接凑成百化分，采用已学的「基期比×增速比」方法：先估现期倍数和增长率倍数，再给增长率较低的分子补正。",
+      "locate": "批发和零售业：现期8287.13亿元，同比增长28.4%；住宿和餐饮业：现期761.31亿元，同比增长54.0%。",
+      "formulaTitle": "步骤一 · 先粗估两个倍数",
+      "formula": "现期倍数：\n\\[\n\\frac{8287}{761}\\approx11\n\\]\n增长率倍数：\n\\[\n\\frac{28.4\\%}{54\\%}\\approx0.5\n\\]\n先相乘，暂估增长量之比：\n\\[\n11\\times0.5=5.5\n\\]",
+      "quickTitle": "步骤二 · 补正分子，得到增长量之比",
+      "quick": "批发和零售业增速较低，所以给基期比的分子补正：\n\\[\n\\begin{aligned}\nr_{\\text{补}}\n&=\\frac{54\\%-28.4\\%}{1+28.4\\%}\\\\\n&\\approx\\frac{54\\%-28\\%}{1.28}\\\\\n&=\\frac{26\\%}{1.28}\\\\\n&\\approx20\\%\n\\end{aligned}\n\\]\n沿用前面的粗估结果：\n\\[\n\\begin{aligned}\n\\frac{\\text{批发零售业同比增量}}{\\text{住宿餐饮业同比增量}}\n&\\approx 5.5\\times(1+20\\%)\\\\\n&=5.5\\times1.2\\\\\n&=6.6\n\\end{aligned}\n\\]\n与选项比较，最接近7倍，选C。",
+      "trap": ""
+    }
   }
 ]
