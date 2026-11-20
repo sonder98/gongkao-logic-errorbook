@@ -82,6 +82,10 @@
    if(element.classList.contains('site-tabs')||protectedIds.has(element.id))continue;
    box.append(element);
   }
+  // On mobile, the legacy responsive layout may already have moved the auth
+  // panel outside the sidebar: include it in the same expandable settings.
+  const auth=$('authPanel');
+  if(auth&&auth.parentElement!==box)box.append(auth);
   // Practice sidebar contains only the course switcher and small related list.
   settings.append(summary,box);
   main.append(settings);
