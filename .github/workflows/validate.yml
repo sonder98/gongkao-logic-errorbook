@@ -19,4 +19,5 @@ jobs:
           node tests/validate-data-analysis.cjs
           node tests/validate-pwa.cjs
           node tests/validate-academic-ui.cjs
+          node tests/validate-single-scroll.cjs
           node tests/validate-scratch.cjs
