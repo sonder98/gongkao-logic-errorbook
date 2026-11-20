@@ -226,7 +226,8 @@
           "questionIds": [
             "formal-unknown-candy-four-children-two-true",
             "formal-unknown-academic-committee-single-adopted-opinion",
-            "formal-unknown-singing-ranking-one-true"
+            "formal-unknown-singing-ranking-one-true",
+            "formal-unknown-four-training-centers-one-false-conflict"
           ]
         }
       ]
@@ -263,7 +264,8 @@
             "formal-unknown-roommates-provinces-universities",
             "formal-unknown-four-streets-income-rank",
             "formal-unknown-five-students-age-major-groups",
-            "formal-unknown-four-roommates-graduation-choices-disjoint-options"
+            "formal-unknown-four-roommates-graduation-choices-disjoint-options",
+            "formal-unknown-four-villages-awards-income-tiers-casework"
           ]
         },
         {
