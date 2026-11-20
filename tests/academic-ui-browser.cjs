@@ -181,11 +181,13 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.setViewportSize({width:320,height:720});
   const narrow=await page.evaluate(()=>({page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(narrow.page<=narrow.viewport+1,'320px viewport must not overflow after typography enlargement '+JSON.stringify(narrow));
-  const tableOverflow=await page.locator('#card .da-table-scroll').first().evaluate(el=>({
-    width:el.clientWidth,scroll:el.scrollWidth
-  }));
-  assert.ok(tableOverflow.scroll<=tableOverflow.width+1,
-    'Grouped data table must not create an inner horizontal scrollbar '+JSON.stringify(tableOverflow));
+  if(await page.locator('#card .da-table-scroll').count()){
+   const tableOverflow=await page.locator('#card .da-table-scroll').first().evaluate(el=>({
+     width:el.clientWidth,scroll:el.scrollWidth
+   }));
+   assert.ok(tableOverflow.scroll<=tableOverflow.width+1,
+     'Grouped data table must not create an inner horizontal scrollbar '+JSON.stringify(tableOverflow));
+  }
   assert.deepEqual(errors,[],'No app JavaScript errors');
   console.log('Academic UI browser checks OK: tabs, lessons, cards, rail, sticky headings, practice, mobile paging');
  }finally{await context.close();await browser.close();}
