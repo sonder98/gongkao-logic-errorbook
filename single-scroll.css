@@ -189,3 +189,11 @@ body.exam-drawer-open{overflow:hidden!important}
  #practiceView #card .ask{font-size:18px;line-height:1.8;margin:18px 0 16px}
  #practiceView #card .choice{font-size:16px;line-height:1.8}
 }
+
+/* Mobile/iPad reading: keep native vertical movement, suppress accidental
+   double-tap / pinch gestures on the question itself where supported.
+   Table and chart interactions remain independently available. */
+@media (pointer:coarse){
+ #practiceView #card .scratch-zone:not(.scratch-active){touch-action:pan-y}
+ #practiceView #card .scratch-zone .choice{touch-action:pan-y}
+}
