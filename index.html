@@ -138,7 +138,7 @@ button,a{-webkit-tap-highlight-color:transparent}
  .site-tab,.btn,.auth-panel button{min-height:44px}
  .nav-item{min-height:44px}
 }
-</style><link rel="stylesheet" href="data-analysis.css"><link rel="stylesheet" href="academic-theme.css"></head><body>
+</style><link rel="stylesheet" href="data-analysis.css"><link rel="stylesheet" href="academic-theme.css"><link rel="stylesheet" href="single-scroll.css"></head><body>
 <header class="academic-topbar">
  <div class="academic-brand" aria-label="Exam 学习系统">
   <div class="academic-brand-mark" aria-hidden="true">E</div>
@@ -215,6 +215,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="data-analysis.js"></script>
 <script src="scratch-overlay.js"></script>
+<script src="single-scroll.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>console.warn('PWA service worker registration failed',error));
@@ -796,16 +797,17 @@ function academicPlaceTabs(){
   const host=$(currentView==='knowledge'?'knowledgeView':'practiceView').querySelector('aside');
   if(host&&tabs.parentElement!==host)host.prepend(tabs);
   const practiceSidebar=practice.querySelector('aside');
-  if(auth.parentElement!==practiceSidebar)practiceSidebar.append(auth);
+  if(!ExamLayout.isInitialized()&&auth.parentElement!==practiceSidebar)practiceSidebar.append(auth);
  }else{
   if(tabs.nextElementSibling!==practice||tabs.parentElement!==document.body)document.body.insertBefore(tabs,practice);
   // Keep question reading immediately after the mobile catalog; put account management below the exercise.
-  if(auth.parentElement!==practice)practice.append(auth);
+  if(!ExamLayout.isInitialized()&&auth.parentElement!==practice)practice.append(auth);
  }
 }
 window.addEventListener('resize',academicPlaceTabs);
 function switchView(view,updateHash=true){
  currentView=view==='knowledge'?'knowledge':'practice';
+ if(currentView==='knowledge')ExamLayout.closeLibrary();
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
  academicPlaceTabs();
@@ -1014,7 +1016,7 @@ if(activeChanged){
 lastNavActive=active;
 const answered=QUESTIONS.filter(q=>record(q.id).submitted).length,correct=QUESTIONS.filter(q=>record(q.id).submitted&&record(q.id).selected===q.answer).length,need=QUESTIONS.filter(q=>record(q.id).review||record(q.id).wrong).length;
 $('stats').innerHTML=`<div><div class="num">${answered}<small> / ${QUESTIONS.length}</small></div><small>已完成</small></div><div><div class="num">${correct}</div><small>答对题数</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
-if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析模块已准备就绪，等待录入第一组真实材料与题目。':'当前模块暂无练习题。'):'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';return}
+if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析模块已准备就绪，等待录入第一组真实材料与题目。':'当前模块暂无练习题。'):'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';ExamLayout.onRender(null,f,QUESTIONS,currentModule);return}
 const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active);
 const analysisExpanded=(r.submitted||r.revealed)&&!collapsedAnalysis.has(q.id);
 const dataMode=currentModule==='data';
@@ -1036,7 +1038,7 @@ const analysisContent=hasPersonalAnalysis?
 const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
-$('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle" aria-label="当前题目序号">${ix+1} / ${f.length}</span><button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
+$('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle" aria-label="当前题目序号">${ix+1} / ${f.length}</span>${dataMode?'<button class="exam-material-jump" type="button" id="examJumpMaterial">↓ 查看资料</button>':''}<button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
 <h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 ${dataMode&&q.optionImage?`<figure class="da-option-image"><img src="${safe(q.optionImage)}" alt="${safe(q.optionImageAlt||'原题图形选项')}" decoding="async" loading="eager"></figure>`:''}
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
@@ -1061,6 +1063,17 @@ if(dataMode){
  if(body)body.scrollTop=previousMaterialScroll;
  const toggle=$('card').querySelector('[data-da-toggle]');
  if(toggle)toggle.onclick=()=>{DataAnalysis.toggleMaterial(q.materialId);render()};
+ $('card').querySelectorAll('[data-da-group]').forEach(button=>button.onclick=()=>{
+   const y=button.getBoundingClientRect().top;
+   DataAnalysis.setTableView(q.materialId,button.dataset.daGroup);
+   render();
+   const active=$('card').querySelector('[data-da-group="'+button.dataset.daGroup+'"]');
+   if(active){
+    const target=active.getBoundingClientRect().top;
+    window.scrollBy({top:target-y,behavior:'auto'});
+   }
+ });
+ if($('examJumpMaterial'))$('examJumpMaterial').onclick=()=>ExamLayout.jumpToMaterial();
  DataAnalysis.renderMath($('card'));
 }
 ExamScratch.mount(q.id,user?.id||'guest');
@@ -1126,6 +1139,7 @@ $('next').onclick=()=>{if(ix<f.length-1)navigatePracticeQuestion(f[ix+1].id)};
  if($('retry'))$('retry').onclick=()=>{collapsedAnalysis.delete(q.id);r.selected='';r.submitted=false;r.revealed=false;save();render()};
  if($('keepLocal'))$('keepLocal').onclick=()=>useLocalConflict(q.id);
  if($('useCloud'))$('useCloud').onclick=()=>useCloudConflict(q.id);
+ ExamLayout.onRender(q,f,QUESTIONS,currentModule);
 }
 function submit(q,r){if(!r.selected)return;collapsedAnalysis.delete(q.id);r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
 $('questionSearch').oninput=e=>{searchTerm=e.target.value;render();if(currentView==='practice')updateViewHash()};
@@ -1186,9 +1200,10 @@ $('reset').onclick=async()=>{
  category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0]?.id||null;render();
  setStatus('已清空「'+moduleName+'」模块的答题记录','good');
 };
-document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
+document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
  academicPlaceTabs();
+ ExamLayout.init();
  const res=await fetch('questions.json',{cache:'no-cache'});
  if(!res.ok)throw new Error('题库请求失败：HTTP '+res.status);
  const data=await res.json();
