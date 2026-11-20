@@ -4,6 +4,9 @@ on:
     paths:
       - 'index.html'
       - 'academic-theme.css'
+      - 'single-scroll.css'
+      - 'single-scroll.js'
+      - 'data-analysis.js'
       - 'tests/academic-ui-browser.cjs'
       - '.github/workflows/academic-ui-smoke.yml'
   workflow_dispatch:

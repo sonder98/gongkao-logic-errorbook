@@ -1,0 +1,135 @@
+/* Exam · Single Scroll Reading, accepted demo, 2026-11-20.
+   One normal page scroll; full question bank scrolls only while drawer is open. */
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+#practiceView.shell{max-width:1780px;grid-template-columns:225px minmax(0,1fr);gap:30px;margin:0 auto 90px;padding:16px clamp(22px,3vw,64px) 70px}
+#practiceView>aside{
+ position:sticky;top:95px;max-height:none;min-height:0;
+ overflow:visible;overscroll-behavior:auto;scrollbar-width:none;
+ border:0;border-right:1px solid var(--line);padding:10px 16px 20px 0;
+}
+#practiceView>aside::-webkit-scrollbar{display:none}
+#practiceView>main{min-width:0}
+#practiceView>main .stats{margin:0 0 24px;background:transparent;border:0;padding:0;gap:22px;box-shadow:none}
+#practiceView>main .stats>div{padding:10px 16px;background:#fafbf8;border:1px solid #e6ebe2;border-radius:5px}
+.exam-page-intro{margin:0 0 20px;padding:2px 0 12px}
+.exam-overline{font-size:11px;letter-spacing:1.8px;font-weight:850;color:#976b4a}
+.exam-page-title{font:750 clamp(23px,2.3vw,30px)/1.5 var(--academic-serif);color:#263f30;margin:7px 0 2px}
+.exam-page-caption{font-size:12px;color:#657669;margin:0}
+.exam-mobile-library{display:none}
+.exam-practice-side{display:grid;gap:0;margin:19px 0 14px}
+.exam-side-heading{display:grid;gap:11px;padding:0 0 15px;margin:0 0 10px;border-bottom:1px solid #e2e9de}
+.exam-side-heading>span{font-size:13px;color:#334c39;font-weight:850}
+.exam-side-selector{width:100%;padding:10px 12px;border:1px solid #d3e0d3;border-radius:5px;background:#fffefa;color:#355741;font-size:13px;font-weight:800;text-align:left}
+.exam-related-heading{font-size:12px;color:#738478;margin:14px 0 8px}
+.exam-related-list{display:grid;gap:5px}
+.exam-related-entry{display:flex;align-items:flex-start;gap:10px;width:100%;padding:11px 8px;border:1px solid transparent;border-radius:5px;text-align:left;background:transparent;color:#506655;line-height:1.6}
+.exam-related-entry:hover{background:#f2f6ef}
+.exam-related-entry.active{background:#eaf1e9;border-color:#d6e4d8;box-shadow:inset 3px 0 0 #376448;color:#224632}
+.exam-related-number{font:700 12px/1.8 Georgia,serif;color:#779680;flex:none}
+.exam-related-title{font-size:13px;font-weight:700;overflow-wrap:anywhere}
+.exam-open-library{display:block;width:100%;text-align:left;padding:13px 12px;border:1px solid #bdd1c0;border-radius:5px;background:#fffefa;color:#2f5b43;font-weight:850;font-size:13px;margin:18px 0 0}
+.exam-open-library:hover{background:#eef4ea}
+.exam-side-hint{font-size:12px;line-height:1.8;color:#697f6d;margin:12px 0}
+#practiceView #card:has(.da-layout){min-height:0;padding:0;border:0;background:transparent;box-shadow:none;border-radius:0}
+#practiceView #card .da-layout{display:grid;grid-template-columns:minmax(0,.96fr) minmax(0,1fr);gap:22px;align-items:start}
+#practiceView #card .da-material-column,#practiceView #card .da-question-column{
+ min-width:0;background:#fffefa;border:1px solid #e4e9e0;border-radius:7px;
+ box-shadow:0 8px 36px rgba(28,48,31,.035);padding:25px clamp(15px,1.7vw,26px) 28px;
+}
+#practiceView #card .da-material{border:0;background:transparent;overflow:visible;border-radius:0}
+#practiceView #card .da-material-header{background:transparent;border:0;border-bottom:1px solid #e5ebe3;padding:0 0 19px;margin:0 0 15px}
+#practiceView #card .da-material-header h3{font-size:22px;color:#244330;line-height:1.55}
+#practiceView #card .da-overline{font-size:12px;color:#896647;letter-spacing:1px}
+#practiceView #card .da-material-header button{border-radius:5px;padding:6px 9px}
+#practiceView #card .da-material-body{max-height:none!important;overflow:visible!important;padding:0}
+#practiceView #card .da-figure{margin:6px 0 16px}
+#practiceView #card .da-figure table{table-layout:fixed;width:100%;min-width:0;border-collapse:collapse;line-height:1.6;font-size:12px}
+#practiceView #card .da-figure th,#practiceView #card .da-figure td{white-space:normal;overflow-wrap:anywhere;padding:9px 7px;vertical-align:middle}
+#practiceView #card .da-figure th{font-size:11px;background:#eef2eb;color:#304b3a}
+#practiceView #card .da-figure td{font-size:12px;color:#34483a}
+#practiceView #card .da-figure tbody tr:nth-child(even) td{background:#fafbf8}
+#practiceView #card .da-table-scroll{max-width:100%;overflow-x:visible!important;overflow-y:visible!important}
+#practiceView #card .da-chart-scroll{max-width:100%;overflow-x:visible}
+#practiceView #card .da-chart-scroll svg{width:100%;min-width:0}
+#practiceView #card .da-table-panes{margin:14px 0 10px}
+#practiceView #card .da-table-view-tabs{display:flex;gap:6px;flex-wrap:wrap;padding:2px 0 15px}
+#practiceView #card .da-table-view-btn{border:1px solid transparent;border-radius:5px;background:transparent;color:#546b55;font-size:12px;font-weight:800;padding:8px 11px}
+#practiceView #card .da-table-view-btn.active{background:#e8f0e8;border-color:#c5d8c6;color:#27533b}
+#practiceView #card .da-table-view-btn:hover{background:#f0f4ef}
+#practiceView #card .da-table-pane-title{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;font-weight:800;color:#385943;margin:8px 0 12px}
+#practiceView #card .da-table-pane-title small{font-size:11px;color:#64796c;font-weight:600}
+#practiceView #card .da-table-pane + .da-table-pane{border-top:1px solid #e8eae2;margin-top:22px;padding-top:18px}
+#practiceView #card .da-figure figcaption{font-size:12px}
+#practiceView #card .da-figure table td:first-child,#practiceView #card .da-figure table th:first-child{font-weight:800}
+#practiceView #card .qtop{margin-top:0}
+#practiceView #card .title{font-size:clamp(26px,2.6vw,36px);line-height:1.5}
+#practiceView #card .stem{font-size:14px}
+#practiceView #card .choice{min-height:50px}
+#practiceView #card .da-question-column .result{font-size:14px}
+#practiceView #card .da-question-column .footer-nav{margin-top:25px}
+.exam-material-jump{display:none}
+.exam-extra-settings{background:#fffefa;border:1px solid #e3e9e1;border-radius:6px;margin:29px 0 10px;overflow:visible}
+.exam-extra-settings>summary{cursor:pointer;padding:17px 19px;font-size:14px;font-weight:800;color:#355641}
+.exam-extra-settings[open]>summary{border-bottom:1px solid #e5e9e1}
+.exam-extra-settings-content{padding:21px;display:grid;gap:12px;max-width:650px}
+.exam-extra-settings-content .aside-title{font-size:14px;margin:8px 0 2px}
+.exam-extra-settings-content .auth-panel{margin:16px 0;order:unset}
+.exam-extra-settings-content .switch{font-size:14px}
+body.exam-drawer-open{overflow:hidden!important}
+.exam-drawer-backdrop{position:fixed;inset:0;background:rgba(29,47,34,.25);z-index:89}
+.exam-drawer-backdrop[hidden],.exam-library-drawer[hidden]{display:none!important}
+.exam-library-drawer{position:fixed;right:0;top:0;bottom:0;width:min(490px,100vw);background:#fffefa;z-index:90;box-shadow:-15px 0 60px rgba(24,40,30,.18);display:flex;flex-direction:column;overflow:hidden}
+.exam-drawer-head{flex:none;padding:26px 30px 15px;border-bottom:1px solid #e4e9e2}
+.exam-drawer-top{display:flex;align-items:flex-start;justify-content:space-between;gap:15px}
+.exam-drawer-title{font:750 27px var(--academic-serif);margin:5px 0;color:#2c4836}
+.exam-drawer-desc{font-size:13px;color:#697b6b;line-height:1.8;margin:8px 0 0}
+.exam-drawer-close{border:1px solid #d9e3db;background:#fffefa;border-radius:5px;color:#456149;font-size:17px;font-weight:750;width:36px;height:36px}
+.exam-drawer-content{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:20px 28px 30px}
+.exam-library-search{position:relative}
+.exam-drawer-content .nav-heading{display:flex;padding:9px 0;margin:0}
+.exam-drawer-content .question-search{height:44px;margin:0 0 12px}
+.exam-drawer-content .filter{margin:9px 0;gap:7px}
+.exam-drawer-content .filter button{padding:7px 10px;font-size:12px}
+.exam-drawer-content .question-list,#examLibraryDrawer #questionList{
+ height:auto!important;min-height:0!important;max-height:none!important;
+ overflow:visible!important;display:flex;flex-direction:column;gap:0;margin:8px 0;padding:0;
+}
+.exam-drawer-content .nav-item{min-height:52px;border:0;border-bottom:1px solid #edf0e9;border-radius:2px;padding:13px 8px}
+.exam-drawer-content .nav-item.active{background:#eaf2e9;border:0;border-left:3px solid #3f6b4b;padding-left:5px}
+.exam-drawer-content .nav-title{font-size:14px;white-space:normal;line-height:1.65;font-weight:650}
+.exam-drawer-content .nav-index{font-size:12px}
+@media(max-width:1300px){
+ #practiceView.shell{grid-template-columns:205px minmax(0,1fr);gap:19px;padding:14px 22px 65px}
+ #practiceView #card .da-layout{gap:14px}
+ #practiceView #card .da-material-column,#practiceView #card .da-question-column{padding:22px 18px}
+}
+@media(max-width:1050px){
+ #practiceView.shell{grid-template-columns:minmax(0,1fr)}
+ #practiceView>aside{display:none}
+ #practiceView .exam-mobile-library{display:inline-flex;align-items:center;border:1px solid #bfd3c2;border-radius:5px;background:#fffefa;color:#325540;padding:10px 13px;margin:0 0 16px;font-size:13px;font-weight:800}
+ #practiceView #card .da-layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media(max-width:800px){
+ #practiceView.shell{padding:12px 11px 42px}
+ #practiceView #card .da-layout{display:flex;flex-direction:column-reverse;gap:16px}
+ #practiceView #card .da-material-column,#practiceView #card .da-question-column{width:100%;padding:20px 18px}
+ #practiceView #card .da-material-body{max-height:none!important}
+ #practiceView #card .title{font-size:27px}
+ #practiceView .stats{gap:6px!important;justify-content:space-between}
+ #practiceView .stats>div{padding:11px 9px!important;min-width:0}
+ #practiceView .stats .num{font-size:22px}
+ #practiceView .exam-page-title{font-size:25px}
+ #practiceView #card .da-figure table th{font-size:11px}
+ #practiceView #card .da-figure table td{font-size:12px}
+ #practiceView #card .da-figure th,#practiceView #card .da-figure td{padding:8px 5px}
+ #practiceView .exam-material-jump{display:inline-flex;border:1px solid #c5d9c5;background:#f2f7ef;color:#2b5640;padding:5px 9px;border-radius:4px;font-size:12px;font-weight:750}
+ .exam-drawer-head{padding:21px 19px 14px}
+ .exam-drawer-content{padding:16px 17px 30px}
+}
+@media(max-width:440px){
+ #practiceView #card .da-material-column,#practiceView #card .da-question-column{padding:17px 13px}
+ #practiceView #card .title{font-size:24px}
+ #practiceView #card .qtop .subtle{margin-left:0}
+ #practiceView #card .da-material-header h3{font-size:18px}
+}

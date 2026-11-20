@@ -9,7 +9,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
  page.on('pageerror',error=>errors.push(error.message));
  try{
   await page.goto(target,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.locator('.nav-item').first().waitFor({state:'visible',timeout:20000});
+  await page.locator('#examRelatedList .exam-related-entry').first().waitFor({state:'visible',timeout:20000});
   assert.equal(await page.locator('header.academic-topbar').isVisible(),true);
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('#practiceView > aside > .site-tabs').count(),1);
@@ -77,29 +77,71 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
 
   await page.locator('#academicPracticeMode').click();
   await page.locator('.choice').first().waitFor({state:'visible'});
-  // Regression: the flex sidebar used to shrink the catalog to one row when
-  // Data Analysis presented many multi-line category filters.
+  assert.equal(await page.locator('#practiceView>aside .site-tabs').count(),1);
+  assert.equal(await page.locator('#examOpenLibrary').isVisible(),true);
+  const scrollModes=await page.evaluate(()=>{
+    const style=sel=>getComputedStyle(document.querySelector(sel));
+    return {
+      aside:style('#practiceView>aside').overflowY,
+      material:style('#card .da-material-body').overflowY,
+      table:document.querySelector('#card .da-table-scroll')?style('#card .da-table-scroll').overflowX:'none',
+      drawerClosed:document.querySelector('#examLibraryDrawer').hidden,
+    };
+  });
+  assert.notEqual(scrollModes.aside,'auto','No constant sidebar scroll');
+  assert.equal(scrollModes.material,'visible','Material should use page scrolling');
+  if(scrollModes.table!=='none')assert.equal(scrollModes.table,'visible','Material tables must not scroll horizontally');
+  assert.equal(scrollModes.drawerClosed,true,'Full catalog is closed by default');
+  await page.locator('#examOpenLibrary').click();
+  assert.equal(await page.locator('#examLibraryDrawer').isVisible(),true);
+  assert.equal(await page.evaluate(()=>document.body.classList.contains('exam-drawer-open')),true);
+  assert.ok(await page.locator('#questionList .nav-item').count()>=20,'Complete module question list should be available');
+  await page.locator('#questionSearch').fill('2019年四个一线城市通勤高峰拥堵程度排序');
+  assert.equal(await page.locator('#questionList .nav-item').count(),1);
+  await page.locator('#questionList .nav-item').click();
+  assert.equal(await page.locator('#examLibraryDrawer').isVisible(),false);
+  assert.equal(await page.evaluate(()=>document.body.classList.contains('exam-drawer-open')),false);
+  assert.match(await page.locator('#card .title').innerText(),/2019年四个一线城市通勤高峰拥堵程度排序/);
+  assert.equal(await page.locator('#card .da-table-scroll').first().evaluate(el=>getComputedStyle(el).overflowX),'visible');
+  await page.locator('#examOpenLibrary').click();
+  await page.locator('#questionSearch').fill('');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('#examLibraryDrawer').isVisible(),false);
+  assert.equal(await page.locator('#examRelatedList .exam-related-entry').count(),2,'Exactly two related questions under the same material');
+  assert.equal(await page.locator('.da-table-view-btn').count(),3,'Two metric tabs plus full data');
+  assert.equal(await page.locator('.da-table-pane').count(),1,'Default shows one coherent group');
+  assert.equal(await page.locator('.da-table-pane tbody tr').count(),19);
+  await page.locator('.da-table-view-btn[data-da-group="all"]').click();
+  assert.equal(await page.locator('.da-table-pane').count(),2);
+  assert.equal(await page.locator('.da-table-pane tbody tr').count(),38,'All 19 cities are preserved in each group');
+  const allHeaders=await page.locator('.da-table-pane th').allTextContents();
+  assert.equal(new Set(allHeaders).size,7,'All seven original table fields remain present');
+  assert.ok(allHeaders.some(x=>x.includes('地铁线路网密度')));
+  await page.locator('.da-table-view-btn[data-da-group="1"]').click();
+  assert.equal(await page.locator('.da-table-pane').count(),1,'Switch back to one grouped table');
+  assert.equal(await page.locator('.da-table-pane th').count(),4);
+
+  // All subjects use the same on-demand full-library drawer, not a 5th
+  // persistent scrollbar in the reading column.
   for(const moduleTab of ['#tabPractice','#tabFormalPractice','#tabDataPractice']){
    await page.locator(moduleTab).click();
+   await page.locator('#examOpenLibrary').click();
    await page.locator('#questionList .nav-item').first().waitFor({state:'visible'});
-   const catalog=await page.locator('#questionList').evaluate(el=>{
-    const item=el.querySelector('.nav-item');
-    return {height:el.getBoundingClientRect().height,
-      rowHeight:item.getBoundingClientRect().height,
-      flexShrink:getComputedStyle(el).flexShrink,
-      scrollable:el.scrollHeight>el.clientHeight,
-      count:el.querySelectorAll('.nav-item').length,
-      asideScroll:getComputedStyle(el.closest('aside')).overflowY};
+   const catalog=await page.locator('#examLibraryDrawer').evaluate(drawer=>{
+    const list=drawer.querySelector('#questionList');
+    const pane=drawer.querySelector('.exam-drawer-content');
+    return {count:list.querySelectorAll('.nav-item').length,
+      listOverflow:getComputedStyle(list).overflowY,
+      paneHeight:pane.clientHeight,
+      drawerScrollable:pane.scrollHeight>pane.clientHeight};
    });
-   assert.ok(catalog.height>=280,'Question catalog collapsed in '+moduleTab+': '+JSON.stringify(catalog));
-   assert.ok(catalog.height>=catalog.rowHeight*5,'At least five question rows should fit in '+moduleTab);
-   assert.equal(catalog.flexShrink,'0','Catalog must not shrink below allocated height');
-   assert.equal(catalog.asideScroll,'auto','Sidebar itself must stay scrollable when filters grow');
-   if(catalog.count>=10)assert.equal(catalog.scrollable,true,'Catalog should scroll independently');
+   assert.ok(catalog.count>15,'Full subject bank is accessible in '+moduleTab);
+   assert.equal(catalog.listOverflow,'visible','No nested catalog scroll in the drawer');
+   assert.ok(catalog.paneHeight>=300,'Drawer retains a useful browsing height');
+   assert.equal(catalog.drawerScrollable,true,'The drawer is the only temporary scroll region');
+   await page.locator('#examDrawerClose').click();
   }
   await page.locator('#tabDataPractice').click();
-  await page.locator('#questionList').evaluate(el=>{el.scrollTop=el.scrollHeight});
-  assert.ok(await page.locator('#questionList').evaluate(el=>el.scrollTop>0),'Catalog can scroll to its end');
 
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   await page.locator('#show').click();
@@ -108,10 +150,24 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await page.locator('.result').count(),0,'Explanation still closes');
   await page.setViewportSize({width:390,height:844});
   await page.waitForFunction(()=>document.querySelector('.site-tabs')?.parentElement===document.body);
-  assert.equal(await page.locator('#practiceView > #authPanel').count(),1);
-  const mobileCatalog=await page.locator('#questionList').evaluate(el=>el.getBoundingClientRect().height);
-  assert.ok(mobileCatalog>=150&&mobileCatalog<=165,'Mobile catalog keeps its compact independent list');
-  const navFont=await page.locator('#practiceView .nav-title').first()
+  assert.equal(await page.locator('#practiceView #authPanel').count(),1);
+  assert.equal(await page.locator('#examMobileLibrary').isVisible(),true);
+  const elements=await page.evaluate(()=>{
+    const body=document.querySelector('#card .da-material-body');
+    const zones=document.querySelectorAll('#card .da-layout>*');
+    return {overflow:getComputedStyle(body).overflowY,
+      materialTop:zones[0].getBoundingClientRect().top,
+      questionTop:zones[1].getBoundingClientRect().top};
+  });
+  assert.equal(elements.overflow,'visible');
+  assert.ok(elements.questionTop<elements.materialTop,'On phones question comes before full material');
+  await page.locator('#examMobileLibrary').click();
+  assert.equal(await page.locator('#examLibraryDrawer').isVisible(),true);
+  await page.locator('#examDrawerClose').click();
+
+  assert.equal(await page.locator('#examLibraryDrawer').isVisible(),false,
+    'Full bank stays closed in normal mobile reading mode');
+  const navFont=await page.locator('#questionList .nav-title').first()
     .evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
   assert.ok(navFont>=14,'Mobile question catalog title must remain readable');
   await page.locator('#next').click();
@@ -125,6 +181,13 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.setViewportSize({width:320,height:720});
   const narrow=await page.evaluate(()=>({page:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth}));
   assert.ok(narrow.page<=narrow.viewport+1,'320px viewport must not overflow after typography enlargement '+JSON.stringify(narrow));
+  if(await page.locator('#card .da-table-scroll').count()){
+   const tableOverflow=await page.locator('#card .da-table-scroll').first().evaluate(el=>({
+     width:el.clientWidth,scroll:el.scrollWidth
+   }));
+   assert.ok(tableOverflow.scroll<=tableOverflow.width+1,
+     'Grouped data table must not create an inner horizontal scrollbar '+JSON.stringify(tableOverflow));
+  }
   assert.deepEqual(errors,[],'No app JavaScript errors');
   console.log('Academic UI browser checks OK: tabs, lessons, cards, rail, sticky headings, practice, mobile paging');
  }finally{await context.close();await browser.close();}
