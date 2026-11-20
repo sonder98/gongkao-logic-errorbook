@@ -9,7 +9,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
  page.on('pageerror',error=>errors.push(error.message));
  try{
   await page.goto(target,{waitUntil:'domcontentloaded',timeout:30000});
-  await page.locator('.nav-item').first().waitFor({state:'visible',timeout:20000});
+  await page.locator('#examRelatedList .exam-related-entry').first().waitFor({state:'visible',timeout:20000});
   assert.equal(await page.locator('header.academic-topbar').isVisible(),true);
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('#practiceView > aside > .site-tabs').count(),1);
