@@ -55,7 +55,7 @@ assert.ok(!mindmapSvg.includes('<script'),'SVG必须保持静态不包含脚本'
 
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020'],'第6课应包含基期比较正式习题');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-base-comparison','flatten-growth-increment-comparison','flatten-growth-base-sum-difference'],'原前三节合并成一级基期比，其余三节顺延');
 assert.deepEqual(lesson06.contentSections.map(x=>x.title),['基期比','基期比较','增量比较','基期和差']);
@@ -187,7 +187,7 @@ const incrementExample=incrementComparisonSection.items[1].workedExamples?.[0];
 assert.ok(incrementExample,'方法二必须有用户给出的真实教材例题');
 for(const s of ['41.96','28.63','18.77','9.91','1.5','2.75','1.47','1.89','8.1','2.57'])
  assert.ok(incrementExample.formula.includes(s),'教材例题数值缺失：'+s);
-assert.equal(lesson06.questionIds.length,6,'本次新增两道基期比较正式习题，教材例题仍不计入');
+assert.equal(lesson06.questionIds.length,8,'基期比较新增三题，基期比新增一题，教材例题仍不计入');
 const deltaA=41.96*.1877/(1+.1877),deltaB=28.63*.0991/(1+.0991);
 const ratioViaFlatten=((41.96/28.63)/(1+(.1877-.0991)/(1+.0991)))*(.1877/.0991);
 assert.ok(Math.abs(deltaA/deltaB-ratioViaFlatten)<1e-12,'拉平后基期比乘增速比须等于原增长量之比');
@@ -364,8 +364,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,24,'应有二十四份真实材料');
-assert.equal(questions.length,25,'应有二十五道真实题目');
+assert.equal(materials.length,25,'应有二十五份真实材料');
+assert.equal(questions.length,26,'应有二十六道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -743,7 +743,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
@@ -869,7 +869,7 @@ assert.ok(cityRankingQuestion,'一线城市拥堵排序题须存在');
 assert.equal(cityRankingQuestion.materialId,'data-material-2020-major-cities-congestion-traffic','新题必须复用第24题同一材料');
 assert.equal(cityRankingQuestion.materialId,congestionBaseQuestion.materialId,'第24、25题引用同一份交通状况材料');
 assert.equal(materials.filter(m=>m.id==='data-material-2020-major-cities-congestion-traffic').length,1,'共用材料只能存在一份');
-assert.equal(materials.length,24,'第25题入库时不能重复添加材料');
+assert.equal(materials.filter(m=>m.id===congestionBaseMaterial.id).length,1,'第24和25题共享交通材料，不重复');
 assert.equal(cityRankingQuestion.category,'拉平增长率');
 assert.equal(cityRankingQuestion.type,'基期比较');
 assert.equal(cityRankingQuestion.answer,'D');
@@ -886,5 +886,25 @@ assert.ok(DA.explanationHtml(cityRankingQuestion).includes('data-da-tex'),'速�
 const cityNumbers=[['北京',2.063,.0115],['上海',1.932,.1108],['广州',1.887,.0824],['深圳',1.673,.0461]];
 assert.deepEqual(cityNumbers.map(([city,amt,r])=>[city,amt/(1+r)]).sort((a,b)=>b[1]-a[1]).map(x=>x[0]),['北京','广州','上海','深圳'],'原题四城基期排序必须为D');
 assert.ok((.1108-.0824)/(1+.0824)>(1.932-1.887)/1.887,'广州补正率高于追赶上海所需增幅');
+const mobileTradeQ=questions.find(q=>q.id==='data-2016-s-city-processing-vs-special-customs-mobile-export-multiple');
+const mobileTradeMaterial=materials.find(m=>m.id==='data-material-2017-s-city-mobile-export-trade-types');
+assert.ok(mobileTradeQ&&mobileTradeMaterial,'手机出口基期比题目和材料必须完整录入');
+assert.equal(mobileTradeQ.materialId,mobileTradeMaterial.id);
+assert.equal(mobileTradeQ.type,'基期比');
+assert.equal(mobileTradeQ.category,'拉平增长率');
+assert.equal(mobileTradeQ.answer,'B','按核对的原始题面，2.6位于B项');
+assert.deepEqual(mobileTradeQ.options,['2.1','2.6','2.9','3.5'],'依据完整原题选项录入，不得推测为C');
+assert.equal(mobileTradeMaterial.blocks.length,1);
+for(const s of ['1.8亿台','22.1%','699.9万台','30.7%','245.2万台','36.6%'])
+ assert.ok(mobileTradeMaterial.blocks[0].text.includes(s),'手机出口材料数据缺失：'+s);
+assert.ok(mobileTradeQ.analysis.formula.includes(String.raw`\frac{5.9\%}{0.634}`),'大降幅补正时必须保留分母0.634');
+assert.ok(mobileTradeQ.analysis.formula.includes('9.3')&&mobileTradeQ.analysis.formula.includes('10'),'修正率精估9.3%再取整为10%速算');
+assert.ok(mobileTradeQ.analysis.quick.includes(String.raw`245\times(1+10\%)`),'给现期分母245补正近10%');
+assert.ok(mobileTradeQ.analysis.quick.includes(String.raw`\frac{700}{270}`)&&mobileTradeQ.analysis.quick.includes('2.6'),'700/270≈2.6，保留原教法');
+assert.ok(DA.explanationHtml(mobileTradeQ).includes('data-da-tex'),'LaTeX公式应正常渲染');
+assert.equal(lesson06.questionIds.filter(q=>q==='data-2016-s-city-processing-vs-special-customs-mobile-export-multiple').length,1,'新题只需关联原课程一次');
+const mobileRatio=(699.9/(1-.307))/(245.2/(1-.366));
+assert.ok(mobileRatio>2.60&&mobileRatio<2.62,'原题确切基期比约2.61，对应2.6');
+assert.equal(materials.length,25,'本题是全新手机出口材料，上一组交通题依然共用同一份');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
