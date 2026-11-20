@@ -517,3 +517,28 @@ body{
  .kb-structured-jump button{font-size:14px}
  .kb-summary{font-size:15px}
 }
+
+/* Practice catalog must retain its own readable viewport in the flex sidebar.
+   Without flex-shrink:0, the many Data Analysis category chips force the
+   list down to a single visible row despite max-height:380px. */
+#practiceView #questionList{
+ flex:0 0 auto;
+ height:clamp(280px,43dvh,380px);
+ min-height:280px;
+ max-height:380px;
+ overflow-y:auto;
+ overscroll-behavior-y:contain;
+}
+#practiceView>aside{
+ overflow-y:auto;
+ scrollbar-width:auto;
+ scrollbar-color:#a6beae transparent;
+}
+@media(max-width:800px){
+ #practiceView #questionList{
+  flex:0 0 auto;
+  height:155px;
+  min-height:155px;
+  max-height:155px;
+ }
+}
