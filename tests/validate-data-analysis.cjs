@@ -55,7 +55,7 @@ assert.ok(!mindmapSvg.includes('<script'),'SVG必须保持静态不包含脚本'
 
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple','data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple'],'第6课应包含基期比较正式习题');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple','data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple','data-2020-g-province-import-commodity-unit-price-decline','data-2019-express-nonlocal-vs-intracity-base-ratio'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-base-comparison','flatten-growth-increment-comparison','flatten-growth-base-sum-difference'],'原前三节合并成一级基期比，其余三节顺延');
 assert.deepEqual(lesson06.contentSections.map(x=>x.title),['基期比','基期比较','增量比较','基期和差']);
@@ -205,7 +205,7 @@ const incrementExample=incrementComparisonSection.items[1].workedExamples?.[0];
 assert.ok(incrementExample,'方法二必须有用户给出的真实教材例题');
 for(const s of ['41.96','28.63','18.77','9.91','1.5','2.75','1.47','1.89','8.1','2.57'])
  assert.ok(incrementExample.formula.includes(s),'教材例题数值缺失：'+s);
-assert.equal(lesson06.questionIds.length,9,'第6课新增一题增量倍数比较正式习题，教材例题仍不计入');
+assert.equal(lesson06.questionIds.length,11,'新增进口单价下降量与快递基期比两道正式习题，教材例题仍不计入');
 const deltaA=41.96*.1877/(1+.1877),deltaB=28.63*.0991/(1+.0991);
 const ratioViaFlatten=((41.96/28.63)/(1+(.1877-.0991)/(1+.0991)))*(.1877/.0991);
 assert.ok(Math.abs(deltaA/deltaB-ratioViaFlatten)<1e-12,'拉平后基期比乘增速比须等于原增长量之比');
@@ -382,8 +382,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,26,'应有二十六份真实材料');
-assert.equal(questions.length,27,'应有二十七道真实题目');
+assert.equal(materials.length,28,'应有二十八份真实材料');
+assert.equal(questions.length,29,'应有二十九道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -761,7 +761,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple','data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020','data-2016-s-city-processing-vs-special-customs-mobile-export-multiple','data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple','data-2020-g-province-import-commodity-unit-price-decline','data-2019-express-nonlocal-vs-intracity-base-ratio']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
@@ -944,6 +944,58 @@ assert.ok(DA.explanationHtml(retailerIncreaseQ).includes('data-da-tex'),'题目�
 assert.equal(lesson06.questionIds.filter(x=>x==='data-2021-s-city-wholesale-retail-vs-accommodation-increase-multiple').length,1,'只关联第6课一次');
 const exactRetailGrowthRatio=(8287.13*.284/(1+.284))/(761.31*.54/(1+.54));
 assert.ok(exactRetailGrowthRatio>6.8&&exactRetailGrowthRatio<6.95,'精算核对答案约7倍');
-assert.equal(materials.length,26,'新增第26份材料，旧共享材料不得重复添加');
+assert.equal(materials.filter(m=>m.id===retailerIncreaseM.id).length,1,'原第27题材料必须唯一，不能误重复创建');
+const priceDeclineQuestion=questions.find(q=>q.id==='data-2020-g-province-import-commodity-unit-price-decline');
+const priceDeclineMaterial=materials.find(m=>m.id==='data-material-2020-g-province-import-commodity-prices');
+assert.ok(priceDeclineQuestion&&priceDeclineMaterial,'G省进口单价下降量题目及材料必须存在');
+assert.equal(priceDeclineQuestion.materialId,priceDeclineMaterial.id);
+assert.equal(priceDeclineQuestion.type,'增长量比较');
+assert.equal(priceDeclineQuestion.answer,'C');
+assert.deepEqual(priceDeclineQuestion.options,['原油','天然气','铜材','成品油']);
+assert.equal(priceDeclineMaterial.blocks[0].type,'table','原材料必须结构化保留全部表格');
+assert.equal(priceDeclineMaterial.blocks[0].rows.length,13,'原材料13个进口商品全部录入');
+assert.equal(priceDeclineMaterial.blocks[0].columns.length,6);
+for(const row of priceDeclineMaterial.blocks[0].rows)assert.equal(row.length,6,'进口商品行的数值列必须齐全');
+for(const [name,quantity,qtyYoY,amount,amountYoY] of [
+ ['原油','54239','7.3','12218','-26.8'],
+ ['天然气','10166','5.3','2315','-19.4'],
+ ['铜材','2023','64.4','1165','19.8'],
+ ['成品油','2835','-7.2','818','-30.4']
+]){
+ const row=priceDeclineMaterial.blocks[0].rows.find(r=>r[0]===name);
+ assert.ok(row&&row[2]===quantity&&row[3]===qtyYoY&&row[4]===amount&&row[5]===amountYoY,'单价题必要数据必须正确：'+name);
+}
+for(const s of [String.raw`\frac{12218}{54239}`,String.raw`\frac{2315}{10166}`,String.raw`\frac{1165}{2023}`,String.raw`\frac{818}{2835}`])
+ assert.ok(priceDeclineQuestion.analysis.formula.includes(s),'第一步须分别计算现期单价：'+s);
+for(const s of ['-32','-25','-23.5','-27'])
+ assert.ok(priceDeclineQuestion.analysis.quick.includes(s),'第二步须有四项单价增长率：'+s);
+assert.ok(priceDeclineQuestion.analysis.quick.includes('铜材的单价下降量最大'),'沿用用户现期优势及降幅接近的判断');
+assert.ok(DA.explanationHtml(priceDeclineQuestion).includes('data-da-tex'),'单价题数学公式应渲染');
+const actualDeclines=[
+ {name:'原油',price:12218/54239,priceYoY:(-.268-.073)/(1+.073)},
+ {name:'天然气',price:2315/10166,priceYoY:(-.194-.053)/(1+.053)},
+ {name:'铜材',price:1165/2023,priceYoY:(.198-.644)/(1+.644)},
+ {name:'成品油',price:818/2835,priceYoY:(-.304-(-.072))/(1-.072)}
+];
+assert.equal(actualDeclines.map(x=>({name:x.name,decline:-x.price*x.priceYoY/(1+x.priceYoY)})).sort((a,b)=>b.decline-a.decline)[0].name,'铜材','单价下降量最大确为铜材');
+const expressBaseQuestion=questions.find(q=>q.id==='data-2019-express-nonlocal-vs-intracity-base-ratio');
+const expressBaseMaterial=materials.find(m=>m.id==='data-material-2020-national-express-service-business');
+assert.ok(expressBaseQuestion&&expressBaseMaterial,'快递基期倍数题目及材料必须存在');
+assert.equal(expressBaseQuestion.materialId,expressBaseMaterial.id);
+assert.equal(expressBaseQuestion.type,'基期比');
+assert.equal(expressBaseQuestion.answer,'C');
+assert.deepEqual(expressBaseQuestion.options,['5.7','5.3','4.6','4.2']);
+for(const s of ['833.6','31.2%','8795.4','17.3%','121.7','10.2%','693.6','35.9%','18.4','27.7%'])
+ assert.ok(expressBaseMaterial.blocks[0].text.includes(s),'快递文字材料需要完整：'+s);
+assert.ok(expressBaseQuestion.analysis.formula.includes(String.raw`\frac{693}{121}`),'先写现期比693/121');
+assert.ok(expressBaseQuestion.analysis.formula.includes(String.raw`\frac{35.9\%-10.2\%}{1+10.2\%}`),'给较低增速的同城分母补正');
+assert.ok(expressBaseQuestion.analysis.quick.includes(String.raw`\frac{700}{121(1+23\%)}`)&&expressBaseQuestion.analysis.quick.includes(String.raw`\frac{700}{150}`),'分母补至约150后直接700/150');
+assert.ok(expressBaseQuestion.analysis.quick.includes('4.6'),'结果约4.6倍');
+assert.ok(!expressBaseQuestion.analysis.quick.includes(String.raw`\frac{693}{121}\times`),'不得把补正倍数误乘到整个现期比');
+assert.ok(DA.explanationHtml(expressBaseQuestion).includes('data-da-tex'),'快递基期比公式应正常渲染');
+const exactExpressBaseRatio=(693.6/(1+.359))/(121.7/(1+.102));
+assert.ok(exactExpressBaseRatio>4.6&&exactExpressBaseRatio<4.65,'快递基期比约4.62，对应C选项4.6');
+assert.equal(lesson06.questionIds.filter(x=>x==='data-2020-g-province-import-commodity-unit-price-decline'||x==='data-2019-express-nonlocal-vs-intracity-base-ratio').length,2,'两道题各关联第6课一次');
+assert.equal(materials.length,28,'两份新材料录入，既有26份材料保持不变');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
