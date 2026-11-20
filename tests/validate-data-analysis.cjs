@@ -94,12 +94,12 @@ for(const s of ['10%','25%','33%','百化分']){
 }
 assert.equal(lesson06.contentSections.length,4,'四大节依次为基期比、基期比较、增量比较和基期和差');
 
-assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,2]);
+assert.deepEqual(flattenOrder.items.map(item=>item.subitems.length),[2,3]);
 const [beforeDivide,afterDivide]=flattenOrder.items;
 assert.ok(beforeDivide.subitems[0].formula.includes('underbrace')&&beforeDivide.subitems[0].formula.includes('r_2-r_1')&&beforeDivide.subitems[0].formula.includes('1+r_1'),'先除后补：分子补正');
 assert.ok(beforeDivide.subitems[1].formula.includes('r_1-r_2')&&beforeDivide.subitems[1].formula.includes('1+r_2'),'先除后补：分母补正');
 assert.ok(afterDivide.subitems[0].formula.includes('先补正分子')&&afterDivide.subitems[0].formula.includes('r_2-r_1'),'先补后除：先补正分子');
-assert.ok(afterDivide.subitems[1].formula.includes('先补正分母')&&afterDivide.subitems[1].formula.includes('r_1-r_2'),'先补后除：先补正分母');
+assert.ok(afterDivide.subitems[2].formula.includes('先补正分母')&&afterDivide.subitems[2].formula.includes('r_1-r_2'),'先补后除：先补正分母');
 assert.ok(baseRatioSection.subtopics.every(group=>(group.items||[]).every(item=>item.example===undefined&&item.workedExamples===undefined)),'既有第6课四节不应引入额外练习');
 for(const [A,B,r1,r2] of [[1200,310,0.08,0.14],[1200,310,0.21,0.09]]){
  const baseline=(A/(1+r1))/(B/(1+r2));
@@ -116,8 +116,26 @@ assert.equal(lesson6ExampleSecond[0].title,'例题2｜先计算现期比，再�
 assert.ok(lesson6ExampleFirst[0].formula.includes('7358')&&lesson6ExampleFirst[0].formula.includes('3909')&&lesson6ExampleFirst[0].formula.includes('7700')&&lesson6ExampleFirst[0].formula.includes('5.8'),'第1例必须保留先补分子与再除分母的顺序');
 assert.ok(lesson6ExampleSecond[0].formula.includes('1027')&&lesson6ExampleSecond[0].formula.includes('7475')&&lesson6ExampleSecond[0].formula.includes('7500')&&lesson6ExampleSecond[0].formula.includes('13.7')&&lesson6ExampleSecond[0].formula.includes('1+5'),'第2例必须先除现期比再补分母');
 assert.ok(!lesson6ExampleSecond[0].formula.includes('13.3'),'1027/7500应约为13.7%');
+const moveFactorSubitem=afterDivide.subitems[1];
+assert.equal(moveFactorSubitem.title,'r₁＜r₂｜分子补正不便时，改为分母退还凑整');
+assert.ok(moveFactorSubitem.description.includes('分母退还')&&moveFactorSubitem.description.includes('凑整'),'新技巧归属于先补后除的分子补正特例');
+assert.ok(moveFactorSubitem.formula.includes(String.raw`\frac{A}{\dfrac{B}{1+r_{\text{补}}}}`),'补正倍数移入分母的代数变形准确');
+assert.equal(moveFactorSubitem.workedExamples?.length,1,'2022年一季度城镇农村收入比只能加入一条教材例题');
+const householdWorkedExample=moveFactorSubitem.workedExamples[0];
+for(const s of ['14388','6131','4.0','6.1','2022年一季度','A.2.78','B.2.54','C.2.39','D.2.35'])
+ assert.ok(householdWorkedExample.description.includes(s)||householdWorkedExample.formula.includes(s),'例题原始数据或选项缺失：'+s);
+assert.ok(householdWorkedExample.formula.includes(String.raw`\frac{6.1\%-4.0\%}{1+4.0\%}`),'先计算平均数补正增长率约2%');
+assert.ok(householdWorkedExample.formula.includes(String.raw`\frac{14388(1+2\%)}{6131}`),'明确原本的分子补正式');
+assert.ok(householdWorkedExample.formula.includes(String.raw`\frac{14388}{\dfrac{6131}{1+2\%}}`),'将分子补正移入分母退还2%');
+assert.ok(householdWorkedExample.formula.includes(String.raw`\frac{14388}{6000}`)&&householdWorkedExample.formula.includes('2.4'),'用6000整除得近似2.4');
+assert.ok(householdWorkedExample.formula.includes('C项（2.39）'),'教材例题答案选C');
+assert.ok(!lesson06.questionIds.includes('data-2022-urban-rural-income-base-ratio'),'教材例题不得放入正式题库');
+const directIncomeRatio=(14388/1.04)/(6131/1.061);
+const movedIncomeRatio=14388/(6131/(1+(0.061-0.04)/(1.04)));
+assert.ok(Math.abs(directIncomeRatio-movedIncomeRatio)<1e-12,'补正倍数移入分母的公式与真实基期比相等');
+assert.ok(directIncomeRatio>2.39&&directIncomeRatio<2.40,'基期比与C选项一致');
 const allLesson6Examples=[...baseRatioSection.subtopics,...lesson06.contentSections.slice(1)].flatMap(g=>(g.items||[]).flatMap(i=>[...(i.workedExamples||[]),...(i.subitems||[]).flatMap(s=>s.workedExamples||[])]));
-assert.equal(allLesson6Examples.length,4,'原有两道例题、第五节方法一与方法二各一例均属于教材，不新增习题');
+assert.equal(allLesson6Examples.length,5,'原有四个教材例题及新增移项凑整例题均属于知识体系，不新增习题');
 assert.ok(Math.abs((7358/1.109)/(3909/1.167)-2)<.03,'第一例基期比约2');
 assert.ok(Math.abs((1027/1.293)/(7475/1.237)-.13)<.003,'第二例基期比约13%');
 assert.ok(Math.abs(1027/7500*100-13.7)<.1,'第二例乘数近似可保留小数精度');
