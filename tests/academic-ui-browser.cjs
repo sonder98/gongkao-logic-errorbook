@@ -121,6 +121,25 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await page.locator('.da-table-pane').count(),1,'Switch back to one grouped table');
   assert.equal(await page.locator('.da-table-pane th').count(),4);
 
+  // Verify *computed* typographic hierarchy for each subject in desktop mode.
+  const practiceSizes=async()=>page.locator('#card').evaluate(card=>{
+    const size=selector=>parseFloat(getComputedStyle(card.querySelector(selector)).fontSize);
+    const weight=selector=>parseFloat(getComputedStyle(card.querySelector(selector)).fontWeight);
+    return {title:size('.title'),stem:size('.stem'),ask:size('.ask'),
+      option:size('.choice'),titleWeight:weight('.title'),optionWeight:weight('.choice')};
+  });
+  for(const subject of ['#tabPractice','#tabFormalPractice','#tabDataPractice']){
+    await page.locator(subject).click();
+    const m=await practiceSizes();
+    assert.ok(m.title<=16,'Generated title should be small metadata: '+JSON.stringify(m));
+    assert.ok(m.stem>=18,'Stem must be comfortable to read: '+JSON.stringify(m));
+    assert.ok(m.option>=16&&m.stem>m.option,'Stem must be larger than options: '+JSON.stringify(m));
+    assert.ok(m.ask>=m.stem,'Actual question should be visually prominent: '+JSON.stringify(m));
+    assert.ok(m.title<m.option,'Generated heading should not compete with answers');
+    assert.ok(m.titleWeight<=m.optionWeight,'Generated heading should not be heavier than answer choices');
+  }
+  await page.locator('#tabDataPractice').click();
+
   // All subjects use the same on-demand full-library drawer, not a 5th
   // persistent scrollbar in the reading column.
   for(const moduleTab of ['#tabPractice','#tabFormalPractice','#tabDataPractice']){
@@ -149,6 +168,10 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.locator('#show').click();
   assert.equal(await page.locator('.result').count(),0,'Explanation still closes');
   await page.setViewportSize({width:390,height:844});
+  const mobileType=await practiceSizes();
+  assert.ok(mobileType.title<=15&&mobileType.stem>=17&&mobileType.option>=16
+    &&mobileType.stem>mobileType.option&&mobileType.ask>=mobileType.stem,
+    'Phone type hierarchy should also emphasize the actual stem: '+JSON.stringify(mobileType));
   await page.waitForFunction(()=>document.querySelector('.site-tabs')?.parentElement===document.body);
   assert.equal(await page.locator('#practiceView #authPanel').count(),1);
   assert.equal(await page.locator('#examMobileLibrary').isVisible(),true);
