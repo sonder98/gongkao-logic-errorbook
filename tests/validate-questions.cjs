@@ -202,7 +202,21 @@ assert.ok(roommates.reason.includes('无交集'),'roommate case must teach disjo
 assert.ok(formal.filter(item=>typeof item.rule==='string'&&item.rule.trim()).length<formal.length/2,'do not write new rules for every formal question');
 assert.ok(!Object.hasOwn(formal.find(item=>item.id==='formal-2015-fujian-disaster-unless-disagreement'),'rule'),'duplicate translation method should not be forced on each example');
 assert.ok(Object.hasOwn(formal.find(item=>item.id==='formal-unknown-weekly-movies-cover-days'),'rule'),'representative capacity principle retained');
-assert.equal(formal.length,30,'formal catalog count');
+for(const [id,answer] of [
+  ['formal-unknown-visiting-scholars-two-categories-contrapositive','B'],
+  ['formal-unknown-new-gaokao-chemistry-physics-politics-existential','C']
+]){
+ const item=formal.find(x=>x.id===id);
+ assert.ok(item&&item.category==='翻译推理'&&item.answer===answer,'paired translation exercise missing: '+id);
+ assert.equal(item.options.length,4);
+ assert.equal(item.image,'');
+ assert.ok(!Object.hasOwn(item,'rule'),'reuse the existing formal knowledge');
+}
+const twoClasses=formal.find(x=>x.id==='formal-unknown-visiting-scholars-two-categories-contrapositive');
+const courseChoice=formal.find(x=>x.id==='formal-unknown-new-gaokao-chemistry-physics-politics-existential');
+assert.ok(twoClasses.reason.includes('非博士学位→非青年骨干教师→高级访问学者'),'retain exclusive categorization and inverse chain');
+assert.ok(courseChoice.reason.includes('物理→非政治')&&courseChoice.reason.includes('有些选化学者'),'retain one-way exclusion and existential chain');
+assert.equal(formal.length,32,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 require('./validate-explanation-style.cjs');
