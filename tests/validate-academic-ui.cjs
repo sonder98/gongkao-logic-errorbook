@@ -4,6 +4,10 @@ const path=require('node:path');
 const root=path.resolve(__dirname,'..');
 const read=name=>fs.readFileSync(path.join(root,name),'utf8');
 const html=read('index.html'),css=read('academic-theme.css'),sw=read('sw.js');
+const practiceCss=read('single-scroll.css');
+assert.ok(practiceCss.includes('Practice text hierarchy · 2026-11-20'),'Practice type hierarchy must remain enforced');
+for(const selector of ['#practiceView #card .title','#practiceView #card .stem','#practiceView #card .ask','#practiceView #card .choice'])
+ assert.ok(practiceCss.includes(selector),'Missing practice text style: '+selector);
 const ids=['academicKnowledgeMode','academicPracticeMode','academicReadingRail',
  'tabKnowledge','tabPractice','tabFormalKnowledge','tabFormalPractice',
  'tabDataKnowledge','tabDataPractice','knowledgeNav','knowledgeCard','questionList',
