@@ -55,7 +55,7 @@ assert.ok(!mindmapSvg.includes('<script'),'SVG必须保持静态不包含脚本'
 
 assert.ok(lesson06,'第6课知识ID保持稳定');
 assert.equal(lesson06.title,'第6课 · 拉平增长率');
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020'],'第6课应包含基期比较正式习题');
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020'],'第6课应包含基期比较正式习题');
 assert.equal(lesson06.patterns,undefined,'第6课必须采用结构化课程而非扁平规则列表');
 assert.deepEqual(lesson06.contentSections.map(x=>x.id),['flatten-growth-basics','flatten-growth-base-comparison','flatten-growth-increment-comparison','flatten-growth-base-sum-difference'],'原前三节合并成一级基期比，其余三节顺延');
 assert.deepEqual(lesson06.contentSections.map(x=>x.title),['基期比','基期比较','增量比较','基期和差']);
@@ -365,7 +365,7 @@ assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
 assert.equal(materials.length,24,'应有二十四份真实材料');
-assert.equal(questions.length,24,'应有二十四道真实题目');
+assert.equal(questions.length,25,'应有二十五道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -743,7 +743,7 @@ assert.equal(autumnGrainMaterial.blocks.length,1);
 assert.equal(autumnGrainMaterial.blocks[0].type,'paragraph');
 for(const s of ['4316.3万吨','1.3%','2047.7万吨','0.6%','2268.6万吨','1.9%'])
  assert.ok(autumnGrainMaterial.blocks[0].text.includes(s),'材料数值缺失: '+s);
-assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020']);
+assert.deepEqual(lesson06.questionIds,['data-2008-autumn-grain-share-of-total','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend','data-2012-jiangsu-export-regions-base-comparison','data-2020-industrial-enterprise-profit-smallest-by-type','data-2019-city-congestion-highest-from-2020','data-2019-tier-one-city-congestion-ranking-from-2020']);
 assert.ok(autumnGrainQuestion.analysis.formula.includes('432\\times1\\%')&&autumnGrainQuestion.analysis.formula.includes('4346'),'先估1%确定量级、再补正分母');
 assert.ok(autumnGrainQuestion.analysis.quick.includes('98\\times52\\%')&&autumnGrainQuestion.analysis.quick.includes('2319')&&autumnGrainQuestion.analysis.quick.includes('579.75'),'按选项比例补正分子、再按乘9错位相减');
 assert.ok(DA.explanationHtml(autumnGrainQuestion).includes('data-da-tex'));
@@ -864,5 +864,27 @@ assert.ok(DA.explanationHtml(congestionBaseQuestion).includes('data-da-tex'));
 const congestionBaseValues=[['北京',2.063,.0115],['上海',1.932,.1108],['重庆',2.260,.044],['南京',1.822,.0684]];
 assert.equal(congestionBaseValues.map(([city,amount,r])=>[city,amount/(1+r)]).sort((a,b)=>b[1]-a[1])[0][0],'重庆','2019年拥堵指数最大是重庆');
 assert.equal(lesson06.questionIds.filter(id=>id==='data-2020-industrial-enterprise-profit-smallest-by-type'||id==='data-2019-city-congestion-highest-from-2020').length,2,'两题应各自关联第6课一次');
+const cityRankingQuestion=questions.find(q=>q.id==='data-2019-tier-one-city-congestion-ranking-from-2020');
+assert.ok(cityRankingQuestion,'一线城市拥堵排序题须存在');
+assert.equal(cityRankingQuestion.materialId,'data-material-2020-major-cities-congestion-traffic','新题必须复用第24题同一材料');
+assert.equal(cityRankingQuestion.materialId,congestionBaseQuestion.materialId,'第24、25题引用同一份交通状况材料');
+assert.equal(materials.filter(m=>m.id==='data-material-2020-major-cities-congestion-traffic').length,1,'共用材料只能存在一份');
+assert.equal(materials.length,24,'第25题入库时不能重复添加材料');
+assert.equal(cityRankingQuestion.category,'拉平增长率');
+assert.equal(cityRankingQuestion.type,'基期比较');
+assert.equal(cityRankingQuestion.answer,'D');
+assert.deepEqual(cityRankingQuestion.options,['北京、上海、广州、深圳','上海、北京、深圳、广州','深圳、北京、上海、广州','北京、广州、上海、深圳']);
+assert.equal(lesson06.questionIds.filter(q=>q==='data-2019-tier-one-city-congestion-ranking-from-2020').length,1,'新题关联第6课一次即可');
+for(const s of ['北京','广州','上海','深圳'])assert.ok(cityRankingQuestion.analysis.locate.includes(s),'原材料定位须包含四城：'+s);
+assert.ok(cityRankingQuestion.analysis.formula.includes('排除B、C'),'首先从北京最大排除B和C');
+assert.ok(cityRankingQuestion.analysis.quick.includes('11.08')&&cityRankingQuestion.analysis.quick.includes('8.24')&&cityRankingQuestion.analysis.quick.includes('2.6'),'第二步先补正广州约2.6%');
+for(const s of ['1932-1887','45}{1887}','450}{189}','450+25','189+11','475}{200}','2.37'])
+ assert.ok(cityRankingQuestion.analysis.quick.includes(s),'保留分子分母同步放缩凑整速算：'+s);
+assert.ok(cityRankingQuestion.analysis.quick.indexOf('2.6')<cityRankingQuestion.analysis.quick.indexOf('1932-1887'),'严格先算补正再看两城现期差距');
+assert.ok(!cityRankingQuestion.analysis.quick.includes('1.887\\times(1+'),'不用硬算广州补正后的具体拥堵指数');
+assert.ok(DA.explanationHtml(cityRankingQuestion).includes('data-da-tex'),'速算公式应正确渲染');
+const cityNumbers=[['北京',2.063,.0115],['上海',1.932,.1108],['广州',1.887,.0824],['深圳',1.673,.0461]];
+assert.deepEqual(cityNumbers.map(([city,amt,r])=>[city,amt/(1+r)]).sort((a,b)=>b[1]-a[1]).map(x=>x[0]),['北京','广州','上海','深圳'],'原题四城基期排序必须为D');
+assert.ok((.1108-.0824)/(1+.0824)>(1.932-1.887)/1.887,'广州补正率高于追赶上海所需增幅');
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
