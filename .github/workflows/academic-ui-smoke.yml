@@ -10,6 +10,8 @@ on:
       - 'tests/academic-ui-browser.cjs'
       - 'tests/repeat-practice-browser.cjs'
       - 'practice-session.js'
+      - 'swipe-navigation.js'
+      - 'tests/mobile-gestures-browser.cjs'
       - '.github/workflows/academic-ui-smoke.yml'
   workflow_dispatch:
 jobs:
@@ -29,3 +31,4 @@ jobs:
           sleep 2
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/academic-ui-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/repeat-practice-browser.cjs
+          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/mobile-gestures-browser.cjs

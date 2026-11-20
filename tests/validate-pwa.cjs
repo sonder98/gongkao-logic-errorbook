@@ -11,6 +11,11 @@ const sw = read('sw.js');
 const scratch = read('scratch-overlay.js');
 const academic=read('academic-theme.css');
 const practice=read('practice-session.js');
+const swipe=read('swipe-navigation.js');
+assert.ok(html.includes('src="swipe-navigation.js"'));
+assert.ok(sw.includes("'./swipe-navigation.js'"));
+assert.ok(swipe.includes('gesturestart')&&swipe.includes('touchstart'));
+assert.match(html,/name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/);
 assert.ok(html.includes('src="practice-session.js"'));
 assert.ok(sw.includes("'./practice-session.js'"));
 assert.ok(practice.includes('practiceAttempts')&&practice.includes('practiceCorrect'));
@@ -21,7 +26,7 @@ assert.ok(academic.includes('.academic-topbar'));
 assert.ok(academic.includes('.kb-structured-jump'));
 
 
-assert.match(html, /name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/);
+// Pinch-lock viewport string is asserted above. Safari may override the lock.
 assert.match(html, /name="apple-mobile-web-app-capable" content="yes"/);
 assert.match(html, /name="apple-mobile-web-app-title" content="Exam"/);
 assert.match(html, /name="apple-mobile-web-app-status-bar-style" content="black-translucent"/);
