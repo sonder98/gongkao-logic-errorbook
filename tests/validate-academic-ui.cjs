@@ -11,6 +11,14 @@ const ids=['academicKnowledgeMode','academicPracticeMode','academicReadingRail',
 for(const id of ids)assert.ok(html.includes('id="'+id+'"'),'Missing UI control '+id);
 assert.ok(html.includes('href="academic-theme.css"'),'Academic theme must load after data-analysis.css');
 assert.ok(sw.includes("'./academic-theme.css'"),'PWA must cache the approved theme for offline use');
+assert.ok(html.includes('src="single-scroll.js"'),'Single-scroll library integration must load');
+assert.ok(html.includes('href="single-scroll.css"'),'Single-scroll stylesheet must load');
+assert.ok(sw.includes("'./single-scroll.js'")&&sw.includes("'./single-scroll.css'"),
+  'Offline app shell must include the practice reading layout');
+assert.ok(html.includes('ExamLayout.onRender(q,f,QUESTIONS,currentModule)'),
+  'Practice render must update the material-relative sidebar');
+assert.ok(html.includes('DataAnalysis.setTableView'),'Grouped data table selection must work');
+
 assert.match(html,/academic-brand-name/);
 assert.match(html,/renderAcademicReadingRail\(topic,topicIndex\)/);
 assert.match(html,/academicKnowledgeMode.*onclick/);
