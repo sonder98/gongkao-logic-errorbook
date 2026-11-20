@@ -82,7 +82,8 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   const scrolled=await page.evaluate(()=>scrollY);
   await page.locator('#openScratch').click();
   assert.equal(await page.evaluate(()=>scrollY),scrolled,'Reopening scratch never jumps to top');
-  await page.locator('#academicKnowledgeMode').click({force:true}).catch(()=>{});
+  // The overlay is above the study switch, so only a route change (not
+  // a click through the shield) may leave the drawing surface.
   // The study view switch should close the standalone overlay even when changed programmatically.
   await page.evaluate(()=>switchView('knowledge'));
   assert.equal(await page.locator('#scratchOverlay').isVisible(),false,
