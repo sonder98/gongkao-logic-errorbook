@@ -20,6 +20,34 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await page.locator('#knowledgeView > aside > .site-tabs').count(),1);
   assert.equal(await page.locator('#knowledgeCard .academic-eyebrow').count(),1);
 
+  // Floating scratch entry must be usable after scrolling down a long question.
+  await page.setViewportSize({width:1024,height:900});
+  await page.locator('#academicPracticeMode').click();
+  await page.locator('#openScratch').waitFor({state:'visible'});
+  const fixedPosition=await page.locator('#openScratch').evaluate(el=>getComputedStyle(el).position);
+  assert.equal(fixedPosition,'fixed','Pencil scratch opener follows the viewport');
+  const beforeScroll=await page.locator('#openScratch').boundingBox();
+  await page.evaluate(()=>window.scrollBy(0,650));
+  const scrolled=await page.evaluate(()=>scrollY);
+  assert.ok(scrolled>=100,'Tablet page must actually move before testing the fixed button');
+  const afterScroll=await page.locator('#openScratch').boundingBox();
+  assert.ok(Math.abs(beforeScroll.y-afterScroll.y)<4,
+    'Floating scratch button must stay at the same screen position when scrolling');
+  const scratchScrollBefore=await page.evaluate(()=>scrollY);
+  await page.locator('#openScratch').click();
+  assert.equal(await page.locator('#scratchOverlay').isVisible(),true);
+  assert.equal(await page.locator('#openScratch').getAttribute('aria-expanded'),'true');
+  assert.ok(Math.abs(await page.evaluate(()=>scrollY)-scratchScrollBefore)<4,
+    'Opening sketch mode must not jump back to the top of the question');
+  await page.locator('#openScratch').click();
+  assert.equal(await page.locator('#scratchOverlay').isVisible(),false);
+  assert.equal(await page.locator('#openScratch').getAttribute('aria-expanded'),'false');
+  assert.ok(Math.abs(await page.evaluate(()=>scrollY)-scratchScrollBefore)<4,
+    'Closing sketch mode must preserve reading position');
+  await page.setViewportSize({width:1280,height:900});
+  await page.evaluate(()=>window.scrollTo(0,0));
+  await page.locator('#academicKnowledgeMode').click();
+
   // Browser-computed legibility checks, not just CSS source assertions.
   const metrics=await page.evaluate(()=>{
    const get=selector=>{

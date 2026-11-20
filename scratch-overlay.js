@@ -89,6 +89,13 @@
   if(e.cancelable)e.preventDefault();
   resize(m);
  }
+ function updateLauncher(m){
+  const isOpen=m.open;
+  m.launch.setAttribute('aria-expanded',String(isOpen));
+  m.launch.setAttribute('aria-label',isOpen?'完成草稿并关闭书写层':'打开透明草稿，在当前题目上书写');
+  m.launch.textContent=isOpen?'✓ 完成':'✎ 草稿';
+  m.launch.classList.toggle('is-active',isOpen);
+ }
  function close(m){
   finish(m);
   m.open=false;openKey=null;
@@ -96,7 +103,7 @@
   m.zone.classList.remove('scratch-active');
   if(m.observer){m.observer.disconnect();m.observer=null}
   if(m.raf){cancelAnimationFrame(m.raf);m.raf=0}
-  m.launch.setAttribute('aria-expanded','false');
+  updateLauncher(m);
  }
  function open(m){
   if(mounted!==m)return;
@@ -105,7 +112,7 @@
   m.overlay.hidden=false;
   m.overlay.classList.remove('is-scrolling');
   m.mode.textContent='滚动页面';
-  m.launch.setAttribute('aria-expanded','true');
+  updateLauncher(m);
   m.undo.disabled=!m.strokes.length;
   resize(m);
   if(typeof ResizeObserver!=='undefined'){
@@ -137,7 +144,11 @@
    strokes:load(key),open:false,scrolling:false,pointerId:null,observer:null,raf:0
   };
   mounted=m;
-  m.launch.onclick=()=>open(m);
+  m.launch.hidden=false;
+  updateLauncher(m);
+  // This button is outside the re-rendered question card, so it stays
+  // within reach at any scroll position, even for very long questions.
+  m.launch.onclick=()=>m.open?close(m):open(m);
   m.close.onclick=()=>close(m);
   m.undo.onclick=()=>{
    finish(m);m.strokes.pop();save(m);m.undo.disabled=!m.strokes.length;resize(m);

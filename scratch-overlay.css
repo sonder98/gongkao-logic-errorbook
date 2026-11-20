@@ -13,3 +13,40 @@
 .scratch-overlay.is-scrolling .scratch-canvas{pointer-events:none}
 .scratch-zone.scratch-active{-webkit-user-select:none;user-select:none}
 @media(max-width:500px){.scratch-toolbar{gap:4px}.scratch-toolbar button{padding:6px 7px;font-size:11px}}
+
+/* Fixed Apple Pencil entry: anchored to the viewport, not the question header.
+   It remains available at any scroll depth and doubles as a close control. */
+#practiceView .scratch-fab{
+ position:fixed;
+ bottom:calc(24px + env(safe-area-inset-bottom,0px));
+ right:calc(24px + env(safe-area-inset-right,0px));
+ z-index:70;
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:48px;min-width:94px;padding:11px 17px;
+ border:1px solid #315f4a;border-radius:999px;
+ background:#2e654f;color:#fff;
+ box-shadow:0 7px 24px rgba(25,54,38,.22);
+ font-size:14px;font-weight:800;line-height:1.3;
+ white-space:nowrap;
+ touch-action:manipulation;
+ -webkit-tap-highlight-color:transparent;
+}
+#practiceView .scratch-fab[hidden],
+#practiceView[hidden] .scratch-fab{display:none!important}
+#practiceView .scratch-fab.is-active{
+ background:#fffefa;color:#275741;border-color:#83a88d;
+ box-shadow:0 7px 24px rgba(25,54,38,.17);
+}
+#practiceView .scratch-fab:focus-visible{outline:3px solid #9ac6a9;outline-offset:3px}
+@media(max-width:800px){
+ #practiceView .scratch-fab{
+  right:calc(16px + env(safe-area-inset-right,0px));
+  bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  min-height:46px;min-width:84px;padding:10px 13px;
+  font-size:13px;
+ }
+}
+/* During handwriting the floating close control stays reachable; the
+   optional brush toolbar also clears the sticky top masthead. */
+.scratch-toolbar{top:calc(83px + env(safe-area-inset-top,0px))}
+@media(max-width:800px){.scratch-toolbar{top:calc(73px + env(safe-area-inset-top,0px))}}
