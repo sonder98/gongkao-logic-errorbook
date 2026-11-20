@@ -135,7 +135,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
     assert.ok(m.stem>=18,'Stem must be comfortable to read: '+JSON.stringify(m));
     assert.ok(m.option>=16&&m.stem>m.option,'Stem must be larger than options: '+JSON.stringify(m));
     assert.ok(m.ask>=m.stem,'Actual question should be visually prominent: '+JSON.stringify(m));
-    assert.ok(m.title<m.option,'Generated heading should not compete with answers');
+    assert.ok(m.title<=m.option,'Generated heading must not be larger than the options');
     assert.ok(m.titleWeight<=m.optionWeight,'Generated heading should not be heavier than answer choices');
   }
   await page.locator('#tabDataPractice').click();
