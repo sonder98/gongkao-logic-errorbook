@@ -216,7 +216,14 @@ const twoClasses=formal.find(x=>x.id==='formal-unknown-visiting-scholars-two-cat
 const courseChoice=formal.find(x=>x.id==='formal-unknown-new-gaokao-chemistry-physics-politics-existential');
 assert.ok(twoClasses.reason.includes('非博士学位→非青年骨干教师→高级访问学者'),'retain exclusive categorization and inverse chain');
 assert.ok(courseChoice.reason.includes('物理→非政治')&&courseChoice.reason.includes('有些选化学者'),'retain one-way exclusion and existential chain');
-assert.equal(formal.length,32,'formal catalog count');
+const villageAward=formal.find(item=>item.id==='formal-unknown-four-villages-awards-income-tiers-casework');
+const trainingCourses=formal.find(item=>item.id==='formal-unknown-four-training-centers-one-false-conflict');
+assert.ok(villageAward&&villageAward.answer==='B'&&villageAward.category==='综合推理'&&villageAward.options.length===4,'village casework missing');
+assert.ok(trainingCourses&&trainingCourses.answer==='B'&&trainingCourses.category==='真假推理'&&trainingCourses.options.length===4,'training only-one-false missing');
+assert.ok(villageAward.reason.includes('同处中档')&&villageAward.reason.includes('同处低档'),'retain two cases');
+assert.ok(trainingCourses.reason.includes('①与④')&&trainingCourses.reason.includes('③必然为真'),'retain truth slot shortcut');
+assert.ok(!Object.hasOwn(villageAward,'rule')&&!Object.hasOwn(trainingCourses,'rule'),'reuse existing topic methods');
+assert.equal(formal.length,34,'formal catalog count');
 const fujian=formal.find(q=>q.id==='formal-2015-fujian-disaster-unless-disagreement');
 assert.match(fujian.trap,/D.*可.*推出/);
 require('./validate-explanation-style.cjs');
