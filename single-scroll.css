@@ -149,3 +149,43 @@ body.exam-drawer-open{overflow:hidden!important}
  .practice-accuracy{gap:5px 11px;font-size:12px;margin:-2px 0 14px}
  .practice-accuracy strong{font-size:13px}
 }
+
+
+/* Practice text hierarchy · 2026-11-20
+   The auto-generated topic label is metadata, not the most important sentence.
+   Stem > options > topic label. The actual question prompt gets emphasis. */
+#practiceView #card .title{
+ font-family:var(--academic-sans);
+ font-size:16px;
+ font-weight:600;
+ line-height:1.6;
+ letter-spacing:0;
+ color:#647267;
+ margin:8px 0 13px;
+}
+#practiceView #card .stem{
+ font-size:18px;
+ font-weight:500;
+ line-height:2.05;
+ letter-spacing:.05px;
+ color:#27392e;
+}
+#practiceView #card .ask{
+ font-size:19px;
+ font-weight:750;
+ line-height:1.85;
+ color:#20392a;
+ margin:21px 0 20px;
+}
+#practiceView #card .choice{
+ font-size:16px;
+ font-weight:600;
+ line-height:1.85;
+ color:#2e4334;
+}
+@media(max-width:800px){
+ #practiceView #card .title{font-size:15px;line-height:1.6;margin:6px 0 11px}
+ #practiceView #card .stem{font-size:17px;line-height:2}
+ #practiceView #card .ask{font-size:18px;line-height:1.8;margin:18px 0 16px}
+ #practiceView #card .choice{font-size:16px;line-height:1.8}
+}
