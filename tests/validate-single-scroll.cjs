@@ -48,4 +48,66 @@ for(const column of retail.blocks[0].columns)assert.ok(retailFull.includes(colum
 const simple=materials.find(m=>m.id==='data-material-2018-q-transport-passenger-distance');
 assert.equal(simple.blocks[0].columns.length,4);
 assert.doesNotMatch(da.materialHtml(simple),/data-da-group=/,'Four columns need no grouped tabs');
+
+// Generic future-material regression: verify *every* normal rectangular table
+// survives automatic grouping with all source rows and every original cell.
+// One-off city/retail fixtures above are examples, not the only protected tables.
+const plain=v=>String(v??'');
+const htmlEscape=v=>plain(v).replaceAll('&','&amp;').replaceAll('<','&lt;')
+  .replaceAll('>','&gt;').replaceAll('"','&quot;');
+let checkedTables=0;
+for(const material of materials){
+ const tables=material.blocks.filter(b=>b.type==='table');
+ if(!tables.length)continue;
+ da.setTableView(material.id,'all');
+ const markup=da.materialHtml(material);
+ const renderedTables=[...markup.matchAll(/<table>([\s\S]*?)<\/table>/g)].map(m=>m[1]);
+ let renderedIndex=0;
+ for(const tableBlock of tables){
+  const regular=tableBlock.columns.every(v=>v!==null&&typeof v!=='object')&&
+   tableBlock.rows.every(row=>row.length===tableBlock.columns.length&&
+    row.every(v=>v!==null&&typeof v!=='object'));
+  if(!regular){
+   // Merged cell structures retain the original table without forced splitting.
+   assert.ok(renderedTables[renderedIndex],material.id+': complex table missing');
+   renderedIndex+=1;
+   continue;
+  }
+  const n=tableBlock.columns.length;
+  const groups=n>4?Array.from({length:Math.ceil((n-1)/3)},(_,i)=>
+   [0,...Array.from({length:Math.min(3,n-1-i*3)},(_,j)=>i*3+j+1)])
+   :[tableBlock.columns.map((_,i)=>i)];
+  for(const columns of groups){
+   const tableHtml=renderedTables[renderedIndex++];
+   assert.ok(tableHtml,material.id+': missing indicator group');
+   const headers=[...tableHtml.matchAll(/<th(?:\s[^>]*)?>([\s\S]*?)<\/th>/g)]
+    .map(match=>match[1]);
+   assert.equal(headers.length,columns.length,material.id+': number of columns differs from source');
+   columns.forEach((sourceCol,i)=>{
+    const source=plain(tableBlock.columns[sourceCol]);
+    if(!/\\\(|\\\[/.test(source))
+     assert.equal(headers[i],htmlEscape(source),material.id+': changed source header '+sourceCol);
+   });
+   const body=tableHtml.match(/<tbody>([\s\S]*?)<\/tbody>/)?.[1];
+   assert.ok(body,material.id+': table body not rendered');
+   const rowHtml=[...body.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(match=>match[1]);
+   assert.equal(rowHtml.length,tableBlock.rows.length,material.id+': lost source rows');
+   rowHtml.forEach((row,sourceRow)=>{
+    const cells=[...row.matchAll(/<td(?:\s[^>]*)?>([\s\S]*?)<\/td>/g)].map(m=>m[1]);
+    assert.equal(cells.length,columns.length,material.id+': lost source columns in row '+sourceRow);
+    columns.forEach((sourceCol,i)=>{
+     const original=plain(tableBlock.rows[sourceRow][sourceCol]);
+     if(!/\\\(|\\\[/.test(original))
+      assert.equal(cells[i],htmlEscape(original),
+       material.id+': changed cell '+sourceRow+','+sourceCol);
+    });
+   });
+  }
+  checkedTables++;
+ }
+ assert.equal(renderedIndex,renderedTables.length,material.id+': unexpected generated tables');
+}
+assert.ok(checkedTables>0,'No ordinary source tables checked');
+console.log('Full-row / full-column verification for',checkedTables,'regular source tables: OK');
+
 console.log('Single-scroll layout & complete data table grouping: OK');
