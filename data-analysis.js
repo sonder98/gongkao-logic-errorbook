@@ -2,6 +2,8 @@
 (function(root){
   'use strict';
   const collapsed=new Set();
+  // Material-only view preference. Full content is always available and never altered in JSON.
+  const tableView=new Map();
   const esc=v=>String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
   const CDN='https://cdn.jsdelivr.net/npm/katex@0.19.0/dist/';
   let mathPromise=null;
@@ -86,12 +88,45 @@
     return '<figure class="da-figure"><div class="da-chart-scroll"><svg viewBox="0 0 '+w+' '+h+'" role="img" aria-label="'+esc(block.alt||block.caption||'资料统计图')+'">'+shapes+'</svg></div>'+
       (block.caption?'<figcaption>'+rich(block.caption)+'</figcaption>':'')+'</figure>';
   }
-  function renderBlock(block){
+  function materialTable(block,materialId){
+    const regular=block.columns.every(cell=>typeof cell!=='object')&&block.rows.every(row=>
+      row.length===block.columns.length&&row.every(cell=>typeof cell!=='object'));
+    // Tall source tables stay in the page flow. Wide, regular tables group
+    // metrics into manageable sets; no columns/rows are discarded.
+    const chunks=regular&&block.columns.length>4
+      ?Array.from({length:Math.ceil((block.columns.length-1)/3)},(_,i)=>
+        [0,...Array.from({length:Math.min(3,block.columns.length-1-i*3)},(_,j)=>1+i*3+j)])
+      :[block.columns.map((_,i)=>i)];
+    const selected=tableView.get(materialId)||'0';
+    const active=selected==='all'?'all':Math.min(Number(selected)||0,chunks.length-1);
+    const names=chunks.map((group,i)=>{
+      if(materialId==='data-material-2020-major-cities-congestion-traffic'){
+        return i===0?'拥堵指标':'交通设施';
+      }
+      return chunks.length===2?(i===0?'基础指标':'补充指标'):'指标组 '+(i+1);
+    });
+    const tabs=chunks.length>1?'<div class="da-table-view-tabs" role="group" aria-label="资料指标分组">'+
+      names.map((name,i)=>'<button type="button" data-da-group="'+i+'" data-da-material="'+esc(materialId)+'" class="da-table-view-btn '+(active===i?'active':'')+'" aria-pressed="'+(active===i)+'">'+esc(name)+'</button>').join('')+
+      '<button type="button" data-da-group="all" data-da-material="'+esc(materialId)+'" class="da-table-view-btn '+(active==='all'?'active':'')+'" aria-pressed="'+(active==='all')+'">完整资料</button></div>':'';
+    const show=active==='all'?chunks.map((_,i)=>i):[active];
+    return '<div class="da-table-panes">'+tabs+show.map(i=>{
+      const group=chunks[i];
+      return '<div class="da-table-pane">'+
+        (chunks.length>1?'<div class="da-table-pane-title"><span>'+esc(names[i])+'</span><small>全部 '+block.rows.length+' 行 · '+group.length+' 列</small></div>':'')+
+        '<figure class="da-figure"><div class="da-table-scroll"><table><thead><tr>'+
+        group.map(n=>renderCell(block.columns[n],'th')).join('')+'</tr></thead><tbody>'+
+        block.rows.map(row=>'<tr>'+group.map(n=>renderCell(row[n],'td')).join('')+'</tr>').join('')+
+        '</tbody></table></div>'+(block.caption&&chunks.length===1?'<figcaption>'+rich(block.caption)+'</figcaption>':'')+
+        '</figure></div>';
+    }).join('')+
+    (chunks.length>1&&block.caption?'<p class="da-data-caption">'+rich(block.caption)+'</p>':'')+'</div>';
+  }
+  function setTableView(materialId,value){
+    tableView.set(materialId,value==='all'?'all':String(Math.max(0,Number(value)||0)));
+  }
+  function renderBlock(block,materialId){
     if(block.type==='paragraph')return '<p class="da-paragraph">'+rich(block.text)+'</p>';
-    if(block.type==='table')return '<figure class="da-figure"><div class="da-table-scroll"><table><thead><tr>'+
-      block.columns.map(cell=>renderCell(cell,'th')).join('')+'</tr></thead><tbody>'+
-      block.rows.map(row=>'<tr>'+row.map(cell=>renderCell(cell,'td')).join('')+'</tr>').join('')+
-      '</tbody></table></div>'+(block.caption?'<figcaption>'+rich(block.caption)+'</figcaption>':'')+'</figure>';
+    if(block.type==='table')return materialTable(block,materialId);
     if(block.type==='image')return '<figure class="da-figure"><img loading="lazy" decoding="async" src="'+esc(block.src)+'" alt="'+esc(block.alt)+'">'+
       (block.caption?'<figcaption>'+rich(block.caption)+'</figcaption>':'')+'</figure>';
     if(block.type==='chart')return renderChart(block);
@@ -103,7 +138,7 @@
     return '<section class="da-material"><header class="da-material-header"><div><span class="da-overline">共用资料</span><h3>'+esc(material.title)+'</h3>'+
       '</div>'+
       '<button type="button" data-da-toggle="'+esc(material.id)+'" aria-expanded="'+(!closed)+'">'+(closed?'展开材料':'收起材料')+'</button></header>'+
-      (closed?'':'<div class="da-material-body">'+(material.blocks||[]).map(renderBlock).join('')+'</div>')+'</section>';
+      (closed?'':'<div class="da-material-body">'+(material.blocks||[]).map(block=>renderBlock(block,material.id)).join('')+'</div>')+'</section>';
   }
   function toggleMaterial(id){if(collapsed.has(id))collapsed.delete(id);else collapsed.add(id);}
   function explanationHtml(q){
@@ -160,5 +195,5 @@
     }
     return true;
   }
-  root.DataAnalysis={rich,renderMath,materialHtml,toggleMaterial,explanationHtml,validate};
+  root.DataAnalysis={rich,renderMath,materialHtml,toggleMaterial,setTableView,explanationHtml,validate};
 })(globalThis);
