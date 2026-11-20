@@ -286,3 +286,234 @@ header.academic-topbar{height:calc(74px + env(safe-area-inset-top,0px));min-heig
 }
 #practiceView>.auth-panel{margin:8px 0 24px;max-width:100%;grid-column:1/-1}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}button{transition:none}}
+
+
+/* Readability pass · 2026-11-20
+   Raised study-navigation sizes, restored sturdy Chinese type, and removed
+   low-contrast sage text from sage-backed learning blocks. Academic structure remains. */
+:root{
+ --ink:#25352d;
+ --sub:#53645a;
+ --academic-green-dark:#244538;
+ --academic-muted:#53645a;
+ --academic-serif:'Noto Serif CJK SC','Source Han Serif SC',Georgia,'PingFang SC','Microsoft YaHei',serif;
+}
+body{
+ color:var(--ink);
+ font-size:15px;
+ font-weight:500;
+ line-height:1.9;
+ -webkit-font-smoothing:auto;
+}
+/* Type hierarchies must be visible without relying on pale-green typography. */
+.kb-heading,.maincard .title{
+ color:#20362b;
+ font-weight:750;
+ letter-spacing:.2px;
+}
+.kb-heading{font-size:clamp(29px,3.2vw,40px)}
+.kb-breadcrumb,.kb-footer .kb-breadcrumb{color:#485b50;font-size:13px;font-weight:700}
+.academic-eyebrow{color:#86583e;font-size:12px;font-weight:800}
+.kb-article-section h3,.kb-method-comparison h3{
+ color:#283f32;
+ font-size:18px;
+ font-weight:800;
+}
+.kb-structured-head h3{color:#223a2e;font-weight:750}
+.kb-structured-item h4,.kb-structured-item h5,
+.kb-structured-subtopic-heading,.kb-structured-worked-example h5{
+ color:#254436;
+ font-weight:750;
+}
+.kb-structured-desc,.kb-structured-subtopic-intro,
+.kb-structured-intro,.kb-list li,.kb-two-cols .kb-method li{
+ font-size:15px;
+ color:#33473c;
+ font-weight:500;
+}
+.kb-structured-example,.kb-example p,.kb-table-note{font-size:14px;color:#48584d}
+.kb-structured-worked-example{color:#35483a}
+/* Neutral paper is the default. Green identifies the important structure,
+   instead of painting both the backdrop and its lettering green. */
+.kb-summary{
+ background:#f8f9f5;
+ border-color:#d9e2d9;
+ color:#293e32;
+ font-size:16px;
+ font-weight:550;
+ line-height:2.05;
+}
+.kb-summary::before{color:#345445;font-size:12px;font-weight:850}
+.kb-structured-key-point{
+ background:#f4f7f2;
+ border-color:#416c53;
+ color:#273d30;
+ font-size:15px;
+ font-weight:550;
+}
+.kb-structured-caution{color:#75472d;font-size:14px;font-weight:550}
+.kb-structured-jump button{
+ background:#fffefa;
+ color:#294435;
+ font-size:17px;
+ font-weight:750;
+}
+.kb-structured-jump button::before{color:#455d4b;font-size:12px;font-weight:700}
+.kb-structured-jump button::after{color:#45634c}
+.kb-structured-jump button:hover{background:#f1f5ef}
+.kb-two-cols .kb-method h3{color:#254536;font-size:19px;font-weight:750}
+.kb-two-cols .kb-method.weak h3{color:#815436}
+.kb-structured-item{background:#fffefa}
+.kb-formula-table th,.da-figure th{
+ background:#eef1ec;
+ color:#273e31;
+ font-size:14px;
+ font-weight:800;
+}
+.kb-formula-table td,.da-figure td{color:#34453a;font-size:14px}
+.kb-table-note{color:#475b4f}
+.da-material-header{background:#f5f7f2}
+.da-material-header h3{color:#263c30;font-size:17px;font-weight:750}
+.da-overline{color:#365747;font-size:12px;font-weight:800}
+.da-paragraph{color:#2d4034;font-size:15px;font-weight:500}
+.da-explain-section h4{color:#274839;font-weight:750;font-size:18px}
+.da-rule{background:#f3f6f1;color:#263f30;font-size:15px;font-weight:550}
+.result,.result.good{background:#f9fbf7}
+.result.bad{background:#fdf8f3}
+.result h3{font-size:22px;font-weight:750;color:#254437}
+.result p,.personal-analysis-body{font-size:15px;color:#304339;font-weight:500}
+.result b{color:#244837;font-weight:800}
+.choice{color:#304337;font-size:15px;font-weight:550}
+.choice.chosen{background:#f4f7f2}
+.choice.correct{background:#f1f6ed}
+.choice .letter{color:#3f5547;font-weight:800}
+.stem{font-size:16px;color:#304237;font-weight:500}
+.ask{font-size:17px;color:#24372d;font-weight:750}
+.label{font-size:12px;color:#3d5546;font-weight:800}
+.tag,.tag.negative{font-size:12px;color:#34513f;font-weight:750}
+.tag.negative{background:#f9faf7}
+.qtop .subtle{color:#56645b!important;font-size:13px!important}
+.kb-question-resources>span{color:#425748}
+.kb-practice-link,.kb-related-link{color:#2b4939;font-size:14px;font-weight:700}
+.stats small{color:#53645a;font-size:12px}
+.note{font-size:16px;font-weight:500;color:#26392f}
+.note-status,.muted{color:#4d5e54}
+.auth-panel h3{color:#2a4937;font-size:14px;font-weight:800}
+.auth-panel p,.auth-panel .status{color:#4e5d53;font-size:12px}
+.auth-panel input{color:#293a30;font-size:14px}
+.btn,.auth-panel button{font-size:13px;font-weight:750}
+/* Left chapter directory: less tiny type and more separation between levels. */
+.shell,.knowledge-shell{grid-template-columns:288px minmax(0,1fr)}
+.knowledge-shell{grid-template-columns:288px minmax(0,1fr) 215px}
+.kb-aside-top strong,.aside-title.nav-heading{
+ color:#334b3d;
+ font-size:13px;
+ font-weight:850;
+ letter-spacing:.8px;
+}
+.kb-count,.nav-count{color:#485b4f;font-size:12px;font-weight:700}
+.kb-search,.question-search{font-size:14px;color:#293b31}
+.kb-search::placeholder,.question-search::placeholder{color:#596b5f}
+.kb-chapter{
+ color:#3e5847;
+ font-size:13px;
+ font-weight:850;
+ letter-spacing:.7px;
+}
+.kb-group{
+ font-size:15px;
+ line-height:1.55;
+ color:#263f30!important;
+ font-weight:800;
+}
+.kb-group-title{white-space:normal;overflow:visible;text-overflow:clip}
+.kb-group-count{font-size:12px;font-weight:650;color:#52665a}
+.kb-group-chevron{color:#45634d;font-size:17px}
+.kb-topic-list{padding-left:16px}
+.kb-nav-item{
+ font-size:14px;
+ font-weight:650;
+ line-height:1.6;
+ min-height:45px;
+ color:#3c5143;
+}
+.kb-nav-item::before{
+ font-size:12px;
+ font-weight:700;
+ color:#53665a;
+}
+.kb-nav-item.current{
+ color:#1e4331;
+ font-weight:800;
+ background:#eaf1e9;
+}
+.kb-nav-item.current::before{color:#315d43}
+.kb-nav-empty{color:#42594a;font-size:14px}
+.module-label{font-size:14px;font-weight:800;color:#324e3d}
+.module-group .site-tab{font-size:12px;font-weight:750;color:#4b6151}
+.module-group .site-tab[aria-selected="true"]{color:#fff}
+.shell>aside .module-group .module-label{font-size:14px!important;color:#294334}
+.shell>aside .module-group .site-tab{
+ font-size:12px!important;
+ min-width:42px;
+ font-weight:750;
+}
+.shell>aside .site-tabs::before{color:#435949;font-size:11px}
+#practiceView .nav-heading{font-size:13px}
+#practiceView .nav-title{font-size:14px;font-weight:650;color:#354b3c}
+#practiceView .nav-item{min-height:45px;color:#384d3e;font-weight:650}
+#practiceView .nav-item.active{
+ color:#1f4431;
+ font-weight:800;
+ background:#eaf1e9;
+}
+#practiceView .nav-index{font-size:12px;color:#52645a}
+#practiceView .filter button{
+ font-size:12px;
+ font-weight:650;
+ color:#3e5746;
+}
+#practiceView .filter button.active{
+ color:#224a34;
+ background:#e8f0e7;
+ border-color:#acc5af;
+ font-weight:800;
+}
+/* Right-side reading outline: label and location are actually legible. */
+.academic-rail-label{font-size:12px;color:#3f5646;font-weight:850;letter-spacing:1px}
+.academic-rail-link{font-size:13px;color:#45594a;font-weight:600;line-height:1.6}
+.academic-rail-link.is-active{color:#204831;font-weight:800;background:#f1f5ef}
+.academic-rail-num{font-size:12px;color:#455d4b;font-weight:700}
+.academic-reading-stats{background:#f8f9f5;color:#31483a;font-size:12px}
+.academic-reading-small,.academic-rail-foot{font-size:12px;color:#485d4e}
+.academic-reading-stats-head{font-size:12px;color:#2c4534}
+.academic-related-btn{font-size:13px}
+.bottom-help,.kb-footer-note{font-size:12px;color:#556359}
+/* Minimum reading sizes survive narrower desktop, iPad and phones. */
+@media(max-width:1300px){
+ .shell,.knowledge-shell{grid-template-columns:265px minmax(0,1fr)}
+}
+@media(max-width:1060px) and (min-width:801px){
+ .shell,.knowledge-shell{grid-template-columns:250px minmax(0,1fr)}
+}
+@media(max-width:800px){
+ .shell,.knowledge-shell{grid-template-columns:minmax(0,1fr)}
+ .module-label{font-size:13px}
+ .module-group .site-tab{font-size:12px}
+ .kb-chapter{font-size:13px}
+ .kb-group{font-size:15px}
+ .kb-nav-item{font-size:14px;min-height:44px}
+ .kb-summary{font-size:15px}
+ .kb-structured-jump button{font-size:15px}
+ .kb-structured-head h3{font-size:23px}
+ .kb-structured-desc,.kb-structured-subtopic-intro{font-size:15px}
+ .kb-structured-item h4,.kb-structured-item h5{font-size:18px}
+ .choice{font-size:15px}
+}
+@media(max-width:440px){
+ .academic-mode{font-size:12px}
+ .module-label{font-size:13px}
+ .module-group .site-tab{font-size:12px}
+ .kb-structured-jump button{font-size:14px}
+ .kb-summary{font-size:15px}
+}

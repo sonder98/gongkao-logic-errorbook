@@ -25,6 +25,10 @@ for(const selector of ['.kb-heading','.kb-summary','.kb-structured-jump',
 assert.match(css,/prefers-reduced-motion/);
 assert.match(css,/safe-area-inset-top/);
 assert.ok(css.includes('.kb-structured-head{position:sticky'),'Structured lesson main headings must keep sticky behavior');
+assert.ok(css.includes('Readability pass · 2026-11-20'),'Readability contrast revision should remain in the theme');
+for(const selector of ['.kb-chapter','.kb-group','.kb-nav-item','.kb-summary','.academic-rail-link','#practiceView .nav-title'])
+ assert.ok(css.includes(selector),'Readable font override missing '+selector);
+assert.ok(css.includes('-webkit-font-smoothing:auto'),'Avoid forced thin antialiasing on Apple devices');
 const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)]
  .map(match=>match[1]).filter(Boolean);
 for(const script of scripts)assert.doesNotThrow(()=>new Function(script),'App scripts must parse');
