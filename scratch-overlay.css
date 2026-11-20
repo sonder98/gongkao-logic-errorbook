@@ -50,3 +50,44 @@
    optional brush toolbar also clears the sticky top masthead. */
 .scratch-toolbar{top:calc(83px + env(safe-area-inset-top,0px))}
 @media(max-width:800px){.scratch-toolbar{top:calc(73px + env(safe-area-inset-top,0px))}}
+
+/* Full-screen, body-level drawing shield: covers all subjects, materials,
+   sidebar, navigation and the sticky masthead, never clipped by a card. */
+.scratch-zone{isolation:auto}
+#scratchOverlay{
+ position:fixed;
+ inset:0;
+ width:100%;
+ height:100%;
+ height:100dvh;
+ z-index:110;
+ overflow:hidden;
+ background:rgba(225,245,241,.025);
+ pointer-events:auto;
+ touch-action:none;
+}
+#scratchOverlay[hidden]{display:none!important}
+#scratchOverlay .scratch-canvas{
+ position:absolute;
+ inset:0;
+ width:100%;
+ height:100%;
+ touch-action:none;
+ pointer-events:auto;
+}
+#scratchOverlay.is-scrolling{touch-action:pan-y;pointer-events:auto}
+#scratchOverlay.is-scrolling .scratch-canvas{pointer-events:none}
+#scratchOverlay .scratch-toolbar{
+ position:absolute;
+ top:calc(84px + env(safe-area-inset-top,0px));
+ right:calc(16px + env(safe-area-inset-right,0px));
+ margin:0;
+ z-index:3;
+}
+#practiceView .scratch-fab.is-active{z-index:120}
+@media(max-width:800px){
+ #scratchOverlay .scratch-toolbar{
+  top:calc(73px + env(safe-area-inset-top,0px));
+  right:calc(10px + env(safe-area-inset-right,0px));
+ }
+}
