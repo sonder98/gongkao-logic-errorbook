@@ -62,6 +62,8 @@ elements.openScratch.onclick();
 assert.equal(scratch.isOpen(),true);
 assert.equal(elements.scratchOverlay.hidden,false);
 assert.equal(elements.openScratch.getAttribute('aria-expanded'),'true');
+assert.equal(elements.openScratch.textContent,'✓ 完成');
+assert.equal(elements.openScratch.classList.contains('is-active'),true);
 
 const draw=(type,id=9)=>{
  elements.scratchCanvas.emit('pointerdown',pointer(type,100,180,id));
@@ -80,6 +82,10 @@ elements.scratchMode.onclick();assert.equal(elements.scratchOverlay.classList.co
 elements.scratchClear.onclick();assert.equal(JSON.parse(storage.get(key)).length,1,'Cancel clear');
 confirmAnswer=true;elements.scratchClear.onclick();assert.equal(storage.has(key),false);
 draw('pen',12);assert.equal(JSON.parse(storage.get(key)).length,1);
+elements.openScratch.onclick();assert.equal(scratch.isOpen(),false,'Fixed FAB also closes the overlay');
+assert.equal(elements.openScratch.textContent,'✎ 草稿');
+assert.equal(elements.openScratch.getAttribute('aria-expanded'),'false');
+elements.openScratch.onclick();assert.equal(scratch.isOpen(),true,'Fixed FAB reopens without returning to top');
 elements.scratchDone.onclick();assert.equal(scratch.isOpen(),false);
 assert.equal(elements.scratchOverlay.hidden,true);
 elements=fresh();scratch.mount('q1','guest');
