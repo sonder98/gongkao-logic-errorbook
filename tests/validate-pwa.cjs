@@ -10,6 +10,11 @@ const manifest = JSON.parse(read('manifest.webmanifest'));
 const sw = read('sw.js');
 const scratch = read('scratch-overlay.js');
 const academic=read('academic-theme.css');
+const practice=read('practice-session.js');
+assert.ok(html.includes('src="practice-session.js"'));
+assert.ok(sw.includes("'./practice-session.js'"));
+assert.ok(practice.includes('practiceAttempts')&&practice.includes('practiceCorrect'));
+
 assert.ok(html.includes('href="academic-theme.css"'));
 assert.ok(sw.includes("'./academic-theme.css'"));
 assert.ok(academic.includes('.academic-topbar'));

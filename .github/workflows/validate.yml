@@ -21,3 +21,4 @@ jobs:
           node tests/validate-academic-ui.cjs
           node tests/validate-single-scroll.cjs
           node tests/validate-scratch.cjs
+          node tests/validate-repeat-practice.cjs

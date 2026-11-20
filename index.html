@@ -216,6 +216,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <script src="data-analysis.js"></script>
 <script src="scratch-overlay.js"></script>
 <script src="single-scroll.js"></script>
+<script src="practice-session.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>console.warn('PWA service worker registration failed',error));
@@ -239,12 +240,13 @@ const CFG_KEY='gongkao_cloud_config_v2';
 const $=id=>document.getElementById(id), letters='ABCDE';
 function readJSON(key,fall={}){try{return JSON.parse(localStorage.getItem(key)||'null')||fall}catch(e){return fall}}
 function clone(value){return JSON.parse(JSON.stringify(value))}
-function cloudRecord(value){const copy=clone(value||{});delete copy._syncConflict;return copy}
+function cloudRecord(value){const copy=ExamPractice.cleanLegacy(clone(value||{}));delete copy._syncConflict;return copy}
 let user=null, db=null, pending=new Set(), cloudMeta={}, syncing=false, syncTimer=null;
 let noteDrafts=readJSON(KEY+'_note_drafts');
 let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
 // UI-only collapsed state; do not add a field to the question progress cloud schema.
-const collapsedAnalysis=new Set();
+// Practice selection and immediate feedback are visit-only. Nothing is saved or synced.
+const collapsedAnalysis=new Set(); // Deprecated UI compatibility only; not part of the progress schema.
 const userKey=()=>KEY+'_user_'+user.id;
 const pendingKey=()=>userKey()+'_pending';
 const metaKey=()=>userKey()+'_cloud_meta';
@@ -302,6 +304,7 @@ function persistUserState(){
  }catch(e){}
 }
 function save(){
+ if(state[active])state[active]=ExamPractice.cleanLegacy(state[active]);
  persistUserState();
  if(user && state[active] && !state[active]._syncConflict){
   pending.add(active);
@@ -368,7 +371,7 @@ async function pullCloud(){
 }
 async function applyUser(next){
  const accountChanged=(next?.id||null)!==(user?.id||null);
- if(accountChanged)persistNoteDrafts();
+ if(accountChanged){ExamPractice.leave();persistNoteDrafts();}
  user=next;
  if(accountChanged)loadNoteDrafts();
  if(user){state=readJSON(userKey());pending=new Set(readJSON(pendingKey(),[]));cloudMeta=readJSON(metaKey());uiAuth();render();await pullCloud()}
@@ -465,7 +468,7 @@ async function getLegacyImage(id){
  return value;
 }
 
-function record(id){return state[id]||(state[id]={selected:'',submitted:false,revealed:false,wrong:false,review:false,note:'',attempts:0})}
+function record(id){return state[id]||(state[id]={wrong:false,review:false,note:'',practiceAttempts:0,practiceCorrect:0})}
 
 function knowledgeTopic(id){return knowledgeTopics.find(item=>item.id===id)}
 function knowledgeSectionForTopic(id){return KNOWLEDGE?.sections.find(section=>section.topics.some(topic=>topic.id===id))}
@@ -757,6 +760,7 @@ function activateModule(next){
   knowledgeExpanded:new Set(knowledgeExpanded),lastNavActive
  };
  currentModule=next;
+ ExamPractice.leave();
  QUESTIONS=next==='formal'?FORMAL_QUESTIONS:next==='data'?DATA_QUESTIONS:ARGUMENT_QUESTIONS;
  KNOWLEDGE=next==='formal'?FORMAL_KNOWLEDGE:next==='data'?DATA_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
  knowledgeTopics=KNOWLEDGE?.sections.flatMap(section=>section.topics)||[];
@@ -806,7 +810,9 @@ function academicPlaceTabs(){
 }
 window.addEventListener('resize',academicPlaceTabs);
 function switchView(view,updateHash=true){
- currentView=view==='knowledge'?'knowledge':'practice';
+ const nextView=view==='knowledge'?'knowledge':'practice';
+ if(nextView!==currentView)ExamPractice.leave();
+ currentView=nextView;
  if(currentView==='knowledge')ExamLayout.closeLibrary();
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
@@ -956,6 +962,7 @@ function filtered(){
 function safe(s){return String(s??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
 // Mobile practice pagination lands on the question card, not the page header.
 function navigatePracticeQuestion(id){
+ if(id!==active)ExamPractice.leave();
  active=id;
  render();
  updateViewHash();
@@ -997,14 +1004,15 @@ $('importantFilter').checked=importantOnly;
 $('navCount').textContent=f.length+' / '+QUESTIONS.length+' 题';
 const list=$('questionList'),oldScroll=list.scrollTop,activeChanged=lastNavActive!==active;
 list.innerHTML=f.length?f.map((q,i)=>{
- const r=record(q.id),status=r.submitted?(r.selected===q.answer?'✓':'×'):(r.review?'★':'·');
- const statusClass=r.submitted?(r.selected===q.answer?'correct':'incorrect'):(r.review?'review':'');
- const statusName=r.submitted?(r.selected===q.answer?'已答对':'已答错'):(r.review?'待复习':'未完成');
+ const r=record(q.id),practiced=ExamPractice.totals(r).attempts>0;
+ const status=r.review?'★':practiced?'•':'·';
+ const statusClass=r.review?'review':practiced?'practiced':'';
+ const statusName=r.review?'待复习':practiced?'已练习':'未练习';
  const pin=q.important===true?'<span class="nav-pin" aria-hidden="true">★</span>':'';
  return `<button type="button" class="nav-item ${active===q.id?'active':''}" data-id="${safe(q.id)}" title="${safe(q.title)}" aria-current="${active===q.id?'true':'false'}" aria-label="${safe(q.title+'，'+(q.important===true?'重点题，':'')+statusName)}"><span class="nav-index">${String(i+1).padStart(2,'0')}</span><span class="nav-title">${safe(q.title)}</span>${pin}<span class="nav-status ${statusClass}" aria-hidden="true">${status}</span></button>`;
 }).join(''):'<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析题库尚未收录真题，请先浏览知识体系；后续从真题材料逐步入库。':'当前模块暂无题目。'):'未找到匹配的题目，请调整搜索或筛选条件')+'</div>';
 list.scrollTop=oldScroll;
-list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
+list.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>{if(active!==b.dataset.id)ExamPractice.leave();active=b.dataset.id;render();if(currentView==='practice')updateViewHash()});
 if(activeChanged){
  const item=Array.from(list.querySelectorAll('.nav-item')).find(el=>el.dataset.id===active);
  if(item){
@@ -1014,11 +1022,19 @@ if(activeChanged){
  }
 }
 lastNavActive=active;
-const answered=QUESTIONS.filter(q=>record(q.id).submitted).length,correct=QUESTIONS.filter(q=>record(q.id).submitted&&record(q.id).selected===q.answer).length,need=QUESTIONS.filter(q=>record(q.id).review||record(q.id).wrong).length;
-$('stats').innerHTML=`<div><div class="num">${answered}<small> / ${QUESTIONS.length}</small></div><small>已完成</small></div><div><div class="num">${correct}</div><small>答对题数</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
+const practiced=QUESTIONS.filter(q=>ExamPractice.totals(record(q.id)).attempts>0).length;
+const totals=QUESTIONS.reduce((sum,q)=>{
+ const n=ExamPractice.totals(record(q.id));
+ sum.attempts+=n.attempts;sum.correct+=n.correct;return sum;
+},{attempts:0,correct:0});
+const need=QUESTIONS.filter(q=>record(q.id).review||record(q.id).wrong).length;
+const accuracy=totals.attempts?Math.round(totals.correct/totals.attempts*100)+'%':'—';
+$('stats').innerHTML=`<div><div class="num">${practiced}<small> / ${QUESTIONS.length}</small></div><small>已练题数</small></div><div><div class="num">${accuracy}</div><small>累计正确率</small></div><div><div class="num">${need}</div><small>待复习</small></div>`;
 if(!f.length){$('card').innerHTML='<div class="empty">'+(!QUESTIONS.length?(currentModule==='data'?'资料分析模块已准备就绪，等待录入第一组真实材料与题目。':'当前模块暂无练习题。'):'没有符合条件的题目，请调整搜索词或筛选条件。')+'</div>';ExamLayout.onRender(null,f,QUESTIONS,currentModule);return}
 const q=f.find(q=>q.id===active),r=record(q.id),ix=f.findIndex(q=>q.id===active);
-const analysisExpanded=(r.submitted||r.revealed)&&!collapsedAnalysis.has(q.id);
+const visit=ExamPractice.view(q.id);
+const accuracyHistory=ExamPractice.totals(r);
+const analysisExpanded=visit.expanded;
 const dataMode=currentModule==='data';
 const previousMaterialScroll=$('card').querySelector('.da-material-body')?.scrollTop||0;
 const material=dataMode?DATA_MATERIALS.find(m=>m.id===q.materialId):null;
@@ -1039,9 +1055,9 @@ const qRelated=linkedTopics(q.id);
 const qKnowledge=qRelated.length?'<div class="kb-question-resources"><span>关联知识</span>'+qRelated.map(topic=>'<button type="button" class="kb-practice-link" data-open-topic="'+safe(topic.id)+'">'+safe(topic.title)+'</button>').join('')+'</div>':'';
 
 $('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div class="qtop"><span class="tag">${safe(q.category)}</span><span class="tag negative">${safe(q.type)}</span>${q.important===true?'<span class="tag important">★ 重点题</span>':''}<span class="subtle" aria-label="当前题目序号">${ix+1} / ${f.length}</span>${dataMode?'<button class="exam-material-jump" type="button" id="examJumpMaterial">↓ 查看资料</button>':''}<button type="button" class="scratch-launch" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay">✎ 打开草稿</button></div>
-<h2 class="title">${safe(q.title)}</h2>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
+<h2 class="title">${safe(q.title)}</h2><div class="practice-accuracy" aria-label="本题练习统计"><span>练习 <strong>${accuracyHistory.attempts}</strong> 次</span><span>答对 <strong>${accuracyHistory.correct}</strong> 次</span><span>正确率 <strong>${accuracyHistory.rate===null?'—':accuracyHistory.rate+'%'}</strong></span></div>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 ${dataMode&&q.optionImage?`<figure class="da-option-image"><img src="${safe(q.optionImage)}" alt="${safe(q.optionImageAlt||'原题图形选项')}" decoding="async" loading="eager"></figure>`:''}
-<div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=r.selected===l?'chosen':'';if(r.submitted&&l===q.answer)cls+=' correct';if(r.submitted&&r.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${r.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
+<div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=visit.selected===l?'chosen':'';if(visit.submitted&&l===q.answer)cls+=' correct';if(visit.submitted&&visit.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${visit.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
 <div class="scratch-overlay" id="scratchOverlay" hidden>
  <canvas class="scratch-canvas" id="scratchCanvas" aria-label="透明书写草稿层"></canvas>
  <div class="scratch-toolbar" role="group" aria-label="手写草稿操作">
@@ -1051,8 +1067,8 @@ ${dataMode&&q.optionImage?`<figure class="da-option-image"><img src="${safe(q.op
   <button type="button" class="scratch-done" id="scratchDone">完成</button>
  </div>
 </div></div>
- <div class="actions row"><button id="submit" class="btn primary" ${(!r.selected||r.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn" type="button" aria-expanded="${analysisExpanded}">${analysisExpanded?'收起解析':'查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
- ${analysisExpanded?`<section class="result ${r.submitted?(r.selected===q.answer?'good':'bad'):''}"><h3>${r.submitted&&r.selected===q.answer?'✓ 答对了':'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<div class="result-analysis-actions"><button type="button" class="btn" id="replaceAnalysis" ${!noteText(q.id,r).trim()||r._syncConflict?'disabled':''}>笔记替换解析</button>${hasPersonalAnalysis?'<button type="button" class="btn" id="restoreAnalysis">恢复原解析</button>':''}<button id="retry" class="btn" type="button">重做本题</button></div></section>`:''}
+ <div class="actions row"><button id="submit" class="btn primary" ${(!visit.selected||visit.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn" type="button" aria-expanded="${analysisExpanded}">${analysisExpanded?'收起解析':'查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
+ ${analysisExpanded?`<section class="result ${visit.submitted?(visit.correct?'good':'bad'):''}"><h3>${visit.submitted&&visit.correct?'✓ 答对了':visit.submitted?'✕ 答错了 · 正确答案 '+q.answer:'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<div class="result-analysis-actions"><button type="button" class="btn" id="replaceAnalysis" ${!noteText(q.id,r).trim()||r._syncConflict?'disabled':''}>笔记替换解析</button>${hasPersonalAnalysis?'<button type="button" class="btn" id="restoreAnalysis">恢复原解析</button>':''}<button id="retry" class="btn" type="button">重做本题</button></div></section>`:''}
  ${r._syncConflict?`<section class="sync-conflict"><h3>这道题在另一台设备也被修改过</h3><p>为了避免静默覆盖，请选择保留当前本机版本，或采用云端版本。</p><div class="actions"><button id="keepLocal" class="btn primary">保留本机并覆盖云端</button><button id="useCloud" class="btn">采用云端版本</button></div></section>`:''}
  <p class="label">个人复盘笔记 <span class="muted">（编辑时仅在本机暂存草稿）</span></p><textarea id="note" class="note" maxlength="20000" placeholder="记录：我当时为什么会选错？下次怎么避免？">${safe(noteText(q.id,r))}</textarea>
  <div class="note-toolbar"><span id="noteStatus" class="muted note-status" role="status" aria-live="polite"></span><button type="button" id="saveNote" class="btn primary">${user?'保存并同步':'保存笔记'}</button></div>
@@ -1078,14 +1094,10 @@ if(dataMode){
 }
 ExamScratch.mount(q.id,user?.id||'guest');
 $('card').querySelectorAll('[data-open-topic]').forEach(b=>b.onclick=()=>openKnowledge(b.dataset.openTopic));
-$('card').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{r.selected=b.dataset.answer;save();render()});
+$('card').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{ExamPractice.select(q.id,b.dataset.answer);render()});
  $('submit').onclick=()=>submit(q,r);
  $('show').onclick=()=>{
-  if(analysisExpanded)collapsedAnalysis.add(q.id);
-  else{
-   collapsedAnalysis.delete(q.id);
-   if(!r.submitted&&!r.revealed){r.revealed=true;save();}
-  }
+  ExamPractice.toggleAnalysis(q.id);
   render();
  };
 $('review').onchange=e=>{r.review=e.target.checked;save();if(wrongOnly&&!r.review&&!r.wrong)render()};
@@ -1136,33 +1148,37 @@ if($('toggleImage'))if($('toggleImage'))$('toggleImage').onclick=async()=>{
 };
 $('prev').onclick=()=>{if(ix>0)navigatePracticeQuestion(f[ix-1].id)};
 $('next').onclick=()=>{if(ix<f.length-1)navigatePracticeQuestion(f[ix+1].id)};
- if($('retry'))$('retry').onclick=()=>{collapsedAnalysis.delete(q.id);r.selected='';r.submitted=false;r.revealed=false;save();render()};
+ if($('retry'))$('retry').onclick=()=>{ExamPractice.restart(q.id);render()};
  if($('keepLocal'))$('keepLocal').onclick=()=>useLocalConflict(q.id);
  if($('useCloud'))$('useCloud').onclick=()=>useCloudConflict(q.id);
  ExamLayout.onRender(q,f,QUESTIONS,currentModule);
 }
-function submit(q,r){if(!r.selected)return;collapsedAnalysis.delete(q.id);r.submitted=true;r.attempts++;r.wrong=r.selected!==q.answer;save();render()}
+function submit(q,r){
+ const outcome=ExamPractice.submit(q.id,q.answer,r);
+ if(!outcome.accepted)return;
+ if(outcome.counted){r.wrong=!outcome.correct;save();}
+ render();
+}
 $('questionSearch').oninput=e=>{searchTerm=e.target.value;render();if(currentView==='practice')updateViewHash()};
 $('wrongFilter').onchange=e=>{wrongOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
 $('importantFilter').onchange=e=>{importantOnly=e.target.checked;render();if(currentView==='practice')updateViewHash()};
 function downloadBackup(label=''){
- const payload={format:'gongkao-logic-backup-v3',schema_version:APP_SCHEMA_VERSION,exported_at:new Date().toISOString(),progress:state};
+ const progress=Object.fromEntries(Object.entries(state).map(([id,r])=>[id,cloudRecord(r)]));
+ const payload={format:'gongkao-logic-backup-v3',schema_version:APP_SCHEMA_VERSION,exported_at:new Date().toISOString(),progress};
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  const suffix=label?'_'+label:'';
  a.href=url;a.download='公考错题记录备份'+suffix+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);
 }
 function normalizeImportedRecord(item){
- const selected=letters.includes(String(item.selected||'').toUpperCase())?String(item.selected).toUpperCase():'';
+ const totals=ExamPractice.totals(item);
  return {
-  selected,
-  submitted:!!item.submitted,
-  revealed:!!item.revealed,
   wrong:!!item.wrong,
   review:!!item.review,
   note:typeof item.note==='string'?item.note.slice(0,20000):'',
   analysisOverride:typeof item.analysisOverride==='string'?item.analysisOverride.slice(0,20000):'',
-  attempts:Number.isFinite(Number(item.attempts))?Math.max(0,Math.floor(Number(item.attempts))):0
+  practiceAttempts:totals.attempts,
+  practiceCorrect:totals.correct
  };
 }
 $('academicKnowledgeMode').onclick=()=>switchView('knowledge');
@@ -1178,6 +1194,7 @@ $('importBackup').onchange=async e=>{
  if(!ids.length)return setStatus('备份中没有当前题库的有效记录','bad');
  if(!confirm('导入 '+ids.length+' 道题的记录？相同题目的当前记录将被覆盖'+(user?'，并同步到云端':'')+'。'))return;
  ids.forEach(id=>{state[id]=normalizeImportedRecord(items[id]);delete noteDrafts[id];if(user)pending.add(id)});
+ ExamPractice.leave();
  persistNoteDrafts();
  persistUserState();
  render();if(user)await pushCloud();setStatus('已导入 '+ids.length+' 道题的记录','good');
@@ -1194,13 +1211,14 @@ $('reset').onclick=async()=>{
   ids.forEach(id=>{pending.delete(id);delete cloudMeta[id]});
  }
  ids.forEach(id=>{delete state[id];delete noteDrafts[id]});
+ ExamPractice.leave();
  ExamScratch.clearQuestions(ids,user?.id||'guest');
  persistNoteDrafts();
  persistUserState();
  category='全部';wrongOnly=false;importantOnly=false;active=QUESTIONS[0]?.id||null;render();
  setStatus('已清空「'+moduleName+'」模块的答题记录','good');
 };
-document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!r.submitted){r.selected=c;save();render()}else if(e.key==='Enter'&&!r.submitted&&r.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
+document.addEventListener('keydown',e=>{if(currentView!=='practice'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||['TEXTAREA','INPUT'].includes(document.activeElement.tagName))return;const f=filtered(),q=f.find(x=>x.id===active);if(!q)return;const r=record(active),visit=ExamPractice.view(active),c=e.key.toUpperCase(),i=letters.indexOf(c);if(i>=0&&i<q.options.length&&!visit.submitted){ExamPractice.select(q.id,c);render()}else if(e.key==='Enter'&&!visit.submitted&&visit.selected){submit(q,r)}else if(e.key==='ArrowRight'&&f.indexOf(q)<f.length-1){ExamPractice.leave();active=f[f.indexOf(q)+1].id;render();updateViewHash()}else if(e.key==='ArrowLeft'&&f.indexOf(q)>0){ExamPractice.leave();active=f[f.indexOf(q)-1].id;render();updateViewHash()}})
 async function boot(){
  academicPlaceTabs();
  ExamLayout.init();

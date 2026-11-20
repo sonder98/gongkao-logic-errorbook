@@ -133,3 +133,19 @@ body.exam-drawer-open{overflow:hidden!important}
  #practiceView #card .qtop .subtle{margin-left:0}
  #practiceView #card .da-material-header h3{font-size:18px}
 }
+
+/* Repeat-practice accuracy: quiet, glanceable metrics; no last-answer spoiler. */
+.practice-accuracy{
+ display:flex;flex-wrap:wrap;align-items:center;gap:8px 15px;
+ margin:-4px 0 20px;padding:0 0 15px;
+ border-bottom:1px solid #e5e9e1;
+ font-size:13px;font-weight:600;line-height:1.7;color:#506358;
+ font-variant-numeric:tabular-nums;
+}
+.practice-accuracy span{white-space:nowrap}
+.practice-accuracy strong{font-weight:800;color:#284b36;font-size:14px}
+#examLibraryDrawer .nav-status.practiced{color:#637c6c}
+@media(max-width:440px){
+ .practice-accuracy{gap:5px 11px;font-size:12px;margin:-2px 0 14px}
+ .practice-accuracy strong{font-size:13px}
+}
