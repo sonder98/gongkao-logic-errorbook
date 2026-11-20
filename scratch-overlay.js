@@ -12,7 +12,14 @@
    const value=JSON.parse(localStorage.getItem(storageKey(key))||'[]');
    if(!Array.isArray(value))return [];
    return value.filter(s=>s&&Array.isArray(s.points))
-    .slice(-MAX_STROKES).map(s=>({points:s.points.filter(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)).slice(0,MAX_POINTS)}));
+    .slice(-MAX_STROKES).map(s=>{
+     const points=s.points.filter(p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite)).slice(0,MAX_POINTS);
+     const o=s.origin;
+     // New writing tracks the document while scrolling. Keep existing
+     // question-relative strokes readable if no origin was stored.
+     const origin=Array.isArray(o)&&o.length===4&&o.every(Number.isFinite)&&o[2]>0&&o[3]>0?o:null;
+     return origin?{points,origin}:{points};
+    });
   } catch (_) {return []}
  }
  function save(m){
@@ -26,6 +33,15 @@
   const canvas=m.canvas,ctx=canvas.getContext('2d');
   if(!ctx)return;
   const width=canvas.clientWidth,height=canvas.clientHeight;
+  const zoneRect=m.zone.getBoundingClientRect();
+  const scrollX=global.scrollX||0,scrollY=global.scrollY||0;
+  const screenPoint=(stroke,p)=>{
+   if(stroke.origin){
+    const [pageX,pageY,w,h]=stroke.origin;
+    return [pageX+p[0]*w-scrollX,pageY+p[1]*h-scrollY];
+   }
+   return [zoneRect.left+p[0]*zoneRect.width,zoneRect.top+p[1]*zoneRect.height];
+  };
   const dpr=Math.min(global.devicePixelRatio||1,2);
   const w=Math.max(1,Math.round(width*dpr)),h=Math.max(1,Math.round(height*dpr));
   if(canvas.width!==w||canvas.height!==h){canvas.width=w;canvas.height=h}
@@ -39,11 +55,15 @@
    const points=stroke.points;
    if(!points.length)continue;
    if(points.length===1){
-    ctx.beginPath();ctx.arc(points[0][0]*width,points[0][1]*height,1.5,0,Math.PI*2);ctx.fill();
+    const [x,y]=screenPoint(stroke,points[0]);
+    ctx.beginPath();ctx.arc(x,y,1.5,0,Math.PI*2);ctx.fill();
     continue;
    }
-   ctx.beginPath();ctx.moveTo(points[0][0]*width,points[0][1]*height);
-   for(let i=1;i<points.length;i++)ctx.lineTo(points[i][0]*width,points[i][1]*height);
+   const [startX,startY]=screenPoint(stroke,points[0]);
+   ctx.beginPath();ctx.moveTo(startX,startY);
+   for(let i=1;i<points.length;i++){
+    const [x,y]=screenPoint(stroke,points[i]);ctx.lineTo(x,y);
+   }
    ctx.stroke();
   }
  }
@@ -73,7 +93,9 @@
   const pos=point(m,e);if(!pos)return;
   m.pointerId=e.pointerId;
   if(m.strokes.length>=MAX_STROKES)m.strokes.shift();
-  m.strokes.push({points:[pos]});
+  m.strokes.push({points:[pos],origin:[
+    global.scrollX||0,global.scrollY||0,m.canvas.clientWidth,m.canvas.clientHeight
+  ]});
   try{m.canvas.setPointerCapture(e.pointerId)}catch(_){}
   if(e.cancelable)e.preventDefault();
   resize(m);
@@ -117,12 +139,17 @@
   resize(m);
   if(typeof ResizeObserver!=='undefined'){
    m.observer=new ResizeObserver(()=>resize(m));
-   m.observer.observe(m.zone);
+   m.observer.observe(m.overlay);
   }
  }
  function dispose(){
   if(!mounted)return;
   finish(mounted);
+  // Overlay is now outside the question card; hide it explicitly before
+  // changing exercise or module, but preserve openKey for same-question redraw.
+  mounted.overlay.hidden=true;
+  mounted.overlay.classList.remove('is-scrolling');
+  mounted.zone.classList.remove('scratch-active');
   if(mounted.observer)mounted.observer.disconnect();
   if(mounted.raf)cancelAnimationFrame(mounted.raf);
   mounted=null;
@@ -165,6 +192,12 @@
    m.overlay.classList.toggle('is-scrolling',m.scrolling);
    m.mode.textContent=m.scrolling?'继续书写':'滚动页面';
   };
+  // Block wheel movement in writing mode. Switching to scroll mode allows
+  // the normal browser page scroll without touching controls underneath.
+  m.overlay.onwheel=e=>{
+   if(!m.scrolling&&e.cancelable)e.preventDefault();
+   if(m.scrolling)requestAnimationFrame(()=>resize(m));
+  };
   m.canvas.addEventListener('pointerdown',e=>start(m,e));
   m.canvas.addEventListener('pointermove',e=>move(m,e));
   m.canvas.addEventListener('pointerup',e=>{if(e.pointerId===m.pointerId){finish(m);resize(m)}});
@@ -172,6 +205,12 @@
   m.canvas.addEventListener('lostpointercapture',e=>{if(e.pointerId===m.pointerId){finish(m);resize(m)}});
   m.canvas.addEventListener('contextmenu',e=>e.preventDefault());
   if(openKey===key)open(m);
+ }
+ if(typeof global.addEventListener==='function'){
+  global.addEventListener('scroll',()=>{
+   if(mounted?.open&&mounted.scrolling)resize(mounted);
+  },{passive:true});
+  global.addEventListener('resize',()=>{if(mounted?.open)resize(mounted)},{passive:true});
  }
  function clearQuestions(ids,account){
   const scope=String(account||'guest');
@@ -181,5 +220,5 @@
    if(mounted?.key===key){mounted.strokes=[];mounted.undo.disabled=true;resize(mounted)}
   }
  }
- global.ExamScratch={mount,clearQuestions,isDrawing:()=>!!mounted&&mounted.pointerId!==null,isOpen:()=>!!mounted?.open};
+ global.ExamScratch={mount,clearQuestions,close:()=>{if(mounted?.open)close(mounted)},isDrawing:()=>!!mounted&&mounted.pointerId!==null,isOpen:()=>!!mounted?.open};
 })(window);

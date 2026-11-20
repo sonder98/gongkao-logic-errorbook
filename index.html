@@ -199,6 +199,15 @@ button,a{-webkit-tap-highlight-color:transparent}
 <label class="switch" style="display:block;margin-top:8px">导入 JSON 备份 <input id="importBackup" type="file" accept=".json,application/json" style="max-width:100%;margin-top:6px"></label>
 <button class="outline" id="reset" type="button">清空本模块答题记录</button></aside>
 <main><div class="stats" id="stats"></div><article class="maincard" id="card"></article><div class="bottom-help">快捷键：<span class="key">A</span>—<span class="key">E</span> 选项，<span class="key">Enter</span> 提交，<span class="key">←</span> / <span class="key">→</span> 切题。原题图片可按需展开。移动端：左滑下一题、右滑上一题。</div></main><button type="button" class="scratch-launch scratch-fab" id="openScratch" aria-expanded="false" aria-controls="scratchOverlay" aria-label="打开透明草稿，在当前题目上书写" hidden>✎ 草稿</button></div>
+<div class="scratch-overlay" id="scratchOverlay" hidden>
+ <canvas class="scratch-canvas" id="scratchCanvas" aria-label="透明书写草稿层"></canvas>
+ <div class="scratch-toolbar" role="group" aria-label="手写草稿操作">
+  <button type="button" id="scratchMode">滚动页面</button>
+  <button type="button" id="scratchUndo" disabled>撤销</button>
+  <button type="button" id="scratchClear">清空</button>
+  <button type="button" class="scratch-done" id="scratchDone">完成</button>
+ </div>
+</div>
 <div class="shell knowledge-shell" id="knowledgeView" role="tabpanel" aria-labelledby="tabKnowledge" hidden>
  <aside>
   <div class="kb-aside-top"><strong>知识目录</strong><span id="knowledgeCount" class="kb-count">加载中</span></div>
@@ -761,6 +770,7 @@ function activateModule(next){
   knowledgeExpanded:new Set(knowledgeExpanded),lastNavActive
  };
  currentModule=next;
+ ExamScratch.close();
  ExamPractice.leave();
  QUESTIONS=next==='formal'?FORMAL_QUESTIONS:next==='data'?DATA_QUESTIONS:ARGUMENT_QUESTIONS;
  KNOWLEDGE=next==='formal'?FORMAL_KNOWLEDGE:next==='data'?DATA_KNOWLEDGE:ARGUMENT_KNOWLEDGE;
@@ -814,7 +824,7 @@ function switchView(view,updateHash=true){
  const nextView=view==='knowledge'?'knowledge':'practice';
  if(nextView!==currentView)ExamPractice.leave();
  currentView=nextView;
- if(currentView==='knowledge')ExamLayout.closeLibrary();
+ if(currentView==='knowledge'){ExamLayout.closeLibrary();ExamScratch.close();}
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
  academicPlaceTabs();
@@ -1059,15 +1069,7 @@ $('card').innerHTML=`${dataStart}<div class="scratch-zone" id="scratchZone"><div
 <h2 class="title">${safe(q.title)}</h2><div class="practice-accuracy" aria-label="本题练习统计"><span>练习 <strong>${accuracyHistory.attempts}</strong> 次</span><span>答对 <strong>${accuracyHistory.correct}</strong> 次</span><span>正确率 <strong>${accuracyHistory.rate===null?'—':accuracyHistory.rate+'%'}</strong></span></div>${qKnowledge}<p class="label">${dataMode?'题目补充信息':'原始题干'}</p><div class="stem">${dataMode?DataAnalysis.rich(q.stem):safe(q.stem)}</div><p class="ask">${safe(q.ask)}</p>
 ${dataMode&&q.optionImage?`<figure class="da-option-image"><img src="${safe(q.optionImage)}" alt="${safe(q.optionImageAlt||'原题图形选项')}" decoding="async" loading="eager"></figure>`:''}
 <div class="choices">${q.options.map((opt,i)=>{let l=letters[i],cls=visit.selected===l?'chosen':'';if(visit.submitted&&l===q.answer)cls+=' correct';if(visit.submitted&&visit.selected===l&&l!==q.answer)cls+=' incorrect';return `<button type="button" class="choice ${cls}" data-answer="${l}" ${visit.submitted?'disabled':''}><span class="letter">${l}</span><span>${safe(opt)}</span></button>`}).join('')}</div>
-<div class="scratch-overlay" id="scratchOverlay" hidden>
- <canvas class="scratch-canvas" id="scratchCanvas" aria-label="透明书写草稿层"></canvas>
- <div class="scratch-toolbar" role="group" aria-label="手写草稿操作">
-  <button type="button" id="scratchMode">滚动页面</button>
-  <button type="button" id="scratchUndo" disabled>撤销</button>
-  <button type="button" id="scratchClear">清空</button>
-  <button type="button" class="scratch-done" id="scratchDone">完成</button>
- </div>
-</div></div>
+</div>
  <div class="actions row"><button id="submit" class="btn primary" ${(!visit.selected||visit.submitted)?'disabled':''}>提交答案</button><button id="show" class="btn" type="button" aria-expanded="${analysisExpanded}">${analysisExpanded?'收起解析':'查看解析'}</button><label class="switch muted"><input type="checkbox" id="review" ${r.review?'checked':''}> 加入待复习</label></div>
  ${analysisExpanded?`<section class="result ${visit.submitted?(visit.correct?'good':'bad'):''}"><h3>${visit.submitted&&visit.correct?'✓ 答对了':visit.submitted?'✕ 答错了 · 正确答案 '+q.answer:'解析 · 正确答案 '+q.answer}</h3>${analysisContent}<div class="result-analysis-actions"><button type="button" class="btn" id="replaceAnalysis" ${!noteText(q.id,r).trim()||r._syncConflict?'disabled':''}>笔记替换解析</button>${hasPersonalAnalysis?'<button type="button" class="btn" id="restoreAnalysis">恢复原解析</button>':''}<button id="retry" class="btn" type="button">重做本题</button></div></section>`:''}
  ${r._syncConflict?`<section class="sync-conflict"><h3>这道题在另一台设备也被修改过</h3><p>为了避免静默覆盖，请选择保留当前本机版本，或采用云端版本。</p><div class="actions"><button id="keepLocal" class="btn primary">保留本机并覆盖云端</button><button id="useCloud" class="btn">采用云端版本</button></div></section>`:''}

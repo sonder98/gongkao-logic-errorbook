@@ -73,6 +73,8 @@ const draw=(type,id=9)=>{
 draw('touch');assert.equal(storage.has(key),false,'Finger does not paint');
 draw('pen');assert.equal(JSON.parse(storage.get(key)).length,1);
 assert.equal(JSON.parse(storage.get(key))[0].points.length,2);
+assert.equal(JSON.parse(storage.get(key))[0].origin.length,4,
+  'New strokes keep document-position anchors for scrolling');
 draw('mouse',10);assert.equal(JSON.parse(storage.get(key)).length,2);
 elements.scratchUndo.onclick();assert.equal(JSON.parse(storage.get(key)).length,1);
 
@@ -91,10 +93,24 @@ assert.equal(elements.scratchOverlay.hidden,true);
 elements=fresh();scratch.mount('q1','guest');
 assert.equal(scratch.isOpen(),false,'Closed mode persists across mount');
 elements.openScratch.onclick();assert.equal(elements.scratchUndo.disabled,false,'Restores sketch on question revisit');
+assert.equal(JSON.parse(storage.get(key))[0].origin.length,4,
+ 'Remounting must not drop the document anchor');
 
 elements=fresh();scratch.mount('q2','guest');assert.equal(scratch.isOpen(),false);
 elements.openScratch.onclick();assert.equal(elements.scratchUndo.disabled,true,'Different question isolated');
 elements=fresh();scratch.mount('q1','other-account');
 elements.openScratch.onclick();assert.equal(elements.scratchUndo.disabled,true,'Different account isolated');
 scratch.clearQuestions(['q1'],'guest');assert.equal(storage.has(key),false);
-console.log('iPad Pencil scratch layer: pen/mouse draw, palm ignore, scroll, undo, confirm clear, local isolation OK');
+
+const index=fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
+const overlayStart=index.indexOf('id="scratchOverlay"');
+const mountStart=index.indexOf('id="openScratch"');
+const knowledgeStart=index.indexOf('id="knowledgeView"');
+assert.ok(overlayStart>mountStart&&overlayStart<knowledgeStart,
+ 'Single overlay must live outside rendered question card and practice shell');
+assert.equal((index.match(/id="scratchOverlay"/g)||[]).length,1);
+const stylesheet=fs.readFileSync(require('node:path').join(__dirname,'../scratch-overlay.css'),'utf8');
+assert.ok(stylesheet.includes('#scratchOverlay{\n position:fixed'));
+assert.ok(stylesheet.includes('#practiceView .scratch-fab.is-active{z-index:120}'));
+console.log('Full-screen Pencil scratch: original stored drawings, document anchors, module cleanup and shield OK');
+
