@@ -1,0 +1,68 @@
+const assert=require('node:assert/strict');
+const study=require('../practice-session.js');
+const legacy={attempts:9,selected:'E',submitted:true,revealed:true,
+ wrong:true,review:true,note:'保留原复盘',analysisOverride:'保留个人解析'};
+assert.deepEqual(study.totals(legacy),{attempts:0,correct:0,rate:null},
+ 'Do not migrate legacy attempts or infer accuracy from the last selected answer');
+const saved={...legacy};
+assert.equal(study.view('q1').submitted,false);
+assert.equal(study.view('q1').selected,'');
+assert.equal(study.view('q1').expanded,false);
+study.select('q1','A');
+assert.equal(study.view('q1').selected,'A');
+const first=study.submit('q1','E',saved);
+assert.deepEqual(first,{accepted:true,counted:true,correct:false});
+assert.deepEqual(study.totals(saved),{attempts:1,correct:0,rate:0});
+assert.equal(study.view('q1').expanded,true,'Feedback stays during current visit');
+assert.equal(study.view('q1').submitted,true);
+assert.equal(study.submit('q1','E',saved).accepted,false,'Double submit is ignored');
+assert.equal(study.totals(saved).attempts,1);
+study.toggleAnalysis('q1');
+assert.equal(study.view('q1').expanded,false);
+study.toggleAnalysis('q1');
+assert.equal(study.view('q1').expanded,true);
+study.view('q2');
+assert.equal(study.view('q2').submitted,false);
+assert.equal(study.view('q1').submitted,false,'Revisiting the question resets choices and feedback');
+assert.equal(study.view('q1').selected,'');
+assert.deepEqual(study.totals(saved),{attempts:1,correct:0,rate:0},
+ 'Leaving a page does not reset cumulative performance');
+study.select('q1','E');
+assert.equal(study.submit('q1','E',saved).correct,true);
+assert.deepEqual(study.totals(saved),{attempts:2,correct:1,rate:50});
+study.restart('q1');
+assert.equal(study.view('q1').selected,'');
+assert.equal(study.view('q1').expanded,false);
+assert.equal(study.view('q1').submitted,false);
+assert.equal(study.totals(saved).attempts,2,'Retry does not erase recorded practice');
+study.toggleAnalysis('q1');
+assert.equal(study.view('q1').revealed,true);
+study.toggleAnalysis('q1');
+study.select('q1','E');
+const spoiled=study.submit('q1','E',saved);
+assert.deepEqual(spoiled,{accepted:true,counted:false,correct:true},
+ 'Previewing the explanation first cannot inflate independent-practice accuracy');
+assert.deepEqual(study.totals(saved),{attempts:2,correct:1,rate:50});
+study.leave();
+assert.equal(study.view('q1').expanded,false,'New session or page refresh starts concealed');
+assert.equal(study.view('q1').submitted,false);
+const clean=study.cleanLegacy(saved);
+for(const key of ['attempts','selected','submitted','revealed'])
+ assert.equal(Object.hasOwn(clean,key),false,'Legacy answers/counters are not exported: '+key);
+assert.equal(clean.note,'保留原复盘');
+assert.equal(clean.analysisOverride,'保留个人解析');
+assert.equal(clean.review,true);
+assert.equal(clean.wrong,true);
+assert.deepEqual(study.totals(clean),{attempts:2,correct:1,rate:50});
+const weird=study.totals({practiceAttempts:5,practiceCorrect:99});
+assert.deepEqual(weird,{attempts:5,correct:5,rate:100},'Corrupt totals cannot exceed attempts');
+const html=require('node:fs').readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
+assert.ok(html.includes('ExamPractice.onRender')===false);
+assert.ok(html.includes('ExamPractice.view(q.id)'));
+assert.ok(html.includes('ExamPractice.leave()'));
+assert.ok(html.includes('ExamPractice.submit(q.id,q.answer,r)'));
+assert.ok(html.includes('practice-accuracy'));
+assert.ok(!html.includes("r.attempts++"),'Old attempts counter must not be updated');
+assert.ok(!html.includes("r.submitted?(r.selected"),'Last answer must not be rendered as spoiler');
+assert.ok(html.includes('practiceAttempts:totals.attempts'));
+console.log('Repeat-practice session, no legacy migration, correct rate and preserved notes: OK');
