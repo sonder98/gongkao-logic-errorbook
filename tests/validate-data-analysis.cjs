@@ -83,8 +83,27 @@ assert.ok(quantitativeMix.items[1].description.includes('现期比近似代替�
  '增速差距不超过20%时按用户讲授的近似策略');
 assert.ok(quantitativeMix.items[2].description.includes('先计算基期比'),
  '增速差距超过20%时必要情况下计算基期比');
-assert.ok(quantitativeMix.items.every(item=>item.caution===undefined&&item.example===undefined&&item.workedExamples===undefined),
- '不得给7.3自创额外边界、提醒或例题');
+assert.ok(quantitativeMix.items.every(item=>item.caution===undefined&&item.example===undefined),
+ '不得给7.3自创额外边界或提示');
+assert.ok(quantitativeMix.items[0].workedExamples===undefined&&quantitativeMix.items[2].workedExamples===undefined,
+ '不得把用户例题挂到其他方法下');
+const quantitativeExample=quantitativeMix.items[1].workedExamples;
+assert.ok(Array.isArray(quantitativeExample)&&quantitativeExample.length===1,'7.3仅加入用户指定的一道教材例题');
+const example73=quantitativeExample[0];
+assert.ok(example73.description.includes('1.47万亿元')&&example73.description.includes('8.0%')&&example73.description.includes('4.1个百分点'),
+ '教材例题保留完整原始材料的信息');
+for(const token of ['2601亿元','9.8%','6409亿元','3.3%','A. 4.5%','B. 5.1%','C. 6.2%','D. 7.0%'])
+ assert.ok(example73.description.includes(token),'例题材料及选项不得缺漏：'+token);
+for(const token of [String.raw`\frac{6409}{2601}`,String.raw`\frac{64}{26}`,String.raw`\frac{5}{2}`,
+ String.raw`9.8\%-3.3\%`,String.raw`\frac{6.5\%}{7}\times 2`,
+ String.raw`1.8\%+3.3\%=5.1\%`,String.raw`6.2\%-3.3\%=2.9\%`])
+ assert.ok(example73.formula.includes(token),'保留用户原始速算链：'+token);
+assert.ok(example73.formula.includes('先定性判断，排除D')&&example73.formula.includes('不必精算基期比'),
+ '例题展示先定性、后现期比估算及误差对线段距离的影响');
+assert.equal(example73.materialImage,undefined,'文字教材例题不擅自新增截图文件');
+assert.equal(lesson07.questionIds.length,0,'教材例题不得写入正式习题关联');
+const exactExample73=(2601+6409)/(2601/1.098+6409/1.033)-1;
+assert.ok(Math.abs(exactExample73-.051)<0.001,'题目增长率计算独立校验约5.1%，答案B');
 assert.equal(lesson07.contentSections[0].subtopics.length,4,'7.1内容不变');
 assert.equal(lesson07.contentSections[1].items.length,3,'7.2内容不变');
 
