@@ -590,9 +590,26 @@ function refreshCloudAutomatically(){
  lastAutoPull=now;
  pullCloud();
 }
+let sdkRetryPromise=null;
+function loadSupabaseWhenOnline(){
+ if(window.supabase?.createClient)return Promise.resolve();
+ if(sdkRetryPromise)return sdkRetryPromise;
+ sdkRetryPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+  script.onload=resolve;
+  script.onerror=()=>reject(new Error('Supabase SDK 无法加载'));
+  document.head.appendChild(script);
+ }).finally(()=>{sdkRetryPromise=null});
+ return sdkRetryPromise;
+}
 window.addEventListener('online',()=>{
- if(db&&user)refreshCloudAutomatically();
- else if(db)db.auth.getSession().then(({data})=>{if(data.session?.user)applyUser(data.session.user)});
+ if(!db){
+  loadSupabaseWhenOnline().then(()=>setupCloud())
+   .catch(error=>setStatus('网络恢复但云端连接失败，本机记录仍保留：'+error.message,'bad'));
+ }else if(user)refreshCloudAutomatically();
+ else db.auth.getSession().then(({data})=>{if(data.session?.user)applyUser(data.session.user)})
+  .catch(error=>setStatus('会话恢复失败：'+error.message,'bad'));
 });
 window.addEventListener('focus',refreshCloudAutomatically);
 document.addEventListener('visibilitychange',()=>{
