@@ -1,7 +1,7 @@
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
-const {merge}=require('../cloud-sync.js');
+const {merge,rebaseGuest}=require('../cloud-sync.js');
 const base={practiceAttempts:3,practiceCorrect:2,review:false,note:'base'};
 const local={...base,practiceAttempts:5,practiceCorrect:3};
 const cloud={...base,practiceAttempts:4,practiceCorrect:3,review:true};
@@ -14,6 +14,22 @@ assert.equal(merge(null,local,cloud),null,'Unknown base is a manual conflict');
 assert.equal(merge(base,{...local,practiceAttempts:0},cloud),null,'Reset counters require resolution');
 assert.equal(merge(base,{...base,note:'updated'},base).note,'updated');
 assert.equal(merge({}, {practiceAttempts:1,practiceCorrect:1}, {practiceAttempts:2,practiceCorrect:1}).practiceAttempts,3);
+assert.deepEqual(rebaseGuest(
+ {practiceAttempts:5,practiceCorrect:3,note:'old'},
+ {practiceAttempts:7,practiceCorrect:4,note:'old'},
+ {practiceAttempts:12,practiceCorrect:7,note:'new'}
+),{practiceAttempts:14,practiceCorrect:8,note:'new'},
+ 'Guest answers must add only the new attempts, without replacing a newer cloud note');
+assert.equal(rebaseGuest(
+ {practiceAttempts:1,note:'old'},
+ {practiceAttempts:2,note:'guest changed'},
+ {practiceAttempts:5,note:'cloud changed'}
+),null,'Concurrent guest and cloud note edits require recovery');
+assert.equal(rebaseGuest(
+ {practiceAttempts:1,practiceCorrect:1},
+ {practiceAttempts:0,practiceCorrect:0},
+ {practiceAttempts:3,practiceCorrect:2}
+),null,'Guest resets must not be silently applied');
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
 assert.match(html,/cloud-sync\.js/);
 assert.match(html,/autoRefreshToken:true/);
