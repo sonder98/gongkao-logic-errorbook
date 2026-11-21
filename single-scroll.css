@@ -792,3 +792,25 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
 @media (prefers-reduced-motion:reduce){
  #practiceView #card.exam-swipe-moving{will-change:auto}
 }
+
+
+/* iPad / phone knowledge lessons reuse the exercise paging transition.
+   Restrict pan-y to text surfaces, not the whole lesson: large formula
+   tables and mindmaps retain their own horizontal scrolling/zoom behavior. */
+#knowledgeView #knowledgeCard.exam-swipe-moving{
+ will-change:transform,opacity;
+ -webkit-backface-visibility:hidden;
+ backface-visibility:hidden;
+}
+@media (any-pointer:coarse){
+ #knowledgeView #knowledgeCard :is(
+  .kb-heading,.kb-summary,.kb-breadcrumb,.academic-eyebrow,
+  .kb-structured-intro,.kb-structured-subtopic-intro,.kb-structured-desc,
+  p,li,h3,h4,h5
+ ){
+  touch-action:pan-y;
+ }
+}
+@media (prefers-reduced-motion:reduce){
+ #knowledgeView #knowledgeCard.exam-swipe-moving{will-change:auto}
+}
