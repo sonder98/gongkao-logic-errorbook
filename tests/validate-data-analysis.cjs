@@ -44,7 +44,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson07=courseTopics.find(t=>t.id==='data-topic-course-07-fraction-mix');
 assert.ok(lesson07,'第7课课程ID须保持稳定');
 assert.deepEqual(lesson07.contentSections.map(s=>s.title),
- ['7.1 分式混合的基本概念','7.2 累计增速混合'],
+ ['7.1 分式混合的基本概念','7.2 累计增速混合','7.3 混合定量'],
  '第7课7.1与7.2为两个并列知识节');
 const cumulativeMix=lesson07.contentSections[1];
 assert.equal(cumulativeMix.id,'fraction-mix-cumulative-growth');
@@ -66,6 +66,27 @@ for(const [prev,cumulative] of [[.1,.11],[.15,.08]]){
  assert.equal(Math.sign(month-cumulative),Math.sign(cumulative-prev),
   '累计增速和上月累计增速的变化方向与当月增速相对累计增速一致');
 }
+
+
+const quantitativeMix=lesson07.contentSections[2];
+assert.equal(quantitativeMix.id,'fraction-mix-quantitative','7.3保持独立章节');
+assert.deepEqual(quantitativeMix.items.map(item=>item.title),[
+ '基本原则｜分母反比确定距离比',
+ '增速差距≤20%｜可用现期比近似',
+ '增速差距＞20%｜关注差距影响'
+],'7.3只包含用户讲授的基本原则和两种增速差距情况');
+assert.ok(quantitativeMix.items[0].formula.includes(String.raw`\frac{|A-C|}{|C-B|}=\frac{n}{m}`),
+ '保持7.1分母反比与距离比的公式，不自加新计算方法');
+assert.ok(quantitativeMix.items[0].description.includes('基期量'),
+ '增长率混合中用于计算距离比的是基期量');
+assert.ok(quantitativeMix.items[1].description.includes('现期比近似代替基期比'),
+ '增速差距不超过20%时按用户讲授的近似策略');
+assert.ok(quantitativeMix.items[2].description.includes('先计算基期比'),
+ '增速差距超过20%时必要情况下计算基期比');
+assert.ok(quantitativeMix.items.every(item=>item.caution===undefined&&item.example===undefined&&item.workedExamples===undefined),
+ '不得给7.3自创额外边界、提醒或例题');
+assert.equal(lesson07.contentSections[0].subtopics.length,4,'7.1内容不变');
+assert.equal(lesson07.contentSections[1].items.length,3,'7.2内容不变');
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
