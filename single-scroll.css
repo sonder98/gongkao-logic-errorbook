@@ -408,7 +408,7 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
 #practiceView #card .stem{
  margin:0;
  color:#2B4034;
- font-size:17px;
+ font-size:18px;
  font-weight:500;
  line-height:1.7;
 }
@@ -428,7 +428,7 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
  border-radius:8px;
  background:var(--exam-paper);
  line-height:1.55;
- font-size:15px;
+ font-size:16px;
  font-weight:600;
  color:#314A39;
 }
@@ -613,9 +613,9 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
  #practiceView>main .stats>div{padding-inline:7px}
  #practiceView>main .stats .num{font-size:16px}
  #practiceView>main .stats>div>small{font-size:10px}
- #practiceView #card .stem{font-size:16px;line-height:1.65}
+ #practiceView #card .stem{font-size:17px;line-height:1.65}
  #practiceView #card .ask{font-size:17px;line-height:1.55}
- #practiceView #card .choice{font-size:14px;line-height:1.5}
+ #practiceView #card .choice{font-size:16px;line-height:1.5}
  .knowledge-shell{grid-template-columns:205px minmax(0,1fr);gap:16px;padding-inline:16px}
  .knowledge-shell .maincard{padding:26px 28px}
  #scratchOverlay .scratch-toolbar{
