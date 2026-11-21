@@ -114,7 +114,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   const position=await page.evaluate(()=>{
    const element=document.getElementById('knowledgeCard');
    const header=document.querySelector('header.academic-topbar');
-   const desired=element.offsetTop-header.getBoundingClientRect().height-12;
+   const desired=scrollY+element.getBoundingClientRect().top-header.getBoundingClientRect().height-12;
    return {actual:scrollY,desired:Math.max(0,Math.min(
     document.documentElement.scrollHeight-innerHeight,desired))};
   });
