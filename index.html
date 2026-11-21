@@ -411,7 +411,7 @@ function pullCloud(){
   if(user?.id!==uid)return;
   if(error){setStatus('读取云端失败，当前进度仍保存在本机：'+error.message,'bad');return}
   const rows=data||[],seen=new Set();
-  let changes=false;
+  let changes=false,legacyConflicts=0;
   for(const row of rows){
    const id=row.question_id;seen.add(id);
    const cached=cloudMeta[id];
@@ -422,6 +422,14 @@ function pullCloud(){
    // against the last confirmed baseline before accepting the remote version.
    if(current&&cached?.baseData&&!ExamCloudSync.eq(cloudRecord(current),cached.baseData)){
     pending.add(id);
+    continue;
+   }
+   // Older app versions did not keep a confirmed baseline. If their saved
+   // record differs, keep both versions for explicit recovery instead of
+   // silently choosing the cloud and erasing possible offline answers.
+   if(current&&!cached?.baseData&&!ExamCloudSync.eq(cloudRecord(current),cloudRecord(row.data))){
+    state[id]._syncConflict={cloudData:row.data,cloudVersion:row.version,cloudUpdatedAt:row.updated_at};
+    legacyConflicts++;changes=true;
     continue;
    }
    if(!ExamCloudSync.eq(current,row.data))changes=true;
@@ -435,6 +443,11 @@ function pullCloud(){
     delete state[id];delete cloudMeta[id];changes=true;
    }
   }
+  // A record stored under the account but absent on the server is safe to
+  // create. Do not drop it merely because older versions forgot its queue.
+  for(const id of Object.keys(state)){
+   if(!seen.has(id)&&!cloudMeta[id]&&!pending.has(id)&&!state[id]?._syncConflict)pending.add(id);
+  }
   if(user?.id!==uid)return;
   // Account is now up to date: apply only newly-made guest edits, not stale
   // full guest records. Conflicting note changes remain in guest storage.
@@ -443,9 +456,11 @@ function pullCloud(){
   if(changes)refreshRenderedProgress();
   uiAuth();
   const stranded=readJSON(guestPendingKey,[]).length;
-  setStatus(stranded?'云端已读取，另有 '+stranded+' 条访客记录留在本机等待恢复':
+  const unresolved=legacyConflicts+Object.values(state).filter(r=>r?._syncConflict).length;
+  setStatus(unresolved?'已有 '+unresolved+' 条同题差异已保留，请在对应题目选择版本':
+   stranded?'云端已读取，另有 '+stranded+' 条访客记录保存在本机等待恢复':
    '已登录 · 自动读取 '+rows.length+' 条云端记录'+(pending.size?'，本机 '+pending.size+' 条修改继续上传':' · 已是最新'),
-   stranded?'bad':'good');
+   unresolved||stranded?'bad':'good');
   if(pending.size)scheduleSync();
  });
 }
