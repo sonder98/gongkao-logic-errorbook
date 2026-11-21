@@ -477,17 +477,17 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
 .knowledge-shell .kb-structured-head{background:var(--exam-paper)}
 /* The always-accessible original brush control, with a subdued floating lift. */
 #practiceView .scratch-fab{
- background:var(--exam-forest);
- color:#FFF;
- border:1px solid #274538;
- border-radius:12px;
+ background:var(--exam-forest)!important;
+ color:#FFF!important;
+ border:1px solid #274538!important;
+ border-radius:12px!important;
  box-shadow:0 4px 14px rgba(44,76,62,.22);
  transition:background var(--exam-ease),box-shadow var(--exam-ease),transform var(--exam-ease);
 }
 #practiceView .scratch-fab.is-active{
- color:var(--exam-forest);
- background:var(--exam-paper);
- border-color:#95AE99;
+ color:var(--exam-forest)!important;
+ background:var(--exam-paper)!important;
+ border-color:#95AE99!important;
  box-shadow:0 4px 14px rgba(44,76,62,.17);
 }
 /* Compact course list while retaining the *original clickable buttons*.
