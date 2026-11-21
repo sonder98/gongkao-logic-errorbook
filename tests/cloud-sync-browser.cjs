@@ -127,4 +127,4 @@ async function test(startSignedIn,initialRows,injectConflict){
  }finally{await second.browser.close()}
  clearTimeout(watchdog);
  console.log('Browser cloud sync: session restore, version conflicts, remote refresh, guest recovery OK');
-})().catch(e=>{console.error(e);process.exitCode=1});
+})().catch(e=>{clearTimeout(watchdog);console.error(e);process.exitCode=1});
