@@ -11,15 +11,16 @@
   '.exam-extra-settings,.kb-table-scroll';
  const MOTION='cubic-bezier(.2,0,0,1)';
  function create({getState,onNavigate,isTouchDevice,viewportWidth,
-                  onDrag=()=>{},onCancel=()=>{},isBusy=()=>false,now=()=>Date.now()}){
+                  onDrag=()=>{},onCancel=()=>{},isBusy=()=>false,now=()=>Date.now(),
+                  ignoreSelector=defaultIgnore,allowChoice=true}){
   let origin=null,aborted=false;
   const enabled=()=>isTouchDevice()&&!!getState()?.enabled&&!isBusy();
   function blocked(target){
    if(!target?.closest)return false;
    // Answer cards are buttons. Exclude *other* controls but let a sideways
    // drag that starts on A/B/C/D navigate (including their letter/text spans).
-   const option=target.closest('#card .choices .choice[data-answer]');
-   return !option&&!!target.closest(defaultIgnore);
+   const option=allowChoice&&target.closest('#card .choices .choice[data-answer]');
+   return !option&&!!target.closest(ignoreSelector);
   }
   function cancel(){
    if(origin?.axis==='horizontal')onCancel();
@@ -79,16 +80,17 @@
   }
   return {start,move,end,cancel,blocked};
  }
- function install({getState,onNavigate}){
-  const view=document.getElementById('practiceView');
+ function installSurface({viewId,cardId,getState,onNavigate,
+                         ignoreSelector=defaultIgnore,allowChoice=true,preventPinch=false}){
+  const view=document.getElementById(viewId);
   if(!view)return;
   const mobile=()=>!!(root.matchMedia?.('(pointer: coarse)').matches||
    root.matchMedia?.('(any-pointer: coarse)').matches||
    root.navigator?.maxTouchPoints>0);
-  const active=()=>mobile()&&getState()?.enabled&&!busy;
-  const card=()=>view.querySelector('#card');
-  const reduced=()=>!!root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   let busy=false,visualId=0;
+  const active=()=>mobile()&&getState()?.enabled&&!busy;
+  const card=()=>view.querySelector(cardId);
+  const reduced=()=>!!root.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   function clearVisual(el){
    if(!el)return;
    el.style.removeProperty('transition');
@@ -102,8 +104,6 @@
    visualId++;
    el.classList.add('exam-swipe-moving');
    el.style.transition='none';
-   // Limited, lightly elastic travel makes navigation intent visible
-   // without pushing a question completely off-screen as it is read.
    const travel=Math.sign(dx)*Math.min(60,Math.abs(dx)*.4);
    el.style.transform='translate3d('+travel+'px,0,0)';
    el.style.opacity=String(1-Math.min(.12,Math.abs(dx)/900));
@@ -125,8 +125,6 @@
    busy=true;
    const token=++visualId;
    el.classList.add('exam-swipe-moving');
-   // The outward shift is short and immediate; the new question then enters
-   // from the opposite side with the same restrained editorial easing.
    el.style.transition='transform 90ms '+MOTION+',opacity 90ms '+MOTION;
    el.style.transform='translate3d('+(-direction*80)+'px,0,0)';
    el.style.opacity='.1';
@@ -150,34 +148,48 @@
   }
   const tracker=create({getState,onNavigate:navigateAnimated,isTouchDevice:mobile,
    viewportWidth:()=>root.innerWidth,onDrag:drag,onCancel:snapBack,
-   isBusy:()=>busy});
-  // Only the question card is a swipe surface. Selecting an answer is a tap,
-  // browsing a table is an independent interaction, and the rest of the app
-  // (navigation, dialogs, notes) never acts as a hidden swipe target.
+   isBusy:()=>busy,ignoreSelector,allowChoice});
+  // Each handler is bound to its own visible article: switching tabs never
+  // reuses a pending touch or accidentally flips between different modules.
   view.addEventListener('touchstart',event=>{
-   if(event.touches?.length>1&&active()){
+   if(event.touches?.length>1){
     tracker.cancel();
-    if(event.cancelable)event.preventDefault();
+    if(preventPinch&&active()&&event.cancelable)event.preventDefault();
    }else if(card()?.contains(event.target))tracker.start(event);
    else tracker.cancel();
   },{capture:true,passive:false});
   view.addEventListener('touchmove',event=>{
-   if(event.touches?.length>1&&active()){
+   if(event.touches?.length>1){
     tracker.cancel();
-    if(event.cancelable)event.preventDefault();
+    if(preventPinch&&active()&&event.cancelable)event.preventDefault();
    }else tracker.move(event);
   },{capture:true,passive:false});
   view.addEventListener('touchend',tracker.end,{capture:true,passive:true});
   view.addEventListener('touchcancel',tracker.cancel,{capture:true,passive:true});
-  const pinch=event=>{
-   if(!active()||!view.contains(event.target))return;
-   tracker.cancel();
-   if(event.cancelable)event.preventDefault();
-  };
-  document.addEventListener('gesturestart',pinch,{capture:true,passive:false});
-  document.addEventListener('gesturechange',pinch,{capture:true,passive:false});
+  if(preventPinch){
+   const pinch=event=>{
+    if(!active()||!view.contains(event.target))return;
+    tracker.cancel();
+    if(event.cancelable)event.preventDefault();
+   };
+   document.addEventListener('gesturestart',pinch,{capture:true,passive:false});
+   document.addEventListener('gesturechange',pinch,{capture:true,passive:false});
+  }
  }
- const api={create,install};
+ function install({getState,onNavigate}){
+  installSurface({viewId:'practiceView',cardId:'#card',getState,onNavigate,
+   preventPinch:true});
+ }
+ function installKnowledge({getState,onNavigate}){
+  // Knowledge can contain horizontally scrollable formula tables and links;
+  // those subtrees keep native touch handling. Paragraphs and headings swipe.
+  const knowledgeIgnore=defaultIgnore+
+   ',table,figure,pre,svg,canvas,iframe,.katex-display,'+
+   '.kb-formula-table,.kb-lesson-mindmap,.kb-method-comparison';
+  installSurface({viewId:'knowledgeView',cardId:'#knowledgeCard',getState,
+   onNavigate,ignoreSelector:knowledgeIgnore,allowChoice:false});
+ }
+ const api={create,install,installKnowledge};
  root.ExamSwipe=api;
  if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window==='undefined'?globalThis:window);
