@@ -197,3 +197,537 @@ body.exam-drawer-open{overflow:hidden!important}
  #practiceView #card .scratch-zone:not(.scratch-active){touch-action:pan-y}
  #practiceView #card .scratch-zone .choice{touch-action:pan-y}
 }
+
+
+/* ==========================================================================
+   Compact Editorial · 2026-11-21
+   CSS-only; original serif / forest-ink identity, DOM, keyboard controls,
+   cloud state and all full-screen Pencil hit-testing remain unchanged.
+   ========================================================================== */
+:root{
+ --exam-forest:#2C4C3E;
+ --exam-warm:#F6F6F3;
+ --exam-paper:#FFFEFC;
+ --exam-border:#E1E5DF;
+ --exam-muted:#66776A;
+ --exam-ease:150ms cubic-bezier(.2,0,0,1);
+}
+html,body{background:var(--exam-warm);font-variant-numeric:tabular-nums}
+body,button,input,textarea{font-variant-numeric:tabular-nums}
+.stats .num,.stats .num small,.practice-accuracy strong,
+.exam-page-caption,.exam-related-number,.nav-index,.kb-count,
+.nav-count,.qtop .subtle,.pill,.academic-top-count{
+ font-variant-numeric:tabular-nums;
+ font-feature-settings:"tnum" 1;
+}
+header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:var(--exam-border)}
+.academic-brand-mark{background:var(--exam-forest)}
+.academic-brand-name{color:var(--exam-forest)}
+.academic-mode[aria-pressed="true"]{color:var(--exam-forest)}
+/* One 52px information strip, assembled from existing sibling elements. */
+#practiceView>main{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) max-content;
+ grid-template-areas:
+  "intro stats"
+  "mobile mobile"
+  "question question"
+  "help help"
+  "settings settings";
+ align-content:start;
+ column-gap:0;
+ row-gap:0;
+}
+#practiceView>main .exam-page-intro{
+ grid-area:intro;
+ display:flex;align-items:center;gap:9px;
+ min-width:0;min-height:52px;height:52px;
+ padding:6px 14px;
+ margin:0 0 12px;
+ border:1px solid var(--exam-border);
+ border-right:0;
+ border-radius:9px 0 0 9px;
+ background:var(--exam-paper);
+}
+#practiceView>main .exam-page-intro .exam-overline{display:none}
+#practiceView>main .exam-page-title{
+ margin:0;
+ font:700 16px/1.35 var(--academic-serif);
+ letter-spacing:.01em;
+ color:var(--exam-forest);
+ white-space:nowrap;
+}
+#practiceView>main .exam-page-caption{
+ display:none;
+ color:var(--exam-muted);
+ font-size:11px;
+ line-height:1.4;
+}
+#practiceView>main .stats{
+ grid-area:stats;
+ display:flex;align-items:center;justify-content:flex-end;
+ gap:0;min-height:52px;height:52px;
+ margin:0 0 12px;
+ padding:0 5px;
+ background:var(--exam-paper);
+ border:1px solid var(--exam-border);
+ border-left:0;
+ border-radius:0 9px 9px 0;
+ box-shadow:none;
+}
+#practiceView>main .stats>div{
+ display:flex;align-items:center;justify-content:center;gap:6px;
+ min-width:0;min-height:30px;
+ padding:0 10px;
+ margin:0;
+ background:transparent;
+ border:0;
+ border-left:1px solid var(--exam-border);
+ border-radius:0;
+ box-shadow:none;
+ white-space:nowrap;
+}
+#practiceView>main .stats .num{
+ display:flex;align-items:baseline;gap:2px;
+ color:var(--exam-forest);
+ font:750 17px/1.25 var(--academic-sans);
+ font-variant-numeric:tabular-nums;
+ letter-spacing:-.02em;
+}
+#practiceView>main .stats .num small{font-size:11px;color:var(--exam-muted);font-weight:500}
+#practiceView>main .stats>div>small{
+ color:var(--exam-muted);
+ font-size:11px;
+ line-height:1.3;
+ font-weight:600;
+}
+#practiceView>main .exam-mobile-library{grid-area:mobile}
+#practiceView>main #card{grid-area:question}
+#practiceView>main .bottom-help{grid-area:help}
+#practiceView>main .exam-extra-settings{grid-area:settings}
+/* Retain single-scroll Material / Question two-column arrangements. */
+#practiceView #card:not(:has(.da-layout)){
+ padding:20px 24px;
+ border:1px solid var(--exam-border);
+ border-radius:12px;
+ box-shadow:none;
+ background:var(--exam-paper);
+ min-height:0;
+}
+#practiceView #card .da-material-column,
+#practiceView #card .da-question-column{
+ padding:20px 24px;
+ border:1px solid var(--exam-border);
+ border-radius:12px;
+ box-shadow:none;
+ background:var(--exam-paper);
+}
+#practiceView #card .da-layout{gap:16px}
+/* The question title and accuracy share one actual grid row, without moving DOM nodes. */
+#practiceView #card .scratch-zone{
+ display:grid;
+ grid-template-columns:minmax(0,1fr) max-content;
+ column-gap:14px;
+ row-gap:0;
+ align-items:center;
+}
+#practiceView #card .scratch-zone > *{grid-column:1/-1;min-width:0}
+#practiceView #card .scratch-zone > .title{
+ grid-column:1;
+ margin:5px 0 8px;
+ color:var(--exam-muted);
+ font:600 14px/1.5 var(--academic-sans);
+ letter-spacing:0;
+}
+#practiceView #card .scratch-zone > .practice-accuracy{
+ grid-column:2;
+ display:flex;align-items:baseline;justify-content:flex-end;
+ flex-wrap:wrap;
+ gap:3px 8px;
+ min-width:0;
+ max-width:100%;
+ margin:4px 0 8px;
+ padding:0;
+ border:0;
+ color:var(--exam-muted);
+ font-size:11px;
+ line-height:1.5;
+ white-space:nowrap;
+}
+#practiceView #card .scratch-zone > .practice-accuracy strong{
+ color:var(--exam-forest);
+ font-size:12px;
+ font-weight:750;
+}
+#practiceView #card .qtop{
+ margin:0 0 4px;
+ padding:0 0 6px;
+ gap:6px;
+ border-bottom:1px solid var(--exam-border);
+}
+#practiceView #card .qtop .tag{
+ font-size:10px;
+ padding:2px 8px;
+ line-height:1.45;
+ border-radius:5px;
+}
+#practiceView #card .qtop .subtle{
+ font-family:var(--academic-sans);
+ font-size:11px;
+ line-height:1.4;
+ color:var(--exam-muted);
+}
+#practiceView #card .kb-question-resources{
+ display:flex;flex-wrap:wrap;align-items:center;
+ gap:4px 6px;
+ border:0;
+ margin:1px 0 7px;
+ padding:0;
+}
+#practiceView #card .kb-question-resources>span{
+ color:var(--exam-muted);font-size:11px;line-height:22px;
+}
+#practiceView #card .kb-practice-link{
+ display:inline-flex;align-items:center;
+ min-height:22px;max-height:22px;
+ padding:1px 7px;
+ border:1px solid #DBE4DC;
+ border-radius:5px;
+ background:#F0F4EF;
+ color:var(--exam-forest);
+ font:600 11px/1.35 var(--academic-sans);
+ white-space:normal;
+}
+#practiceView #card .label{
+ margin:5px 0 4px;
+ font-size:10px;
+ line-height:1.55;
+ letter-spacing:.055em;
+ color:var(--exam-muted);
+}
+#practiceView #card .stem{
+ margin:0;
+ color:#2B4034;
+ font-size:17px;
+ font-weight:500;
+ line-height:1.7;
+}
+#practiceView #card .ask{
+ margin:9px 0 10px;
+ font-size:18px;
+ font-weight:750;
+ line-height:1.65;
+ color:var(--exam-forest);
+}
+#practiceView #card .choices{gap:7px}
+#practiceView #card .choice{
+ min-height:48px;
+ padding:9px 12px;
+ gap:11px;
+ border:1px solid var(--exam-border);
+ border-radius:8px;
+ background:var(--exam-paper);
+ line-height:1.55;
+ font-size:15px;
+ font-weight:600;
+ color:#314A39;
+}
+#practiceView #card .choice .letter{
+ width:24px;height:24px;min-width:24px;
+ flex:0 0 24px;
+ border:1px solid #D9E1D8;
+ border-radius:6px;
+ display:inline-flex;align-items:center;justify-content:center;
+ font:650 12px/1.2 var(--academic-sans);
+ background:#F3F6F1;
+ color:var(--exam-forest);
+}
+#practiceView #card .choice.chosen{border-color:var(--exam-forest);background:#F2F6F1}
+#practiceView #card .choice.chosen .letter{background:var(--exam-forest);border-color:var(--exam-forest);color:#FFF}
+#practiceView #card .choice.correct{background:#F0FDF4;border-color:#86EFAC}
+#practiceView #card .choice.incorrect{background:#FEF2F2;border-color:#FCA5A5}
+/* The original grade, rationale, note and revision actions are untouched. */
+#practiceView #card .result{border-radius:10px;box-shadow:none}
+#practiceView #card .note{border-radius:9px}
+#practiceView .practice-accuracy span{white-space:nowrap}
+/* Knowledge reading uses the available center lane, without narrowing the text. */
+.knowledge-shell>main{min-width:0;width:100%}
+.knowledge-shell .maincard{
+ max-width:840px;
+ width:100%;
+ margin-inline:auto;
+ border:1px solid var(--exam-border);
+ border-radius:12px;
+ box-shadow:none;
+ background:var(--exam-paper);
+}
+.knowledge-shell .kb-heading{
+ color:var(--exam-forest);
+ font-family:var(--academic-serif);
+}
+.knowledge-shell .kb-summary{
+ border:1px solid #DCE6DA;
+ border-left:3px solid var(--exam-forest);
+ border-radius:8px;
+ background:#EFF3ED;
+ color:#304B3B;
+}
+.knowledge-shell .kb-summary::after{display:none}
+.knowledge-shell .kb-summary::before{color:#536D59}
+.knowledge-shell .kb-structured-head{background:var(--exam-paper)}
+/* The always-accessible original brush control, with a subdued floating lift. */
+#practiceView .scratch-fab{
+ background:var(--exam-forest);
+ color:#FFF;
+ border:1px solid #274538;
+ border-radius:12px;
+ box-shadow:0 4px 14px rgba(44,76,62,.22);
+ transition:background var(--exam-ease),box-shadow var(--exam-ease),transform var(--exam-ease);
+}
+#practiceView .scratch-fab.is-active{
+ color:var(--exam-forest);
+ background:var(--exam-paper);
+ border-color:#95AE99;
+ box-shadow:0 4px 14px rgba(44,76,62,.17);
+}
+/* Compact course list while retaining the *original clickable buttons*.
+   Each course exposes its current learning mode button as the hit target.
+   The top-center switch is the sole Knowledge vs Practice control. */
+@media(min-width:801px){
+ .shell>aside .site-tabs{
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch;
+  gap:4px!important;
+  margin:0 0 18px!important;
+  padding:5px 0 12px!important;
+  min-height:0;
+  border-bottom:1px solid var(--exam-border);
+  overflow:visible;
+ }
+ .shell>aside .site-tabs::before{
+  content:'STUDY LIBRARY';
+  display:block;
+  margin:0 0 4px;
+  padding:0 9px;
+  color:var(--exam-muted);
+  font:700 10px/1.5 var(--academic-sans);
+  letter-spacing:.12em;
+ }
+ .shell>aside .site-tabs .module-group{
+  position:relative;
+  display:flex;
+  align-items:center;
+  width:100%;
+  min-height:40px;
+  padding:0 10px;
+  border:1px solid transparent;
+  border-radius:8px;
+  background:transparent;
+  box-shadow:none;
+ }
+ .shell>aside .site-tabs .module-group .module-label{
+  position:relative;
+  z-index:1;
+  flex:1;
+  padding:0;
+  margin:0;
+  pointer-events:none;
+  color:#44594A!important;
+  font-size:13px!important;
+  font-weight:700;
+  line-height:1.4;
+ }
+ .shell>aside .site-tabs .module-group:has(.site-tab[aria-selected="true"]){
+  background:#E8EFE9;
+  border-color:#CFDDD0;
+  box-shadow:inset 3px 0 0 var(--exam-forest);
+ }
+ .shell>aside .site-tabs .module-group:has(.site-tab[aria-selected="true"]) .module-label{
+  color:var(--exam-forest)!important;
+ }
+ .shell>aside .site-tabs .module-group .site-tab{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:block;
+  width:100%;
+  min-height:38px;
+  margin:0;
+  padding:0;
+  opacity:1;
+  font-size:0!important;
+  color:transparent!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  cursor:pointer;
+ }
+ .shell>aside .site-tabs .module-group .site-tab[aria-selected="true"]{
+  background:transparent!important;
+  border:0!important;
+ }
+ /* Hide ONLY the other-mode button; do not hide the clickable subject entry. */
+ #practiceView>aside .site-tabs .site-tab[aria-controls="knowledgeView"],
+ #knowledgeView>aside .site-tabs .site-tab[aria-controls="practiceView"]{
+  display:none!important;
+ }
+ .shell>aside .site-tabs .module-group:focus-within{outline:2px solid #6E947C;outline-offset:2px}
+}
+/* At iPad widths where the existing style hid the entire practice rail,
+   restore a narrow course list without making the main reader too small. */
+@media(min-width:801px) and (max-width:1024px){
+ #practiceView.shell{
+  display:grid;
+  grid-template-columns:174px minmax(0,1fr);
+  gap:14px;
+  padding:9px 15px 34px;
+ }
+ #practiceView>aside{
+  display:block;
+  position:sticky;
+  top:88px;
+  width:auto;
+  max-height:none;
+  overflow:visible;
+  padding:3px 10px 15px 0;
+  border-right:1px solid var(--exam-border);
+ }
+ #practiceView>aside .exam-practice-side{margin:6px 0 10px}
+ #practiceView>aside .exam-side-heading{gap:5px;padding-bottom:8px}
+ #practiceView>aside .exam-side-selector{font-size:12px;padding:8px}
+ #practiceView>aside .exam-related-entry{padding:7px 5px;gap:6px}
+ #practiceView>aside .exam-related-heading{font-size:11px}
+ #practiceView>aside .exam-related-title{font-size:12px;line-height:1.45}
+ #practiceView>aside .exam-open-library{padding:10px;font-size:12px;margin-top:10px}
+ #practiceView>aside .exam-side-hint{display:none}
+ #practiceView .exam-mobile-library{display:none}
+ #practiceView #card:not(:has(.da-layout)){
+  padding:18px 20px;
+  min-height:70dvh;
+ }
+ #practiceView #card .da-material-column,#practiceView #card .da-question-column{
+  padding:18px 18px;
+ }
+ #practiceView>main .exam-page-title{font-size:14px}
+ #practiceView>main .stats>div{padding-inline:7px}
+ #practiceView>main .stats .num{font-size:16px}
+ #practiceView>main .stats>div>small{font-size:10px}
+ #practiceView #card .stem{font-size:16px;line-height:1.65}
+ #practiceView #card .ask{font-size:17px;line-height:1.55}
+ #practiceView #card .choice{font-size:14px;line-height:1.5}
+ .knowledge-shell{grid-template-columns:205px minmax(0,1fr);gap:16px;padding-inline:16px}
+ .knowledge-shell .maincard{padding:26px 28px}
+ #scratchOverlay .scratch-toolbar{
+  right:calc(12px + env(safe-area-inset-right,0px));
+  padding:4px;gap:4px;
+  background:rgba(255,254,252,.87);
+  border:1px solid var(--exam-border);
+  box-shadow:0 3px 12px rgba(44,76,62,.12);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+ }
+ #scratchOverlay .scratch-toolbar button{min-height:34px;padding:5px 8px}
+}
+@media(min-width:1025px){
+ #practiceView.shell{grid-template-columns:clamp(225px,18vw,270px) minmax(0,1fr);gap:28px}
+ #practiceView>aside{display:block}
+ #practiceView #card:not(:has(.da-layout)){max-width:900px;width:100%;margin-inline:auto}
+ .knowledge-shell{grid-template-columns:250px minmax(0,1fr);gap:24px}
+}
+@media(min-width:1420px){
+ .knowledge-shell{grid-template-columns:250px minmax(0,1fr) 190px;gap:28px}
+ .knowledge-shell .academic-reading-rail{display:block!important}
+}
+/* iPad portrait (768–800px) shares mobile's top course scroller. */
+@media(min-width:768px) and (max-width:800px){
+ #practiceView.shell{padding-inline:16px}
+ #practiceView #card:not(:has(.da-layout)){min-height:70dvh}
+ #practiceView>main .stats{padding-inline:2px}
+ #practiceView>main .stats>div{padding-inline:7px}
+}
+/* Phone: native single-column mode, 16px gutters and generously sized controls. */
+@media(max-width:767px){
+ #practiceView.shell{grid-template-columns:minmax(0,1fr);padding:10px 16px 35px}
+ #practiceView>aside{display:none}
+ #practiceView>main{
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"intro" "stats" "mobile" "question" "help" "settings";
+ }
+ #practiceView>main .exam-page-intro{
+  height:37px;min-height:37px;
+  margin:0;border-bottom:0;border-right:1px solid var(--exam-border);
+  border-radius:9px 9px 0 0;
+ }
+ #practiceView>main .exam-page-title{font-size:14px}
+ #practiceView>main .stats{
+  justify-content:space-between;
+  height:42px;min-height:42px;
+  margin:0 0 10px;
+  border:1px solid var(--exam-border);
+  border-top:0;
+  border-radius:0 0 9px 9px;
+ }
+ #practiceView>main .stats>div{flex:1;gap:4px;padding:0 5px!important}
+ #practiceView>main .stats>div:first-child{border-left:0}
+ #practiceView>main .stats .num{font-size:15px}
+ #practiceView>main .stats>div>small{font-size:10px}
+ #practiceView .exam-mobile-library{min-height:44px;margin-bottom:10px}
+ #practiceView #card:not(:has(.da-layout)){padding:18px 16px}
+ #practiceView #card .da-material-column,#practiceView #card .da-question-column{padding:18px 16px}
+ #practiceView #card .scratch-zone{grid-template-columns:minmax(0,1fr)}
+ #practiceView #card .scratch-zone > .title{grid-column:1;margin:4px 0 2px}
+ #practiceView #card .scratch-zone > .practice-accuracy{
+  grid-column:1;justify-content:flex-start;margin:0 0 8px;
+ }
+ #practiceView #card .stem{font-size:17px;line-height:1.7}
+ #practiceView #card .ask{font-size:18px;line-height:1.65}
+ #practiceView #card .choice{min-height:48px;padding:12px 13px;font-size:16px}
+ .knowledge-shell .maincard{max-width:840px}
+ .site-tabs{scrollbar-width:none!important}
+ .site-tabs::-webkit-scrollbar{display:none}
+ button:where(.btn,.academic-mode,.site-tab,.choice,.exam-mobile-library,.scratch-fab){
+  min-height:44px;
+ }
+ #practiceView .scratch-fab{
+  right:calc(16px + env(safe-area-inset-right,0px));
+  bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  min-height:48px;
+ }
+}
+@media(max-width:360px){
+ #practiceView.shell{padding-inline:12px}
+ #practiceView>main .stats .num{font-size:13px}
+ #practiceView>main .stats>div{gap:3px;padding-inline:3px!important}
+ #practiceView>main .stats>div>small{font-size:9px}
+}
+/* Avoid sticky hover on Pencil/touch; reserve hover for actual mouse devices. */
+@media(hover:hover) and (pointer:fine){
+ #practiceView #card .choice:hover:not(:disabled){
+  background:#F3F6F1;border-color:#7F9D86;
+ }
+ .exam-related-entry:hover,.shell>aside .site-tabs .module-group:hover{
+  background:#EDF2EB;
+ }
+ .shell>aside .site-tabs .module-group:has(.site-tab[aria-selected="true"]):hover{
+  background:#DFEADF;
+ }
+ #practiceView .scratch-fab:hover{background:#365B49}
+}
+@media(hover:none),(pointer:coarse){
+ #practiceView #card .choice:hover:not(:disabled){
+  background:var(--exam-paper);
+  border-color:var(--exam-border);
+ }
+ #practiceView #card .choice.chosen:hover:not(:disabled){
+  background:#F2F6F1;border-color:var(--exam-forest);
+ }
+ #practiceView #card .choice.correct:hover:not(:disabled){background:#F0FDF4;border-color:#86EFAC}
+ #practiceView #card .choice.incorrect:hover:not(:disabled){background:#FEF2F2;border-color:#FCA5A5}
+ .exam-related-entry:hover{background:transparent}
+ .exam-related-entry.active:hover{background:#E8EFE9}
+ button:active:not(:disabled){transform:scale(.99)}
+}
+/* Respect system accessibility: no motion where user requested less. */
+@media(prefers-reduced-motion:reduce){
+ #practiceView .scratch-fab,button{transition:none!important}
+}
