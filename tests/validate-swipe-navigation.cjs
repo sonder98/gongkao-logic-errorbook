@@ -8,7 +8,7 @@ const swipe=create({getState,onNavigate:id=>visited.push(id),isTouchDevice:()=>t
 const event=(x,y,dx=0,dy=0,options={})=>{
  const t={identifier:7,clientX:x,clientY:y};
  const after={identifier:7,clientX:x+dx,clientY:y+dy};
- return {start:{target:{closest:()=>options.blocked?{}:null},touches:[t]},
+ return {start:{target:{closest:selector=>options.blocked&&selector.includes('button')?{}:null},touches:[t]},
    move:{touches:[after]},end:{changedTouches:[after]}};
 };
 function gesture(x,y,dx,dy,opts){
