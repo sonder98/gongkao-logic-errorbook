@@ -825,11 +825,70 @@
         {
           "id": "data-topic-course-07-fraction-mix",
           "title": "第7课 · 分式混合",
-          "summary": "对应课程第7课《分式混合》。本节点先作为课程知识入口；核心方法、公式、适用条件、计算步骤和易错点，后续以实际课程内容和练习题为依据逐步补充。",
+          "summary": "7.1 分式混合的基本概念：由盐水混合的 mA＋nB＝(m＋n)C 推出浓度差之比等于初始重量的反比；这一关系可推广到增长率、平均数、成本口径利润率等满足“部分基数×比率相加＝整体基数×整体比率”的情形。",
           "recognize": [],
           "patterns": [],
           "pitfalls": [],
-          "questionIds": []
+          "questionIds": [],
+          "contentSections": [
+            {
+              "id": "fraction-mix-basic-concept",
+              "title": "7.1 分式混合的基本概念",
+              "description": "分式混合从盐水混合问题出发。关键是两个部分分别用“基数×比率”求出总量，且这些总量及基数能够相加得到整体。",
+              "subtopics": [
+                {
+                  "id": "fraction-mix-saline",
+                  "title": "一、从盐水混合推出基本关系",
+                  "description": "第一杯盐水质量为 \\(m\\)，浓度为 \\(A\\)；第二杯盐水质量为 \\(n\\)，浓度为 \\(B\\)。混合后总质量为 \\(m+n\\)，浓度为 \\(C\\)。",
+                  "items": [
+                    {
+                      "title": "混合前后盐的总质量不变",
+                      "description": "混合前两杯盐水中的盐的质量相加，等于混合后的盐的质量。将等式移项、合并 \\(m\\) 和 \\(n\\)，可得到差值关系。",
+                      "formula": "\\[\n\\begin{aligned}\nmA+nB&=(m+n)C\\\\\nmA+nB&=mC+nC\\\\\nm(A-C)&=n(C-B)\\\\[4pt]\n\\boxed{\\frac{A-C}{C-B}}&=\\boxed{\\frac{n}{m}}\n\\end{aligned}\n\\]",
+                      "keyPoint": "两部分浓度与混合浓度之差的比值，等于各自初始重量的反比。这里左侧 \\(A-C\\) 对应第一杯质量 \\(m\\)，\\(C-B\\) 对应第二杯质量 \\(n\\)。",
+                      "caution": "两杯浓度不相同时，才能使用差值比公式；如果 \\(A=B=C\\)，差值为零，不能直接作比。"
+                    }
+                  ]
+                },
+                {
+                  "id": "fraction-mix-generalization",
+                  "title": "二、分式混合的推广条件",
+                  "description": "盐水混合只是最直观的例子。只要两个部分的“基数×比率”表示的是同一种、能够相加的总量，而且整体基数等于两个部分的基数之和，就可以构建相同的混合等式。",
+                  "items": [
+                    {
+                      "title": "部分乘积相加＝整体乘积",
+                      "formula": "\\[\n\\begin{aligned}\n&\\text{部分1基数}\\times\\text{部分1比率}\\\\\n+{}&\\text{部分2基数}\\times\\text{部分2比率}\\\\\n={}&\\text{整体基数}\\times\\text{整体比率}\n\\end{aligned}\n\\]\n\\[\n\\text{整体基数}=\\text{部分1基数}+\\text{部分2基数}\n\\]",
+                      "description": "把两个部分的基数分别记作 \\(m,n\\)，比率记作 \\(A,B\\)，整体比率记作 \\(C\\)，就可以写成 \\(mA+nB=(m+n)C\\)，从而得到相同的差值比关系。",
+                      "keyPoint": "不是看到两个乘积就能使用分式混合，还要满足基数可相加、所表示的总量也可相加。"
+                    }
+                  ]
+                },
+                {
+                  "id": "fraction-mix-applications",
+                  "title": "三、常见应用场景",
+                  "description": "以下三种情形都能写成“部分基数×部分比率”相加得到“整体基数×整体比率”的等式，因此都可以使用分式混合。",
+                  "items": [
+                    {
+                      "title": "① 增长率",
+                      "description": "增长量＝基期量×增长率。全年增长量等于上下半年增长量之和，全年基期量也等于上下半年基期量之和。",
+                      "formula": "\\[\n\\begin{aligned}\n&\\text{上半年基期量}\\times\\text{上半年增长率}\\\\\n+{}&\\text{下半年基期量}\\times\\text{下半年增长率}\\\\\n={}&\\text{全年基期量}\\times\\text{全年增长率}\\\\\n={}&\\text{全年增长量}\n\\end{aligned}\n\\]"
+                    },
+                    {
+                      "title": "② 平均数（人均分）",
+                      "description": "总得分＝人数×人均分。男生与女生得分相加，得到全班总得分；男生和女生人数相加，得到全班人数。",
+                      "formula": "\\[\n\\begin{aligned}\n&\\text{男生人数}\\times\\text{男生平均分}\\\\\n+{}&\\text{女生人数}\\times\\text{女生平均分}\\\\\n={}&\\text{全班人数}\\times\\text{全班平均分}\\\\\n={}&\\text{全班总得分}\n\\end{aligned}\n\\]"
+                    },
+                    {
+                      "title": "③ 利润率（以成本为分母）",
+                      "description": "利润＝成本×利润率。原价商品与打折商品的利润相加，得到总利润；对应成本相加，得到总成本。",
+                      "formula": "\\[\n\\begin{aligned}\n&\\text{原价商品成本}\\times\\text{原价商品利润率}\\\\\n+{}&\\text{打折商品成本}\\times\\text{打折商品利润率}\\\\\n={}&\\text{总成本}\\times\\text{总体利润率}\\\\\n={}&\\text{总利润}\n\\end{aligned}\n\\]",
+                      "caution": "这里的利润率按照图片中的例子，以成本为分母。"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         {
           "id": "data-topic-course-08-fraction-compare",
