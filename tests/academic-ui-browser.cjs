@@ -83,6 +83,16 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.locator('#tabFormalKnowledge').click();
   assert.match(await page.locator('#knowledgeCard h2').innerText(),/翻译推理|条件翻译/);
   await page.locator('#tabDataKnowledge').click();
+  // 资料分析目录按大类单层展开，不重复显示“章节名 + 同名分组”。
+  assert.equal(await page.locator('#knowledgeNav .kb-chapter').count(),0,
+    'Data analysis should not render a second chapter heading above its toggle');
+  assert.equal(await page.locator('#knowledgeNav .kb-data-chapter').count(),5,
+    'Data analysis should show one collapsible heading per major category');
+  assert.equal(await page.locator('#knowledgeNav .kb-data-chapter').filter({hasText:'三、分式与比重'}).count(),1);
+  await page.locator('[data-knowledge-section="data-fraction-share"]').click();
+  assert.equal(await page.locator('[data-knowledge-section="data-fraction-share"]').getAttribute('aria-expanded'),'true');
+  assert.equal(await page.locator('#knowledgeNav .kb-nav-item').count(),3,
+    'Expanded fraction chapter should directly expose its three lesson entries');
   const scalingTopic=page.locator('[data-knowledge-topic="data-topic-course-03-scaling"]');
   if(await scalingTopic.count()===0)await page.locator('[data-knowledge-section="data-speed"]').click();
   await scalingTopic.click();
