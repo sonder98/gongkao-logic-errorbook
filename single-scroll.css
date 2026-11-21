@@ -785,6 +785,9 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
  #practiceView #card .choice span{
   touch-action:pan-y;
  }
+ /* On iOS, disabled answer buttons sometimes swallow touchstart entirely.
+    Let the option row receive the drag; the answer remains disabled. */
+ #practiceView #card .choice:disabled{pointer-events:none}
 }
 @media (prefers-reduced-motion:reduce){
  #practiceView #card.exam-swipe-moving{will-change:auto}
