@@ -47,6 +47,19 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await id(),first,'Right swipe from option text must go back to previous question');
   await page.locator('#card .choice').first().click();
   assert.equal(await page.locator('#card .choice.chosen').count(),1,'Normal answer tap still selects an option');
+  await page.locator('#submit').click();
+  assert.equal(await page.locator('#card .choice').first().evaluate(el=>getComputedStyle(el).pointerEvents),
+   'none','Disabled submitted options let touches reach their row on iOS');
+  const afterSubmit=await id();
+  await gesture({dx:-88,dy:3,selector:'#card .choices'});
+  await waitForSwitch(afterSubmit);
+  await waitForIdle();
+  const afterSubmittedSwipe=await id();
+  await gesture({dx:88,dy:3,selector:'#card .choices'});
+  await waitForSwitch(afterSubmittedSwipe);
+  await waitForIdle();
+  assert.equal(await id(),first,'Completed exercise still permits swiping back');
+
   await gesture({dx:-55,dy:4});
   assert.equal(await id(),first,'Short horizontal drag must not change questions');
   await gesture({dx:-135,dy:170});
