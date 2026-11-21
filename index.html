@@ -168,8 +168,8 @@ button,a{-webkit-tap-highlight-color:transparent}
  </div>
 </nav>
 <div class="shell" id="practiceView" role="tabpanel" aria-labelledby="tabPractice"><aside><section class="auth-panel" id="authPanel" aria-busy="false">
-<h3>☁ 云端账号与同步</h3>
-<p id="authStatus" class="status">当前为本地模式。先在下方配置 Supabase，即可用邮箱账号同步。</p>
+<h3>☁ 云端自动同步</h3>
+<p id="authStatus" class="status">正在恢复登录与同步进度…</p>
 <details id="cloudConfigDetails"><summary>首次配置 Supabase（点击展开）</summary>
 <input id="cloudUrl" type="url" placeholder="Project URL · https://xxx.supabase.co" autocomplete="off">
 <input id="cloudKey" type="text" placeholder="Publishable key / anon key（不是 secret key）" autocomplete="off" style="margin-top:7px">
@@ -183,10 +183,10 @@ button,a{-webkit-tap-highlight-color:transparent}
 </div>
 <div id="memberAuth" style="display:none">
 <p id="memberEmail"></p>
-<div class="auth-actions"><button class="main" id="refreshCloud" type="button">从云端刷新</button><button id="logoutBtn" type="button">退出</button></div>
+<div class="auth-actions"><button class="main" id="refreshCloud" type="button">立即检查同步</button><button id="logoutBtn" type="button">退出</button></div>
 <button id="importLegacy" type="button" style="width:100%;margin-top:7px">把旧版浏览器记录导入云端</button>
 </div>
-<p>未登录也能本地刷题。登录后答题与复习标记自动同步；个人复盘笔记在点击「保存并同步」后才提交云端。编辑时草稿仅暂存在本机。</p>
+<p>登录一次后当前浏览器会尝试保持登录；打开网页、切回页面、恢复联网都会自动检查云端。答题和复习标记自动上传；个人笔记点击保存后自动上传，未提交的草稿仍仅在本机。</p>
 </section>
 
 <p class="aside-title nav-heading">题库导航 <span id="navCount" class="nav-count" aria-live="polite">—</span></p>
@@ -194,7 +194,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <input id="questionSearch" class="question-search" type="search" placeholder="搜索题名、题干、分类…" autocomplete="off">
 <div id="filters" class="filter"></div>
 <div class="question-list" id="questionList" tabindex="0" aria-label="题目列表，可使用鼠标滚轮或滚动条上下浏览"></div>
-<p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">未登录：本地保存。已登录：云端同步并保留本机备份。</p>
+<p class="aside-title">复习设置</p><label class="switch"><input type="checkbox" id="wrongFilter"> 只看做错 / 标记待复习</label><label class="switch" style="margin-top:7px"><input type="checkbox" id="importantFilter"> ★ 只看重点题</label><p class="mini">自动同步云端进度；断网时保留本机修改。</p>
 <button class="outline" id="exportBackup" type="button">导出 JSON 备份</button>
 <label class="switch" style="display:block;margin-top:8px">导入 JSON 备份 <input id="importBackup" type="file" accept=".json,application/json" style="max-width:100%;margin-top:6px"></label>
 <button class="outline" id="reset" type="button">清空本模块答题记录</button></aside>
@@ -226,6 +226,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <script src="scratch-overlay.js"></script>
 <script src="single-scroll.js"></script>
 <script src="practice-session.js"></script>
+<script src="cloud-sync.js"></script>
 <script src="swipe-navigation.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
@@ -251,7 +252,7 @@ const $=id=>document.getElementById(id), letters='ABCDE';
 function readJSON(key,fall={}){try{return JSON.parse(localStorage.getItem(key)||'null')||fall}catch(e){return fall}}
 function clone(value){return JSON.parse(JSON.stringify(value))}
 function cloudRecord(value){const copy=ExamPractice.cleanLegacy(clone(value||{}));delete copy._syncConflict;return copy}
-let user=null, db=null, pending=new Set(), cloudMeta={}, syncing=false, syncTimer=null;
+let user=null, db=null, pending=new Set(), cloudMeta={}, syncQueue=Promise.resolve(), syncTimer=null, lastAutoPull=0;
 let noteDrafts=readJSON(KEY+'_note_drafts');
 let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
 // UI-only collapsed state; do not add a field to the question progress cloud schema.
@@ -259,6 +260,8 @@ let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,important
 const collapsedAnalysis=new Set(); // Deprecated UI compatibility only; not part of the progress schema.
 const userKey=()=>KEY+'_user_'+user.id;
 const pendingKey=()=>userKey()+'_pending';
+const guestPendingKey=KEY+'_guest_pending';
+const lastAccountKey=KEY+'_last_account';
 const metaKey=()=>userKey()+'_cloud_meta';
 const noteDraftKey=()=>(user?userKey():KEY)+'_note_drafts';
 function loadNoteDrafts(){
@@ -297,7 +300,7 @@ async function submitNote(id){
  r.note=noteText(id,r);
  delete noteDrafts[id];
  persistNoteDrafts();
- if(user)pending.add(id);
+ markDirty(id);
  persistUserState();
  updateNoteControls(id);
  if(user)await pushCloud();
@@ -311,97 +314,180 @@ function persistUserState(){
    localStorage.setItem(pendingKey(),JSON.stringify([...pending]));
    localStorage.setItem(metaKey(),JSON.stringify(cloudMeta));
   }
- }catch(e){}
+ }catch(e){setStatus('本机保存失败，请检查浏览器存储空间','bad')}
+}
+function markDirty(id){
+ if(!id)return;
+ if(user)pending.add(id);
+ else{
+  const queue=new Set(readJSON(guestPendingKey,[]));
+  queue.add(id);
+  try{localStorage.setItem(guestPendingKey,JSON.stringify([...queue]))}catch(e){setStatus('本机无法保存离线记录','bad')}
+ }
 }
 function save(){
  if(state[active])state[active]=ExamPractice.cleanLegacy(state[active]);
+ if(state[active]&&!state[active]._syncConflict)markDirty(active);
  persistUserState();
- if(user && state[active] && !state[active]._syncConflict){
-  pending.add(active);
-  persistUserState();
-  scheduleSync();
- }
+ if(user&&pending.size)scheduleSync();
 }
-function scheduleSync(){clearTimeout(syncTimer);syncTimer=setTimeout(()=>pushCloud(),700)}
-async function pushCloud(){
- if(!user||!db||syncing||pending.size===0)return;
- syncing=true;const uid=user.id, ids=[...pending].filter(id=>state[id]&&!state[id]._syncConflict);
- let failed=false,conflicts=0;
- for(const id of ids){
-  const snapshot=cloudRecord(state[id]);
-  const expected=cloudMeta[id]?.version??null;
-  const {data,error}=await db.rpc('save_question_progress',{
-   p_question_id:id,p_data:snapshot,p_expected_version:expected
-  });
-  if(user?.id!==uid){syncing=false;return}
-  if(error){failed=true;setStatus('保存失败，已保留在本机：'+error.message,'bad');break}
-  const row=Array.isArray(data)?data[0]:data;
-  if(!row){failed=true;setStatus('保存失败：云端没有返回写入结果','bad');break}
-  if(row.conflict){
-   state[id]._syncConflict={cloudData:row.data,cloudVersion:row.version,cloudUpdatedAt:row.updated_at};
-   pending.delete(id);conflicts++;
-  }else{
-   cloudMeta[id]={version:row.version,updatedAt:row.updated_at};
-   if(JSON.stringify(cloudRecord(state[id]))===JSON.stringify(snapshot))pending.delete(id);
+function scheduleSync(){
+ clearTimeout(syncTimer);
+ syncTimer=setTimeout(()=>{pushCloud()},700);
+}
+function queueCloud(task){
+ // Never fetch a stale snapshot while a previous upload is in flight.
+ const next=syncQueue.catch(()=>{}).then(task);
+ syncQueue=next.catch(error=>{console.error('Cloud sync failed',error);setStatus('自动同步暂时失败，本机记录已保留：'+error.message,'bad')});
+ return next;
+}
+function refreshRenderedProgress(){
+ // Do not replace the note editor or interrupt a Pencil stroke during syncing.
+ if(document.activeElement?.id==='note')updateNoteControls(active);
+ else if(!ExamScratch.isDrawing())render();
+}
+function pushCloud(){
+ return queueCloud(async()=>{
+  if(!user||!db||pending.size===0)return;
+  const uid=user.id,ids=[...pending].filter(id=>state[id]&&!state[id]._syncConflict);
+  let failed=false,conflicts=0,autoMerged=0;
+  for(const id of ids){
+   if(user?.id!==uid)return;
+   const snapshot=cloudRecord(state[id]);
+   const expected=cloudMeta[id]?.version??null;
+   const {data,error}=await db.rpc('save_question_progress',{
+    p_question_id:id,p_data:snapshot,p_expected_version:expected
+   });
+   if(user?.id!==uid)return;
+   if(error){failed=true;setStatus('云端上传失败，本机修改已保留：'+error.message,'bad');break}
+   const row=Array.isArray(data)?data[0]:data;
+   if(!row){failed=true;setStatus('云端上传未返回结果，记录已保存在本机','bad');break}
+   if(row.conflict){
+    const merged=ExamCloudSync.merge(cloudMeta[id]?.baseData,cloudRecord(state[id]),cloudRecord(row.data));
+    if(merged){
+     state[id]=merged;
+     cloudMeta[id]={version:row.version,updatedAt:row.updated_at,baseData:cloudRecord(row.data)};
+     pending.add(id);
+     autoMerged++;
+    }else{
+     state[id]._syncConflict={cloudData:row.data,cloudVersion:row.version,cloudUpdatedAt:row.updated_at};
+     pending.delete(id);
+     conflicts++;
+    }
+   }else{
+    cloudMeta[id]={version:row.version,updatedAt:row.updated_at,baseData:snapshot};
+    // Keep an answer made during the upload for the next round.
+    if(ExamCloudSync.eq(cloudRecord(state[id]),snapshot))pending.delete(id);
+   }
+   persistUserState();
   }
- }
- persistUserState();
- syncing=false;
- // A background sync must never rebuild the textarea while the user is typing.
- if(document.activeElement?.id!=='note'&&!ExamScratch.isDrawing())render();
- else if(document.activeElement?.id==='note')updateNoteControls(active);
- if(conflicts)setStatus('发现 '+conflicts+' 道题存在双端修改，请在题目中选择保留版本','bad');
- else if(!failed)setStatus(pending.size?'部分已同步，其余改动继续上传…':'已登录 · 改动已同步到云端','good');
- if(pending.size&&!failed)scheduleSync();
-}
-async function pullCloud(){
- if(!user||!db)return;
- const uid=user.id;setStatus('正在读取云端记录…');
- const {data,error}=await db.from('question_progress').select('question_id,data,version,updated_at').eq('user_id',uid);
- if(user?.id!==uid)return;
- if(error){setStatus('云端读取失败，先继续使用本地记录：'+error.message,'bad');return}
- const local=readJSON(userKey());
- pending=new Set(readJSON(pendingKey(),[]));
- cloudMeta=readJSON(metaKey());
- let merged={...local};
- (data||[]).forEach(row=>{
-  if(!pending.has(row.question_id)&&!(local[row.question_id]?._syncConflict)){
-   merged[row.question_id]=row.data;
-   cloudMeta[row.question_id]={version:row.version,updatedAt:row.updated_at};
+  if(user?.id!==uid)return;
+  refreshRenderedProgress();
+  if(conflicts)setStatus('有 '+conflicts+' 道题双端修改无法安全合并，已保留两份记录，请在题目中选择','bad');
+  else if(!failed)setStatus(pending.size?'本机修改正在继续自动同步…':'已登录 · 云端进度已自动同步','good');
+  if(pending.size&&!failed){
+   if(autoMerged)scheduleSync();
+   else if(ids.length) scheduleSync();
   }
  });
- state=merged;
+}
+function pullCloud(){
+ return queueCloud(async()=>{
+  if(!user||!db)return;
+  const uid=user.id;
+  setStatus('正在自动检查云端进度…');
+  const {data,error}=await db.from('question_progress').select('question_id,data,version,updated_at').eq('user_id',uid);
+  if(user?.id!==uid)return;
+  if(error){setStatus('读取云端失败，当前进度仍保存在本机：'+error.message,'bad');return}
+  const rows=data||[],seen=new Set();
+  let changes=false;
+  for(const row of rows){
+   const id=row.question_id;seen.add(id);
+   const cached=cloudMeta[id];
+   const current=state[id];
+   if(current?._syncConflict)continue;
+   if(pending.has(id))continue;
+   // A previous crash may have saved state but not marked pending. Detect it
+   // against the last confirmed baseline before accepting the remote version.
+   if(current&&cached?.baseData&&!ExamCloudSync.eq(cloudRecord(current),cached.baseData)){
+    pending.add(id);
+    continue;
+   }
+   if(!ExamCloudSync.eq(current,row.data))changes=true;
+   state[id]=cloudRecord(row.data);
+   cloudMeta[id]={version:row.version,updatedAt:row.updated_at,baseData:cloudRecord(row.data)};
+  }
+  // If a record was deliberately deleted on another device, remove its old
+  // confirmed local copy; never remove an unsynced draft.
+  for(const id of Object.keys(cloudMeta)){
+   if(!seen.has(id)&&!pending.has(id)&&!state[id]?._syncConflict){
+    delete state[id];delete cloudMeta[id];changes=true;
+   }
+  }
+  if(user?.id!==uid)return;
+  persistUserState();
+  if(changes)refreshRenderedProgress();
+  uiAuth();
+  const stranded=readJSON(guestPendingKey,[]).length;
+  setStatus(stranded?'云端已读取，另有 '+stranded+' 条访客记录留在本机等待恢复':
+   '已登录 · 自动读取 '+rows.length+' 条云端记录'+(pending.size?'，本机 '+pending.size+' 条修改继续上传':' · 已是最新'),
+   stranded?'bad':'good');
+  if(pending.size)scheduleSync();
+ });
+}
+function promoteGuestChanges(){
+ const dirty=readJSON(guestPendingKey,[]);
+ if(!dirty.length)return;
+ const owner=localStorage.getItem(lastAccountKey);
+ if(owner&&owner!==user.id)return;
+ const guest=readJSON(KEY),left=[];
+ for(const id of dirty){
+  if(!guest[id])continue;
+  if(pending.has(id)){left.push(id);continue}
+  // Never give guest progress an inherited cloud version: if the cloud has
+  // this question, the server will return a conflict instead of overwriting.
+  state[id]=cloudRecord(guest[id]);
+  cloudMeta[id]={version:null};
+  pending.add(id);
+ }
+ localStorage.setItem(guestPendingKey,JSON.stringify(left));
  persistUserState();
- // The login refresh may complete while a user is editing a local note draft.
- if(document.activeElement?.id!=='note'&&!ExamScratch.isDrawing())render();
- else if(document.activeElement?.id==='note')updateNoteControls(active);
- uiAuth();
- setStatus('已登录 · 已读取 '+(data||[]).length+' 条云端记录'+(pending.size?'，还有 '+pending.size+' 条本机改动待同步':''),'good');
- if(pending.size)pushCloud();
 }
 async function applyUser(next){
+ if(next?.id&&next.id===user?.id)return;
  const accountChanged=(next?.id||null)!==(user?.id||null);
- if(accountChanged){ExamPractice.leave();persistNoteDrafts();}
+ if(accountChanged){ExamPractice.leave();persistNoteDrafts();clearTimeout(syncTimer)}
  user=next;
  if(accountChanged)loadNoteDrafts();
- if(user){state=readJSON(userKey());pending=new Set(readJSON(pendingKey(),[]));cloudMeta=readJSON(metaKey());uiAuth();render();await pullCloud()}
- else {pending=new Set();cloudMeta={};state=readJSON(KEY);uiAuth();render();setStatus(db?'未登录 · 本地记录模式':'未连接 Supabase · 本地记录模式')}
+ if(user){
+  state=readJSON(userKey());
+  pending=new Set(readJSON(pendingKey(),[]));
+  cloudMeta=readJSON(metaKey());
+  promoteGuestChanges();
+  localStorage.setItem(lastAccountKey,user.id);
+  uiAuth();render();
+  await pullCloud();
+ }else{
+  pending=new Set();cloudMeta={};state=readJSON(KEY);
+  uiAuth();render();
+  setStatus(db?'未登录 · 本机自动保存，可登录同步':'云端未连接 · 本机自动保存');
+ }
 }
 async function setupCloud(){
  const saved=readJSON(CFG_KEY);
  const url=(CLOUD_URL||saved.url||'').trim(),key=(CLOUD_PUBLIC_KEY||saved.key||'').trim();
  $('cloudUrl').value=url;$('cloudKey').value=key;
  if(!url||!key){setStatus('未配置 Supabase，当前仅本地保存');return}
- if(!window.supabase||!window.supabase.createClient){setStatus('登录模块加载失败，请联网访问网页后刷新','bad');return}
+ if(!window.supabase||!window.supabase.createClient){setStatus('云端模块未加载，离线记录已保存在本机；联网后请刷新','bad');return}
  try{
-  db=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true}});
+  db=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   const {data,error}=await db.auth.getSession();if(error)throw error;
   await applyUser(data.session?.user||null);
   db.auth.onAuthStateChange((_event,session)=>{
    const next=session?.user||null;
-   if((next?.id||null)!==(user?.id||null))setTimeout(()=>applyUser(next),0);
+   if((next?.id||null)!==(user?.id||null))setTimeout(()=>{applyUser(next)},0);
   });
- }catch(e){db=null;setStatus('连接配置异常：'+e.message,'bad')}
+ }catch(e){setStatus('云端登录恢复失败，本机记录仍保留：'+e.message,'bad')}
 }
 $('saveCloudConfig').onclick=()=>{
  const url=$('cloudUrl').value.trim(),key=$('cloudKey').value.trim();
@@ -413,7 +499,9 @@ $('loginBtn').onclick=async()=>{
  if(!db)return setStatus('请先配置 Supabase 项目','bad');
  const email=$('authEmail').value.trim(),password=$('authPassword').value;
  if(!email||!password)return setStatus('请填写邮箱和密码','bad');
- setStatus('正在登录…');const {data,error}=await db.auth.signInWithPassword({email,password});
+ setStatus('正在登录…');
+ const {data,error}=await db.auth.signInWithPassword({email,password});
+ $('authPassword').value='';
  if(error)return setStatus('登录失败：'+error.message,'bad');
  await applyUser(data.user);
 };
@@ -422,14 +510,19 @@ $('signupBtn').onclick=async()=>{
  const email=$('authEmail').value.trim(),password=$('authPassword').value;
  if(!email||password.length<6)return setStatus('请填写邮箱，并设置至少6位密码','bad');
  const emailRedirectTo=location.origin+location.pathname;
- setStatus('正在注册…');const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo}});
+ setStatus('正在注册…');
+ const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo}});
+ $('authPassword').value='';
  if(error)return setStatus('注册失败：'+error.message,'bad');
  if(data.session)await applyUser(data.user);
  else setStatus('注册请求已提交。请到邮箱点击验证链接，然后返回此网页登录。','good');
 };
 $('logoutBtn').onclick=async()=>{
  if(!db)return;
- if(pending.size)await pushCloud();
+ if(pending.size){
+  await pushCloud();
+  if(pending.size)return setStatus('仍有未同步的本机记录，请联网并等待自动同步后再退出','bad');
+ }
  const {error}=await db.auth.signOut();
  if(error)return setStatus('退出失败：'+error.message,'bad');
  await applyUser(null);
@@ -441,11 +534,26 @@ $('importLegacy').onclick=async()=>{
  if(!keys.length)return setStatus('当前浏览器没有找到旧版答题记录');
  if(!confirm('将旧版浏览器记录中的 '+keys.length+' 道题覆盖到当前账号云端？相同题目的云端笔记也会被覆盖。'))return;
  downloadBackup('迁移前备份');
- keys.forEach(id=>{state[id]=legacy[id];pending.add(id)});
+ keys.forEach(id=>{state[id]=legacy[id];markDirty(id)});
  persistUserState();
  render();await pushCloud();
 };
-window.addEventListener('online',()=>{if(user&&pending.size)pushCloud()});
+function refreshCloudAutomatically(){
+ if(!db||!user||navigator.onLine===false)return;
+ const now=Date.now();
+ if(now-lastAutoPull<5000)return;
+ lastAutoPull=now;
+ pullCloud();
+}
+window.addEventListener('online',()=>{
+ if(db&&user)refreshCloudAutomatically();
+ else if(db)db.auth.getSession().then(({data})=>{if(data.session?.user)applyUser(data.session.user)});
+});
+window.addEventListener('focus',refreshCloudAutomatically);
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible')refreshCloudAutomatically();
+});
+setInterval(refreshCloudAutomatically,60000);
 
 function useLocalConflict(id){
  const r=state[id],conflict=r?._syncConflict;if(!conflict)return;
@@ -1196,7 +1304,7 @@ $('importBackup').onchange=async e=>{
  const ids=Object.keys(items).filter(id=>[...ARGUMENT_QUESTIONS,...FORMAL_QUESTIONS,...DATA_QUESTIONS].some(q=>q.id===id)&&items[id]&&typeof items[id]==='object');
  if(!ids.length)return setStatus('备份中没有当前题库的有效记录','bad');
  if(!confirm('导入 '+ids.length+' 道题的记录？相同题目的当前记录将被覆盖'+(user?'，并同步到云端':'')+'。'))return;
- ids.forEach(id=>{state[id]=normalizeImportedRecord(items[id]);delete noteDrafts[id];if(user)pending.add(id)});
+ ids.forEach(id=>{state[id]=normalizeImportedRecord(items[id]);delete noteDrafts[id];markDirty(id)});
  ExamPractice.leave();
  persistNoteDrafts();
  persistUserState();
@@ -1209,11 +1317,12 @@ $('reset').onclick=async()=>{
  if(!confirm(user?'确定清空此账号「'+moduleName+'」模块的云端答题记录、复习标记及笔记吗？其他模块不受影响。':'确定清空本地「'+moduleName+'」模块的答题记录、复习标记与笔记吗？其他模块不受影响。'))return;
  downloadBackup('清空前备份');
  if(user){
-  const {error}=await db.from('question_progress').delete().eq('user_id',user.id).in('question_id',ids);
+  const {error}=await queueCloud(()=>db.from('question_progress').delete().eq('user_id',user.id).in('question_id',ids));
   if(error){setStatus('云端删除失败，本地记录未清空：'+error.message,'bad');return}
   ids.forEach(id=>{pending.delete(id);delete cloudMeta[id]});
  }
  ids.forEach(id=>{delete state[id];delete noteDrafts[id]});
+ if(!user){const keep=readJSON(guestPendingKey,[]).filter(id=>!ids.includes(id));localStorage.setItem(guestPendingKey,JSON.stringify(keep))}
  ExamPractice.leave();
  ExamScratch.clearQuestions(ids,user?.id||'guest');
  persistNoteDrafts();
@@ -1247,11 +1356,11 @@ async function boot(){
  active=data[0].id;
  $('questionCount').textContent=data.length;
  render();
+ await setupCloud();
  await loadKnowledge();
  await loadFormalData();
  await loadDataAnalysis();
  restoreHashView();
- await setupCloud();
 }
 boot().catch(error=>{
  console.error('题库加载失败',error);
