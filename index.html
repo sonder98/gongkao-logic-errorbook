@@ -459,6 +459,9 @@ function promoteGuestChanges(){
  for(const id of dirty){
   if(!guest[id]){delete baselines[id];continue}
   if(state[id]?._syncConflict){left.push(id);continue}
+  if(!state[id]&&!cloudMeta[id]){
+   state[id]=cloudRecord(guest[id]);pending.add(id);delete baselines[id];moved=true;continue;
+  }
   const rebased=ExamCloudSync.rebaseGuest(baselines[id],cloudRecord(guest[id]),cloudRecord(state[id]||{}));
   if(!rebased){left.push(id);continue}
   state[id]=rebased;
@@ -485,7 +488,7 @@ async function applyUser(next){
   uiAuth();render();
   await pullCloud();
  }else{
-  pending=new Set();cloudMeta={};state=readJSON(KEY);
+  pending=new Set();cloudMeta={};state=readJSON(KEY);guestStartState=clone(state);
   uiAuth();render();
   setStatus(db?'未登录 · 本机自动保存，可登录同步':'云端未连接 · 本机自动保存');
  }
@@ -549,9 +552,14 @@ $('importLegacy').onclick=async()=>{
  if(!user)return;
  const legacy=readJSON(KEY), keys=Object.keys(legacy).filter(k=>ARGUMENT_QUESTIONS.some(q=>q.id===k));
  if(!keys.length)return setStatus('当前浏览器没有找到旧版答题记录');
- if(!confirm('将旧版浏览器记录中的 '+keys.length+' 道题覆盖到当前账号云端？相同题目的云端笔记也会被覆盖。'))return;
+ if(!confirm('将旧版浏览器记录中的 '+keys.length+' 道题尝试导入账号？遇到已有云端记录会保留冲突，只有你确认后才能覆盖。'))return;
  downloadBackup('迁移前备份');
- keys.forEach(id=>{state[id]=legacy[id];markDirty(id)});
+ keys.forEach(id=>{
+  state[id]=cloudRecord(legacy[id]);
+  // A guest record has no trustworthy account-cloud ancestor. An existing
+  // remote row must return a version conflict instead of being replaced.
+  cloudMeta[id]={version:null};markDirty(id);
+ });
  persistUserState();
  render();await pushCloud();
 };
