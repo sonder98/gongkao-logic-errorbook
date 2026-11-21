@@ -7,6 +7,14 @@ const id=questions[0].id,answer=questions[0].answer;
 const account={id:'00000000-0000-4000-8000-000000000001',email:'exam@example.test'};
 const url=process.env.TEST_URL||'http://127.0.0.1:8000/';
 const watchdog=setTimeout(()=>{console.error('Cloud browser regression timed out after 110s');process.exit(1)},110000);
+async function waitForStore(store,key,check,timeout=12000){
+ const started=Date.now();
+ while(Date.now()-started<timeout){
+  if(check(store.get(key)))return;
+  await new Promise(resolve=>setTimeout(resolve,100));
+ }
+ throw Error('Mock cloud did not reach expected state: '+JSON.stringify(store.get(key)));
+}
 async function test(startSignedIn,initialRows,injectConflict){
  const store=new Map(Object.entries(initialRows).map(([key,value])=>[key,structuredClone(value)]));
  let conflictOnNext=injectConflict,requests=0;
@@ -92,10 +100,8 @@ async function test(startSignedIn,initialRows,injectConflict){
   },{id},{timeout:12000});
   await first.page.locator('.choice[data-answer="'+answer+'"]').click();
   await first.page.locator('#submit').click();
-  await first.page.waitForFunction(async({id})=>{
-   const row=await window.__cloudRequest({type:'read',id});
-   return row?.version===3&&row.data.practiceAttempts===4&&row.data.practiceCorrect===3;
-  },{id},{timeout:12000});
+  await waitForStore(first.store,id,row=>row?.version===3&&
+   row.data.practiceAttempts===4&&row.data.practiceCorrect===3);
   const current=first.store.get(id);
   assert.equal(current.data.practiceAttempts,4,'Same-question attempts from both devices must accumulate');
   current.version++;
@@ -122,10 +128,8 @@ async function test(startSignedIn,initialRows,injectConflict){
    document.querySelector('#authPassword').value='test-password-only';
    document.querySelector('#loginBtn').click();
   });
-  await second.page.waitForFunction(async({id})=>{
-   const row=await window.__cloudRequest({type:'read',id});
-   return row?.data.practiceAttempts===5&&row.data.practiceCorrect===4;
-  },{id},{timeout:12000});
+  await waitForStore(second.store,id,row=>
+   row?.data.practiceAttempts===5&&row.data.practiceCorrect===4);
   assert.deepEqual(second.errors,[],'No browser runtime errors during guest-to-account recovery');
  }finally{await second.browser.close()}
  clearTimeout(watchdog);
