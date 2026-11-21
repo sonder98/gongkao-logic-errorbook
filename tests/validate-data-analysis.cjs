@@ -111,7 +111,7 @@ for(const token of ['2700.09万吨','3.20%','2114.38万吨','4.13%',
  'A. -20%','B. 0%','C. 5%','D. 10%'])
  assert.ok(example73Water.description.includes(token),'水产品例题原题内容不完整：'+token);
 for(const token of [
- '先定性排除','排除C（5%）和D（10%）','代入A（-20%）',
+ '第一步：定性排除','排除C（5%）和D（10%）','代入A（-20%）',
  String.raw`3.20\%-(-20\%)=23.20\%`,String.raw`4.13\%-3.20\%=0.93\%`,
  String.raw`\frac{23.2\%}{0.93\%}`,
  String.raw`2700.09-2114.38=585.71`,
