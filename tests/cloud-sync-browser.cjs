@@ -6,6 +6,7 @@ const questions=require('../questions.json');
 const id=questions[0].id,answer=questions[0].answer;
 const account={id:'00000000-0000-4000-8000-000000000001',email:'exam@example.test'};
 const url=process.env.TEST_URL||'http://127.0.0.1:8000/';
+const watchdog=setTimeout(()=>{console.error('Cloud browser regression timed out after 110s');process.exit(1)},110000);
 async function test(startSignedIn,initialRows,injectConflict){
  const store=new Map(Object.entries(initialRows).map(([key,value])=>[key,structuredClone(value)]));
  let conflictOnNext=injectConflict,requests=0;
@@ -71,6 +72,7 @@ async function test(startSignedIn,initialRows,injectConflict){
 (async()=>{
  const original={data:{practiceAttempts:2,practiceCorrect:1,wrong:true,review:false,note:''},
   version:1,updated_at:new Date().toISOString()};
+ console.log('Cloud browser: start signed-in / conflict test');
  const first=await test(true,{[id]:original},true);
  try{
   await first.page.waitForFunction(({id})=>{
@@ -94,6 +96,7 @@ async function test(startSignedIn,initialRows,injectConflict){
   },{id},{timeout:12000});
   assert.deepEqual(first.errors,[],'No browser runtime errors during automatic sync');
  }finally{await first.browser.close()}
+ console.log('Cloud browser: start guest / login recovery test');
  const second=await test(false,{[id]:{
   data:{practiceAttempts:4,practiceCorrect:3,review:false,wrong:false,note:''},
   version:2,updated_at:new Date().toISOString()
@@ -110,5 +113,6 @@ async function test(startSignedIn,initialRows,injectConflict){
   },{id},{timeout:12000});
   assert.deepEqual(second.errors,[],'No browser runtime errors during guest-to-account recovery');
  }finally{await second.browser.close()}
+ clearTimeout(watchdog);
  console.log('Browser cloud sync: session restore, version conflicts, remote refresh, guest recovery OK');
 })().catch(e=>{console.error(e);process.exitCode=1});
