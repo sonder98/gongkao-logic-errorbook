@@ -53,8 +53,8 @@ assert.deepEqual(cumulativeMix.items.map(item=>item.title),[
 ]);
 assert.ok(cumulativeMix.items[0].description.includes('上月累计量＋当月量＝当月累计量'),
  '累计量关系须严格遵守讲义');
-assert.ok(cumulativeMix.items[1].formula.includes(String.raw`r_{1\\sim n-1}<r_{1\\sim n}`)&&
- cumulativeMix.items[1].formula.includes(String.raw`r_{1\\sim n-1}>r_{1\\sim n}`),
+assert.ok(cumulativeMix.items[1].formula.includes(String.raw`r_{1\sim n-1}<r_{1\sim n}`)&&
+ cumulativeMix.items[1].formula.includes(String.raw`r_{1\sim n-1}>r_{1\sim n}`),
  '累计增速上升和下降对应的大小方向须完整');
 assert.ok(cumulativeMix.items[2].formula.includes('10\\%<11\\%<r_5')&&
  cumulativeMix.items[2].formula.includes('r_5>11\\%'),
