@@ -22,4 +22,5 @@ jobs:
           node tests/validate-single-scroll.cjs
           node tests/validate-scratch.cjs
           node tests/validate-repeat-practice.cjs
+          node tests/validate-cloud-sync.cjs
           node tests/validate-swipe-navigation.cjs
