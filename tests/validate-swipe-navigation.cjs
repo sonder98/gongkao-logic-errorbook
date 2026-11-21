@@ -79,7 +79,7 @@ send(form,-132,0);
 assert.equal(visits.length,stopped,'Other buttons are not swipe surfaces');
 send(choice,-85,90);
 assert.equal(visits.length,stopped,'Diagonal/vertical reading must not navigate');
-send(choice,-60,2,{duration:1950});
+send(choice,-92,2,{duration:1950});
 assert.equal(visits.length,stopped+1,'Slow but deliberate iPad drag has no arbitrary 1.4s timeout');
 assert.ok(cancelled>0,'Cancelled gestures reset the visual position');
 const flick=create({getState:()=>({enabled:true,at:1,ids}),onNavigate:id=>visits.push({id}),
