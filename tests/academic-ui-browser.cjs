@@ -93,6 +93,21 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await page.locator('[data-knowledge-section="data-fraction-share"]').getAttribute('aria-expanded'),'true');
   assert.equal(await page.locator('#knowledgeNav .kb-nav-item').count(),3,
     'Expanded fraction chapter should directly expose its three lesson entries');
+  // 第5课用户指定的J省4月环比跨年例题：完整图表可加载且手机自适应。
+  await page.locator('[data-knowledge-section="data-growth-rate"]').click();
+  await page.locator('[data-knowledge-topic="data-topic-course-05-growth-decomposition"]').click();
+  const jPowerChart=page.locator('#knowledgeCard .kb-example-material img');
+  assert.equal(await jPowerChart.count(),1,'J省材料只能在对应教材例题显示一次');
+  await page.waitForFunction(()=>{
+   const img=document.querySelector('#knowledgeCard .kb-example-material img');
+   return img&&img.complete&&img.naturalWidth>0;
+  },null,{timeout:15000});
+  assert.ok((await jPowerChart.getAttribute('src')).includes('lesson-05-j-province-2020-cumulative-power-chart.svg'),
+   '课内教材例题必须引用完整图表');
+  await page.setViewportSize({width:390,height:844});
+  const jChartWidths=await jPowerChart.evaluate(img=>({image:img.getBoundingClientRect().width,figure:img.closest('figure').getBoundingClientRect().width}));
+  assert.ok(jChartWidths.image<=jChartWidths.figure+1,'手机图表必须缩放到材料卡片宽度内');
+  await page.setViewportSize({width:1280,height:900});
   const scalingTopic=page.locator('[data-knowledge-topic="data-topic-course-03-scaling"]');
   if(await scalingTopic.count()===0)await page.locator('[data-knowledge-section="data-speed"]').click();
   await scalingTopic.click();
