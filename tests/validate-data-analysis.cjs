@@ -40,6 +40,33 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
   '第12课 · 容斥问题','第13课 · 假设代入'
 ]);
 
+
+const lesson07=courseTopics.find(t=>t.id==='data-topic-course-07-fraction-mix');
+assert.ok(lesson07,'第7课课程ID须保持稳定');
+assert.deepEqual(lesson07.contentSections.map(s=>s.title),
+ ['7.1 分式混合的基本概念','7.2 累计增速混合'],
+ '第7课7.1与7.2为两个并列知识节');
+const cumulativeMix=lesson07.contentSections[1];
+assert.equal(cumulativeMix.id,'fraction-mix-cumulative-growth');
+assert.deepEqual(cumulativeMix.items.map(item=>item.title),[
+ '累计量的组成关系','定性判断：累计增速位于两者之间','讲义示例：根据累计增速判断5月增速'
+]);
+assert.ok(cumulativeMix.items[0].description.includes('上月累计量＋当月量＝当月累计量'),
+ '累计量关系须严格遵守讲义');
+assert.ok(cumulativeMix.items[1].formula.includes(String.raw`r_{1\\sim n-1}<r_{1\\sim n}`)&&
+ cumulativeMix.items[1].formula.includes(String.raw`r_{1\\sim n-1}>r_{1\\sim n}`),
+ '累计增速上升和下降对应的大小方向须完整');
+assert.ok(cumulativeMix.items[2].formula.includes('10\\%<11\\%<r_5')&&
+ cumulativeMix.items[2].formula.includes('r_5>11\\%'),
+ '讲义示例应由10%升至11%推得5月增速大于11%');
+assert.equal(lesson07.contentSections[0].subtopics.length,4,
+ '加入7.2不改原7.1的四个子知识点');
+for(const [prev,cumulative] of [[.1,.11],[.15,.08]]){
+ const month=(cumulative-.6*prev)/.4;
+ assert.equal(Math.sign(month-cumulative),Math.sign(cumulative-prev),
+  '累计增速和上月累计增速的变化方向与当月增速相对累计增速一致');
+}
+
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
 const mapAssetPath=path.join(root,lesson06.mindmapImage);
