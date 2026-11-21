@@ -65,6 +65,9 @@
 .kb-group-count{flex:none;color:var(--sub);font-size:10px;font-weight:650;font-variant-numeric:tabular-nums}
 .kb-group-chevron{flex:none;font-size:12px;color:#8a9da5;transition:transform .15s}
 .kb-group[aria-expanded="true"] .kb-group-chevron{transform:rotate(90deg)}
+.kb-group.kb-data-chapter{margin:15px 0 6px;padding:12px 9px}
+.kb-group.kb-data-chapter:first-child{margin-top:2px}
+.kb-group.kb-data-chapter::before{display:none}
 .kb-group-search{cursor:default}
 .kb-group-search:hover{background:transparent}
 .kb-topic-list{padding-left:10px;margin:1px 0 8px;border-left:1px solid #e5ecea}
@@ -847,15 +850,19 @@ function renderKnowledge(){
  $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
  let lastChapter='',navHtml='';
  for(const {section,topics} of groups){
-  if(lastChapter!==section.chapter){
+  // 资料分析每个大类就是一个章节，直接用章节作为可展开的目录项，避免同名标题重复。
+  const flatDataChapter=currentModule==='data';
+  if(!flatDataChapter&&lastChapter!==section.chapter){
    navHtml+='<div class="kb-chapter">'+safe(section.chapter)+'</div>';
    lastChapter=section.chapter;
   }
+  const sectionLabel=flatDataChapter?section.chapter:section.title;
+  const chapterClass=flatDataChapter?' kb-data-chapter':'';
   const expanded=searching||knowledgeExpanded.has(section.id);
   if(searching){
-   navHtml+='<div class="kb-group kb-group-search"><span class="kb-group-title">'+safe(section.title)+'</span><span class="kb-group-count">'+topics.length+' 项</span></div>';
+   navHtml+='<div class="kb-group kb-group-search'+chapterClass+'"><span class="kb-group-title">'+safe(sectionLabel)+'</span><span class="kb-group-count">'+topics.length+' 项</span></div>';
   }else{
-   navHtml+='<button type="button" class="kb-group" data-knowledge-section="'+safe(section.id)+'" aria-expanded="'+expanded+'" title="'+safe(section.title)+'"><span class="kb-group-chevron" aria-hidden="true">›</span><span class="kb-group-title">'+safe(section.title)+'</span><span class="kb-group-count">'+section.topics.length+' 项</span></button>';
+   navHtml+='<button type="button" class="kb-group'+chapterClass+'" data-knowledge-section="'+safe(section.id)+'" aria-expanded="'+expanded+'" title="'+safe(sectionLabel)+'"><span class="kb-group-chevron" aria-hidden="true">›</span><span class="kb-group-title">'+safe(sectionLabel)+'</span><span class="kb-group-count">'+section.topics.length+' 项</span></button>';
   }
   if(expanded){
    navHtml+='<div class="kb-topic-list">';
