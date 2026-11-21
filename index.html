@@ -710,6 +710,8 @@ function structuredKnowledgeDetailsHtml(item){
   (item.workedExamples?.length?'<div class="kb-structured-worked-examples">'+item.workedExamples.map(ex=>
    '<section class="kb-structured-worked-example"><h5>'+safe(ex.title)+'</h5>'+
    (ex.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(ex.description)+'</p>':'')+
+   (ex.materialImage&&/^assets\\/data-analysis\\/[\\w./-]+\\.svg$/.test(ex.materialImage)?
+    '<figure class="kb-example-material"><a href="'+safe(ex.materialImage)+'" target="_blank" rel="noopener noreferrer" aria-label="查看例题完整图表"><img src="'+safe(ex.materialImage)+'" alt="'+safe(ex.materialAlt||ex.title)+'" width="1220" height="760" loading="lazy" decoding="async"></a></figure>':'')+
    (ex.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(ex.formula)+'</div>':'')+
    (ex.note?'<p class="kb-structured-caution">'+DataAnalysis.rich(ex.note)+'</p>':'')+
    '</section>').join('')+'</div>':'')+
