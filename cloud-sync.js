@@ -39,6 +39,31 @@
   }
   return merged;
  }
- root.ExamCloudSync={merge,eq};
+ // Reapply only actions made while logged out, not the guest's potentially old
+ // aggregate state. This avoids replacing newer cloud progress with guest data.
+ function rebaseGuest(base,guest,current){
+  if(!base||!guest||!current)return null;
+  const ba=count(base.practiceAttempts),bc=count(base.practiceCorrect);
+  const ga=count(guest.practiceAttempts),gc=count(guest.practiceCorrect);
+  const ca=count(current.practiceAttempts),cc=count(current.practiceCorrect);
+  if(ga<ba||gc<bc||gc>ga||cc>ca)return null;
+  const attempts=ca+ga-ba,correct=cc+gc-bc;
+  if(!Number.isSafeInteger(attempts)||!Number.isSafeInteger(correct)||correct>attempts)return null;
+  const result={...current},keys=new Set([...Object.keys(base),...Object.keys(guest)]);
+  for(const key of keys){
+   if(key==='_syncConflict'||key==='practiceAttempts'||key==='practiceCorrect')continue;
+   const b=normalize(base,key),g=normalize(guest,key),c=normalize(current,key);
+   if(eq(g,b))continue;
+   // Guest and cloud both edited an unknown text or flag: ask, never guess.
+   if(!eq(c,b)&&!eq(c,g))return null;
+   if(Object.prototype.hasOwnProperty.call(guest,key))result[key]=guest[key];
+   else delete result[key];
+  }
+  if(attempts||'practiceAttempts' in current||'practiceAttempts' in guest){
+   result.practiceAttempts=attempts;result.practiceCorrect=correct;
+  }
+  return result;
+ }
+ root.ExamCloudSync={merge,rebaseGuest,eq};
  if(typeof module==='object'&&module.exports)module.exports=root.ExamCloudSync;
 })(typeof window==='undefined'?globalThis:window);
