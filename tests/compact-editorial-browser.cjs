@@ -80,6 +80,28 @@ const url=process.env.TEST_URL||'http://127.0.0.1:8000/';
   });
   assert.equal(knowledge.maxWidth,'840px','Editorial knowledge width cap should be 840px');
   assert.ok(knowledge.width<=840+1);
+  // Cross-tab sidebar geometry must be identical at iPad and desktop widths.
+  // Switching between study modes should never shift the course rail or reading start.
+  for(const width of [820,1024,1280,1500,1800]){
+   await page.setViewportSize({width,height:900});
+   const measure=async mode=>{
+    await page.locator(mode==='knowledge'?'#academicKnowledgeMode':'#academicPracticeMode').click();
+    const selector=mode==='knowledge'?'#knowledgeView':'#practiceView';
+    return page.locator(selector).evaluate(root=>{
+     const aside=root.querySelector(':scope > aside').getBoundingClientRect();
+     const main=root.querySelector(':scope > main').getBoundingClientRect();
+     const shell=root.getBoundingClientRect();
+     return {asideWidth:aside.width,asideLeft:aside.left,asideRight:aside.right,
+       mainLeft:main.left,shellWidth:shell.width,shellLeft:shell.left};
+    });
+   };
+   const practice=await measure('practice'),knowledgeMode=await measure('knowledge');
+   for(const key of ['asideWidth','asideLeft','asideRight','mainLeft','shellWidth','shellLeft']){
+    assert.ok(Math.abs(practice[key]-knowledgeMode[key])<1,
+     'Practice and knowledge should share sidebar geometry at '+width+'px, '+key+
+     ': '+JSON.stringify({practice,knowledgeMode}));
+   }
+  }
   await page.setViewportSize({width:390,height:844});
   await page.locator('#academicPracticeMode').click();
   await page.locator('#card .choice').first().waitFor({state:'visible'});
