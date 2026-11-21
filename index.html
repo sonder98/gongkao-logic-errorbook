@@ -1018,14 +1018,24 @@ function switchView(view,updateHash=true){
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
 }
-function openKnowledge(id,scrollToArticle=false){
+function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
  switchView('knowledge');
- if(scrollToArticle)$('knowledgeCard').scrollIntoView({block:'start',behavior:'smooth'});
+ if(source==='swipe'){
+  // A long lesson may be swiped halfway down the page: return directly to
+  // the beginning of the next lesson below the fixed academic header.
+  requestAnimationFrame(()=>{
+   if(currentView!=='knowledge'||selectedTopic!==id)return;
+   const topbar=document.querySelector('header.academic-topbar')?.getBoundingClientRect().height||0;
+   const card=$('knowledgeCard');
+   const top=window.scrollY+card.getBoundingClientRect().top-topbar-12;
+   window.scrollTo({top:Math.max(0,top),behavior:'instant'});
+  });
+ }else if(scrollToArticle)$('knowledgeCard').scrollIntoView({block:'start',behavior:'smooth'});
  else window.scrollTo({top:0,behavior:'smooth'});
 }
 function openPractice(id){
@@ -1417,6 +1427,18 @@ async function boot(){
    return {enabled:index>=0&&questions.length>1,at:index,ids:questions.map(q=>q.id)};
   },
   onNavigate:id=>navigatePracticeQuestion(id,'swipe')
+ });
+ ExamSwipe.installKnowledge({
+  getState:()=>{
+   if(currentView!=='knowledge'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||!KNOWLEDGE||
+      !$('knowledgeCard').querySelector('.kb-heading'))return {enabled:false};
+   // Match the existing ← 上一节 / 下一节 → buttons exactly: course order
+   // covers all real topics, including transitions across chapter boundaries.
+   const index=knowledgeTopics.findIndex(topic=>topic.id===selectedTopic);
+   return {enabled:index>=0&&knowledgeTopics.length>1,at:index,
+    ids:knowledgeTopics.map(topic=>topic.id)};
+  },
+  onNavigate:id=>openKnowledge(id,false,'swipe')
  });
  academicPlaceTabs();
  ExamLayout.init();
