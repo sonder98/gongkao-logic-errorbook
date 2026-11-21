@@ -98,6 +98,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   await page.locator('[data-knowledge-topic="data-topic-course-05-growth-decomposition"]').click();
   const jPowerChart=page.locator('#knowledgeCard .kb-example-material img');
   assert.equal(await jPowerChart.count(),1,'J省材料只能在对应教材例题显示一次');
+  await jPowerChart.scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>{
    const img=document.querySelector('#knowledgeCard .kb-example-material img');
    return img&&img.complete&&img.naturalWidth>0;
