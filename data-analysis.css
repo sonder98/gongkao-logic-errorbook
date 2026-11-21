@@ -81,6 +81,12 @@
 .kb-structured-worked-example{min-width:0;padding:14px 16px;border-radius:10px;border:1px solid #d9e7e3;background:#f8fcfb}
 .kb-structured-worked-example h5{margin:0 0 8px;color:#21645c;font-size:14px;font-weight:800;line-height:1.45}
 .kb-structured-worked-example .kb-structured-formula{margin:12px 0}
+.kb-example-material{margin:12px 0;padding:6px;border:1px solid #d9e7e3;border-radius:10px;background:#fff;overflow:hidden}
+.kb-example-material a{display:block;cursor:zoom-in;outline-offset:3px}
+.kb-example-material a:focus-visible{outline:2px solid #138777;border-radius:7px}
+.kb-example-material img{display:block;width:100%;height:auto;object-fit:contain;border-radius:6px}
+@media(max-width:800px){.kb-example-material{margin:10px 0;padding:3px;border-radius:8px}}
+
 @media(max-width:800px){.kb-structured-worked-example{padding:12px 10px}}
 
 /* Emphasize key conceptual boundaries in-place, without creating flat rule lists. */
