@@ -62,11 +62,23 @@ async function test(startSignedIn,initialRows,injectConflict){
  }));
  const errors=[];
  page.on('pageerror',err=>errors.push(err.message));
- await page.goto(url,{waitUntil:'domcontentloaded',timeout:20000});
- const member=page.locator('#memberAuth');
- if(startSignedIn)await member.waitFor({state:'visible'});
- else await page.locator('#guestAuth').waitFor({state:'visible'});
- await page.waitForFunction(()=>document.querySelectorAll('.choice').length>0,null,{timeout:12000});
+ try{
+  await page.goto(url,{waitUntil:'domcontentloaded',timeout:20000});
+  const member=page.locator('#memberAuth');
+  if(startSignedIn)await member.waitFor({state:'visible'});
+  else await page.locator('#guestAuth').waitFor({state:'visible'});
+  await page.waitForFunction(()=>document.querySelectorAll('.choice').length>0,null,{timeout:12000});
+ }catch(error){
+  console.error('Cloud browser boot snapshot',await page.evaluate(()=>({
+   status:document.querySelector('#authStatus')?.textContent,
+   hasFake:!!window.__fakeSupabase,
+   hasSupabase:!!window.supabase,
+   usesFake:window.supabase===window.__fakeSupabase,
+   questions:document.querySelectorAll('.choice').length
+  })).catch(()=>null),'page errors',errors);
+  await browser.close();
+  throw error;
+ }
  return {store,browser,context,page,errors,requests:()=>requests};
 }
 (async()=>{
