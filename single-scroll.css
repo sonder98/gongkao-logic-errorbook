@@ -769,3 +769,26 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
   grid-template-columns:var(--exam-sidebar-width) minmax(0,1fr) 190px;
  }
 }
+
+
+/* Smooth touch question paging: no permanent compositor layer or altered
+   hit-testing; the class exists only for the duration of an intentional swipe. */
+#practiceView #card.exam-swipe-moving{
+ will-change:transform,opacity;
+ -webkit-backface-visibility:hidden;
+ backface-visibility:hidden;
+}
+@media (any-pointer:coarse){
+ #practiceView #card .choices,
+ #practiceView #card .choice,
+ #practiceView #card .choice .letter,
+ #practiceView #card .choice span{
+  touch-action:pan-y;
+ }
+ /* On iOS, disabled answer buttons sometimes swallow touchstart entirely.
+    Let the option row receive the drag; the answer remains disabled. */
+ #practiceView #card .choice:disabled{pointer-events:none}
+}
+@media (prefers-reduced-motion:reduce){
+ #practiceView #card.exam-swipe-moving{will-change:auto}
+}

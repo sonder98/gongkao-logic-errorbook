@@ -8,7 +8,7 @@ const swipe=create({getState,onNavigate:id=>visited.push(id),isTouchDevice:()=>t
 const event=(x,y,dx=0,dy=0,options={})=>{
  const t={identifier:7,clientX:x,clientY:y};
  const after={identifier:7,clientX:x+dx,clientY:y+dy};
- return {start:{target:{closest:()=>options.blocked?{}:null},touches:[t]},
+ return {start:{target:{closest:selector=>options.blocked&&selector.includes('button')?{}:null},touches:[t]},
    move:{touches:[after]},end:{changedTouches:[after]}};
 };
 function gesture(x,y,dx,dy,opts){
@@ -42,3 +42,53 @@ assert.equal(visited.length,2,'Pinch never navigates');
 swipe.cancel();gesture(170,300,-98,4);
 assert.equal(visited.length,3,'Next single-finger gesture works after pinch cancellation');
 console.log('Mobile swipe navigation: directions, limits, scroll, exclusion, pinch & disabled mode OK');
+
+
+// An answer option is a BUTTON but is also a valid horizontal swipe surface.
+// Other controls remain ignored; a confirmed horizontal move cancels native
+// synthetic clicks, while a small tap must never call preventDefault.
+let clock=1000,prevented=0,dragged=0,cancelled=0;
+const visits=[];
+const choice={closest:selector=>
+ selector.startsWith('#card .choices .choice')?{dataset:{answer:'A'}}:
+ selector.includes('button')?{}:null};
+const form={closest:selector=>selector.startsWith('#card .choices .choice')?null:
+ selector.includes('button')?{}:null};
+const improved=create({getState:()=>({enabled:true,at:1,ids}),
+ onNavigate:(id,direction)=>visits.push({id,direction}),
+ isTouchDevice:()=>true,viewportWidth:()=>1024,now:()=>clock,
+ onDrag:()=>dragged++,onCancel:()=>cancelled++});
+const send=(target,dx,dy,{duration=190,multi=false}={})=>{
+ const first={identifier:7,clientX:360,clientY:380};
+ const finish={identifier:7,clientX:360+dx,clientY:380+dy};
+ improved.start({target,touches:multi?[first,{identifier:8,clientX:385,clientY:380}]:[first]});
+ clock+=Math.round(duration/2);
+ improved.move({touches:[finish],cancelable:true,preventDefault:()=>prevented++});
+ clock+=Math.round(duration/2);
+ improved.end({changedTouches:[finish]});
+};
+send(choice,-83,8);
+assert.deepEqual(visits,[{id:'q3',direction:1}],'84px landscape iPad swipe from option navigates');
+assert.ok(prevented>0&&dragged>0,'Horizontal option drag produces feedback and suppresses click');
+const stopped=visits.length;
+const countBeforeTap=prevented;
+send(choice,-10,3);
+assert.equal(visits.length,stopped,'Short finger movement is still a tap, not navigation');
+assert.equal(prevented,countBeforeTap,'Tap leaves native button click intact');
+send(form,-132,0);
+assert.equal(visits.length,stopped,'Other buttons are not swipe surfaces');
+send(choice,-85,90);
+assert.equal(visits.length,stopped,'Diagonal/vertical reading must not navigate');
+send(choice,-92,2,{duration:1950});
+assert.equal(visits.length,stopped+1,'Slow but deliberate iPad drag has no arbitrary 1.4s timeout');
+send(choice,-48,2,{duration:850});
+assert.ok(cancelled>0,'Cancelled horizontal drags reset the visual position');
+const flick=create({getState:()=>({enabled:true,at:1,ids}),onNavigate:id=>visits.push({id}),
+ isTouchDevice:()=>true,viewportWidth:()=>1024,now:()=>clock});
+const firstF={identifier:7,clientX:360,clientY:380};
+const lastF={identifier:7,clientX:312,clientY:381};
+flick.start({target:choice,touches:[firstF]});clock+=110;
+flick.move({touches:[lastF],cancelable:true,preventDefault(){}});
+flick.end({changedTouches:[lastF]});
+assert.equal(visits.at(-1).id,'q3','A fast intentional 48px flick works on iPad');
+console.log('Answer-option swipe hit testing, 84px tablet threshold, tap safety, drag and fast flick OK');
