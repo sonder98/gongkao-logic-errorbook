@@ -316,6 +316,37 @@ assert.ok(yoyToMom.formula.includes('26年5月环比倍数')&&yoyToMom.formula.i
 for(const word of ['同比增速a＞上月同比增速b','同比降低','同比不变','不代表今年当月环比增速高于或低于今年上月环比增速','不代表环比增速一定为正'])
   assert.ok(yoyToMom.caution.includes(word),'速判应保留条件和比较对象：'+word);
 assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
+
+const aprilJExample=yoyToMom.workedExamples?.[0];
+assert.ok(aprilJExample&&yoyToMom.workedExamples.length===1,'第5课环比跨年比较只增加用户指定的一道教材例题');
+assert.ok(aprilJExample.title.includes('2020年4月J省发电量环比增速'),'例题题目要与讲义一致');
+assert.ok(aprilJExample.description.includes('是否快于上年同期'),'保留用户原问法');
+assert.equal(aprilJExample.materialImage,'assets/data-analysis/lesson-05-j-province-2020-cumulative-power-chart.svg');
+const aprilJChart=fs.readFileSync(path.join(root,aprilJExample.materialImage),'utf8');
+assert.ok(aprilJChart.startsWith('<svg')&&aprilJChart.includes('</svg>')&&!aprilJChart.includes('<script'),
+ '完整教材图表须是安全的静态SVG');
+const jLabels=['1-2月','1-3月','1-4月','1-5月','1-6月','1-7月','1-8月','1-9月','1-10月','1-11月','1-12月'];
+const jVolumes=[155.4,228.6,299.8,376.8,450.8,534.1,612,690.9,765.8,852.8,944.7];
+const jGrowth=[2.5,0.2,0.7,2.8,3.1,3.8,3.6,5.3,5.5,6.2,5.9];
+for(let i=0;i<jLabels.length;i++){
+ assert.ok(aprilJChart.includes(jLabels[i]+'累计发电量'+jVolumes[i]+'亿千瓦时'),
+  '图表须保留完整累计发电量：'+jLabels[i]);
+ assert.ok(aprilJChart.includes(jLabels[i]+'同比增长率'+jGrowth[i]+'%'),
+  '图表须保留完整同比增速：'+jLabels[i]);
+}
+assert.ok(aprilJExample.formula.includes('1～3月累计增速0.2%')&&
+ aprilJExample.formula.includes('1～4月累计增速0.7%'),
+ '4月单月增速由1～3月0.2%升至1～4月0.7%推得大于0.7%');
+assert.ok(aprilJExample.formula.includes('1～2月累计增速2.5%')&&
+ aprilJExample.formula.includes('1～3月累计增速0.2%'),
+ '3月单月增速由1～2月2.5%降至1～3月0.2%推得小于0.2%');
+assert.ok(aprilJExample.formula.includes(String.raw`\boxed{\text{20年4月环比倍数}>\text{19年4月环比倍数}}`),
+ '按用户的同比倍数对比路线得出最终结论');
+assert.ok(htmlSource.includes('class="kb-example-material"')&&htmlSource.includes('ex.materialImage'),
+ '教材例题须展示图表材料而不是只有题目文字');
+assert.ok(dataStyleSource.includes('.kb-example-material img{display:block;width:100%;height:auto'),
+ '手机与iPad教材图表必须按可用宽度缩放');
+
 const prevMay=120,prevApr=100,curMay=144,curApr=110;
 assert.ok(Math.abs((curMay/curApr)/(prevMay/prevApr)-(1+0.2)/(1+0.1))<1e-12,'环比倍数跨年比值公式应正确');
 assert.deepEqual(lesson05.questionIds,['data-2018-tea-export-value-growth-rate','data-2012-surveying-services-2006-multiple','data-2018-social-retail-sales-2015-multiple','data-2016-national-cotton-yield-per-area-growth','data-2020-real-estate-development-funding-2019-increase','data-2016-may-imported-drug-mom-growth','data-2022-q4-iron-ore-monthly-mom-trend'],'第5课关联七道正式习题，包含跨年环比趋势比较');
