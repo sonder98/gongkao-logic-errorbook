@@ -336,6 +336,11 @@ function markDirty(id){
   }catch(e){setStatus('本机无法保存离线记录','bad')}
  }
 }
+function hasMeaningfulProgress(r){
+ if(!r)return false;
+ return ExamPractice.totals(r).attempts>0||!!r.wrong||!!r.review||
+  !!r.note||!!r.analysisOverride;
+}
 function save(){
  if(state[active])state[active]=ExamPractice.cleanLegacy(state[active]);
  if(state[active]&&!state[active]._syncConflict)markDirty(active);
@@ -427,7 +432,7 @@ function pullCloud(){
    // Older app versions did not keep a confirmed baseline. If their saved
    // record differs, keep both versions for explicit recovery instead of
    // silently choosing the cloud and erasing possible offline answers.
-   if(current&&!cached?.baseData&&!ExamCloudSync.eq(cloudRecord(current),cloudRecord(row.data))){
+   if(current&&hasMeaningfulProgress(current)&&!cached?.baseData&&!ExamCloudSync.eq(cloudRecord(current),cloudRecord(row.data))){
     state[id]._syncConflict={cloudData:row.data,cloudVersion:row.version,cloudUpdatedAt:row.updated_at};
     legacyConflicts++;changes=true;
     continue;
@@ -446,7 +451,7 @@ function pullCloud(){
   // A record stored under the account but absent on the server is safe to
   // create. Do not drop it merely because older versions forgot its queue.
   for(const id of Object.keys(state)){
-   if(!seen.has(id)&&!cloudMeta[id]&&!pending.has(id)&&!state[id]?._syncConflict)pending.add(id);
+   if(!seen.has(id)&&!cloudMeta[id]&&!pending.has(id)&&!state[id]?._syncConflict&&hasMeaningfulProgress(state[id]))pending.add(id);
   }
   if(user?.id!==uid)return;
   // Account is now up to date: apply only newly-made guest edits, not stale
@@ -456,7 +461,7 @@ function pullCloud(){
   if(changes)refreshRenderedProgress();
   uiAuth();
   const stranded=readJSON(guestPendingKey,[]).length;
-  const unresolved=legacyConflicts+Object.values(state).filter(r=>r?._syncConflict).length;
+  const unresolved=Object.values(state).filter(r=>r?._syncConflict).length;
   setStatus(unresolved?'已有 '+unresolved+' 条同题差异已保留，请在对应题目选择版本':
    stranded?'云端已读取，另有 '+stranded+' 条访客记录保存在本机等待恢复':
    '已登录 · 自动读取 '+rows.length+' 条云端记录'+(pending.size?'，本机 '+pending.size+' 条修改继续上传':' · 已是最新'),
