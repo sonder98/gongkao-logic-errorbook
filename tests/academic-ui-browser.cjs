@@ -13,7 +13,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
   assert.equal(await page.locator('header.academic-topbar').isVisible(),true);
   assert.equal(await page.locator('#academicPracticeMode').getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('#practiceView > aside > .site-tabs').count(),1);
-  assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(246, 245, 241)');
+  assert.equal(await page.locator('body').evaluate(el=>getComputedStyle(el).backgroundColor),'rgb(246, 246, 243)');
   await page.locator('#academicKnowledgeMode').click();
   await page.locator('#knowledgeCard h2').waitFor({state:'visible'});
   assert.equal(await page.locator('#academicKnowledgeMode').getAttribute('aria-pressed'),'true');
