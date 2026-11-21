@@ -302,6 +302,16 @@ assert.equal(splitQuick.example,undefined,'不得自编示例或新题');
 const yoyToMom=growthQuick.items[3];
 assert.ok(yoyToMom.description.includes('当月的同比增长率')&&yoyToMom.description.includes('上月的同比增长率'),'区分当月与上月同比率');
 assert.ok(yoyToMom.formula.includes('\\frac{1+a}{1+b}'),'同比增长率必须转成同比倍数后相除');
+
+assert.ok(yoyToMom.formula.includes(String.raw`(\text{26年5月}/\text{26年4月})`)&&
+ yoyToMom.formula.includes(String.raw`(\text{25年5月}/\text{25年4月})`),
+ '先将两年环比倍数写为左右横排的比值');
+assert.ok(yoyToMom.formula.includes(String.raw`(\text{26年5月}/\text{25年5月})`)&&
+ yoyToMom.formula.includes(String.raw`(\text{26年4月}/\text{25年4月})`),
+ '再直接重组为两个月的同比倍数，不使用层叠的复合分式');
+assert.equal((yoyToMom.formula.match(/\\frac/g)||[]).length,1,
+ '最终结果才采用分数线，推导过程须保持横向斜杠');
+
 assert.ok(yoyToMom.formula.includes('今年当月环比倍数')&&yoyToMom.formula.includes('去年同月环比倍数'),'公式左边必须是两年同月环比倍数之比');
 for(const word of ['同比增速a＞上月同比增速b','同比降低','同比不变','不代表今年当月环比增速高于或低于今年上月环比增速','不代表环比增速一定为正'])
   assert.ok(yoyToMom.caution.includes(word),'速判应保留条件和比较对象：'+word);
