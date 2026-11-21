@@ -64,9 +64,8 @@ async function test(startSignedIn,initialRows,injectConflict){
  page.on('pageerror',err=>errors.push(err.message));
  try{
   await page.goto(url,{waitUntil:'domcontentloaded',timeout:20000});
-  const member=page.locator('#memberAuth');
-  if(startSignedIn)await member.waitFor({state:'visible'});
-  else await page.locator('#guestAuth').waitFor({state:'visible'});
+  await page.waitForFunction(expected=>document.querySelector('#authStatus')?.textContent.includes(expected),
+   startSignedIn?'已登录':'未登录',{timeout:10000});
   await page.waitForFunction(()=>document.querySelectorAll('.choice').length>0,null,{timeout:12000});
  }catch(error){
   console.error('Cloud browser boot snapshot',await page.evaluate(()=>({
@@ -116,9 +115,13 @@ async function test(startSignedIn,initialRows,injectConflict){
  try{
   await second.page.locator('.choice[data-answer="'+answer+'"]').click();
   await second.page.locator('#submit').click();
-  await second.page.locator('#authEmail').fill('exam@example.test');
-  await second.page.locator('#authPassword').fill('test-password-only');
-  await second.page.locator('#loginBtn').click();
+  // Auth lives in a collapsed drawer in the current Academic layout.
+  // Exercise the login handler without requiring that drawer to be opened.
+  await second.page.evaluate(()=>{
+   document.querySelector('#authEmail').value='exam@example.test';
+   document.querySelector('#authPassword').value='test-password-only';
+   document.querySelector('#loginBtn').click();
+  });
   await second.page.waitForFunction(async({id})=>{
    const row=await window.__cloudRequest({type:'read',id});
    return row?.data.practiceAttempts===5&&row.data.practiceCorrect===4;
