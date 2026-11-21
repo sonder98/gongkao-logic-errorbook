@@ -88,7 +88,7 @@ assert.ok(quantitativeMix.items.every(item=>item.caution===undefined&&item.examp
 assert.ok(quantitativeMix.items[0].workedExamples===undefined&&quantitativeMix.items[2].workedExamples===undefined,
  '不得把用户例题挂到其他方法下');
 const quantitativeExample=quantitativeMix.items[1].workedExamples;
-assert.ok(Array.isArray(quantitativeExample)&&quantitativeExample.length===1,'7.3仅加入用户指定的一道教材例题');
+assert.ok(Array.isArray(quantitativeExample)&&quantitativeExample.length===2,'7.3保留两道由用户指定的教材例题');
 const example73=quantitativeExample[0];
 assert.ok(example73.description.includes('1.47万亿元')&&example73.description.includes('8.0%')&&example73.description.includes('4.1个百分点'),
  '教材例题保留完整原始材料的信息');
@@ -104,6 +104,28 @@ assert.equal(example73.materialImage,undefined,'文字教材例题不擅自新�
 assert.equal(lesson07.questionIds.length,0,'教材例题不得写入正式习题关联');
 const exactExample73=(2601+6409)/(2601/1.098+6409/1.033)-1;
 assert.ok(Math.abs(exactExample73-.051)<0.001,'题目增长率计算独立校验约5.1%，答案B');
+
+const example73Water=quantitativeExample[1];
+assert.ok(example73Water.title.includes('非养殖水产品产量同比变化'),'第二道教材例题须紧跟电信业务例题');
+for(const token of ['2700.09万吨','3.20%','2114.38万吨','4.13%',
+ 'A. -20%','B. 0%','C. 5%','D. 10%'])
+ assert.ok(example73Water.description.includes(token),'水产品例题原题内容不完整：'+token);
+for(const token of [
+ '先定性排除','排除C（5%）和D（10%）','代入A（-20%）',
+ String.raw`3.20\%-(-20\%)=23.20\%`,String.raw`4.13\%-3.20\%=0.93\%`,
+ String.raw`\frac{23.2\%}{0.93\%}`,
+ String.raw`2700.09-2114.38=585.71`,
+ String.raw`\frac{2114.38}{585.71}\approx3.6`,
+ '基期比不可能达到约25倍','结论：选B（0%）'
+]) assert.ok(example73Water.formula.includes(token),'水产品例题应忠实保留用户解题链：'+token);
+assert.equal(example73Water.materialImage,undefined,'本题作为教材文字例题，不新建独立图像资源');
+assert.equal(lesson07.questionIds.length,0,'两道教材例题均不得变成正式习题');
+const waterActualRate=((2700.09-2114.38)/
+ ((2700.09/1.032)-(2114.38/1.0413))-1);
+assert.ok(Math.abs(waterActualRate)<0.003,'非养殖水产品实际增长率接近0%，B符合计算');
+const waterImpliedRatio=(3.2-(-20))/(4.13-3.2);
+assert.ok(waterImpliedRatio>24&&waterImpliedRatio<26,'假设A时距离比大约25，排除异常基期比');
+
 assert.equal(lesson07.contentSections[0].subtopics.length,4,'7.1内容不变');
 assert.equal(lesson07.contentSections[1].items.length,3,'7.2内容不变');
 
