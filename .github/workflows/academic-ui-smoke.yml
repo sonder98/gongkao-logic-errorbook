@@ -18,6 +18,7 @@ on:
       - 'tests/fullscreen-scratch-browser.cjs'
       - 'swipe-navigation.js'
       - 'tests/mobile-gestures-browser.cjs'
+      - 'tests/knowledge-swipe-browser.cjs'
       - '.github/workflows/academic-ui-smoke.yml'
   workflow_dispatch:
 jobs:
@@ -40,4 +41,5 @@ jobs:
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/compact-editorial-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/repeat-practice-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/mobile-gestures-browser.cjs
+          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/knowledge-swipe-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/fullscreen-scratch-browser.cjs
