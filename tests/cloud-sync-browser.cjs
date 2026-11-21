@@ -10,7 +10,7 @@ async function test(startSignedIn,initialRows,injectConflict){
  const store=new Map(Object.entries(initialRows).map(([key,value])=>[key,structuredClone(value)]));
  let conflictOnNext=injectConflict,requests=0;
  const browser=await chromium.launch({channel:process.env.BROWSER_CHANNEL||'chrome',headless:true,args:['--no-sandbox']});
- const context=await browser.newContext();
+ const context=await browser.newContext({serviceWorkers:'block'});
  await context.exposeFunction('__cloudRequest',async command=>{
   requests++;
   if(command.type==='list')return [...store].map(([question_id,r])=>({question_id,...structuredClone(r)}));
@@ -55,16 +55,17 @@ async function test(startSignedIn,initialRows,injectConflict){
   })};
  },{account,startSignedIn});
  const page=await context.newPage();
+ page.setDefaultTimeout(10000);
  await page.route('https://cdn.jsdelivr.net/npm/@supabase/**',r=>r.fulfill({
   status:200,contentType:'application/javascript',body:'window.supabase=window.__fakeSupabase;'
  }));
  const errors=[];
  page.on('pageerror',err=>errors.push(err.message));
- await page.goto(url,{waitUntil:'domcontentloaded'});
+ await page.goto(url,{waitUntil:'domcontentloaded',timeout:20000});
  const member=page.locator('#memberAuth');
  if(startSignedIn)await member.waitFor({state:'visible'});
  else await page.locator('#guestAuth').waitFor({state:'visible'});
- await page.waitForFunction(()=>document.querySelectorAll('.choice').length>0);
+ await page.waitForFunction(()=>document.querySelectorAll('.choice').length>0,null,{timeout:12000});
  return {store,browser,context,page,errors,requests:()=>requests};
 }
 (async()=>{
@@ -75,7 +76,7 @@ async function test(startSignedIn,initialRows,injectConflict){
   await first.page.waitForFunction(({id})=>{
    const key='gongkao_logic_errorbook_v1_user_00000000-0000-4000-8000-000000000001';
    return JSON.parse(localStorage.getItem(key)||'{}')[id]?.practiceAttempts===2;
-  },{id});
+  },{id},{timeout:12000});
   await first.page.locator('.choice[data-answer="'+answer+'"]').click();
   await first.page.locator('#submit').click();
   await first.page.waitForFunction(async({id})=>{
