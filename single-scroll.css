@@ -810,6 +810,10 @@ header.academic-topbar{background:var(--exam-warm);box-shadow:none;border-color:
  ){
   touch-action:pan-y;
  }
+ /* Do not constrain p/li content nested inside horizontally scrollable tables. */
+ #knowledgeView #knowledgeCard :is(table,.kb-formula-table,.kb-table-scroll,.da-table-scroll) *{
+  touch-action:auto;
+ }
 }
 @media (prefers-reduced-motion:reduce){
  #knowledgeView #knowledgeCard.exam-swipe-moving{will-change:auto}
