@@ -254,13 +254,15 @@ function clone(value){return JSON.parse(JSON.stringify(value))}
 function cloudRecord(value){const copy=ExamPractice.cleanLegacy(clone(value||{}));delete copy._syncConflict;return copy}
 let user=null, db=null, pending=new Set(), cloudMeta={}, syncQueue=Promise.resolve(), syncTimer=null, lastAutoPull=0;
 let noteDrafts=readJSON(KEY+'_note_drafts');
-let state=readJSON(KEY), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
+let state=readJSON(KEY), guestStartState=clone(readJSON(KEY)), active=null,category='全部',wrongOnly=false,importantOnly=false,searchTerm='',lastNavActive=null;
 // UI-only collapsed state; do not add a field to the question progress cloud schema.
 // Practice selection and immediate feedback are visit-only. Nothing is saved or synced.
 const collapsedAnalysis=new Set(); // Deprecated UI compatibility only; not part of the progress schema.
 const userKey=()=>KEY+'_user_'+user.id;
 const pendingKey=()=>userKey()+'_pending';
 const guestPendingKey=KEY+'_guest_pending';
+const guestBaselineKey=KEY+'_guest_baselines';
+const guestOwnerKey=KEY+'_guest_account';
 const lastAccountKey=KEY+'_last_account';
 const metaKey=()=>userKey()+'_cloud_meta';
 const noteDraftKey=()=>(user?userKey():KEY)+'_note_drafts';
@@ -322,7 +324,16 @@ function markDirty(id){
  else{
   const queue=new Set(readJSON(guestPendingKey,[]));
   queue.add(id);
-  try{localStorage.setItem(guestPendingKey,JSON.stringify([...queue]))}catch(e){setStatus('本机无法保存离线记录','bad')}
+  try{
+   const baselines=readJSON(guestBaselineKey);
+   if(!Object.prototype.hasOwnProperty.call(baselines,id)){
+    baselines[id]=cloudRecord(guestStartState[id]||{});
+    localStorage.setItem(guestBaselineKey,JSON.stringify(baselines));
+   }
+   if(localStorage.getItem(guestOwnerKey)===null)
+    localStorage.setItem(guestOwnerKey,localStorage.getItem(lastAccountKey)||'');
+   localStorage.setItem(guestPendingKey,JSON.stringify([...queue]));
+  }catch(e){setStatus('本机无法保存离线记录','bad')}
  }
 }
 function save(){
@@ -425,6 +436,9 @@ function pullCloud(){
    }
   }
   if(user?.id!==uid)return;
+  // Account is now up to date: apply only newly-made guest edits, not stale
+  // full guest records. Conflicting note changes remain in guest storage.
+  if(promoteGuestChanges())changes=true;
   persistUserState();
   if(changes)refreshRenderedProgress();
   uiAuth();
@@ -437,21 +451,25 @@ function pullCloud(){
 }
 function promoteGuestChanges(){
  const dirty=readJSON(guestPendingKey,[]);
- if(!dirty.length)return;
- const owner=localStorage.getItem(lastAccountKey);
- if(owner&&owner!==user.id)return;
- const guest=readJSON(KEY),left=[];
+ if(!dirty.length)return false;
+ const owner=localStorage.getItem(guestOwnerKey);
+ if(owner&&owner!==user.id)return false;
+ const guest=readJSON(KEY),baselines=readJSON(guestBaselineKey),left=[];
+ let moved=false;
  for(const id of dirty){
-  if(!guest[id])continue;
-  if(pending.has(id)){left.push(id);continue}
-  // Never give guest progress an inherited cloud version: if the cloud has
-  // this question, the server will return a conflict instead of overwriting.
-  state[id]=cloudRecord(guest[id]);
-  cloudMeta[id]={version:null};
+  if(!guest[id]){delete baselines[id];continue}
+  if(state[id]?._syncConflict){left.push(id);continue}
+  const rebased=ExamCloudSync.rebaseGuest(baselines[id],cloudRecord(guest[id]),cloudRecord(state[id]||{}));
+  if(!rebased){left.push(id);continue}
+  state[id]=rebased;
   pending.add(id);
+  delete baselines[id];
+  moved=true;
  }
  localStorage.setItem(guestPendingKey,JSON.stringify(left));
- persistUserState();
+ localStorage.setItem(guestBaselineKey,JSON.stringify(baselines));
+ if(!left.length)localStorage.removeItem(guestOwnerKey);
+ return moved;
 }
 async function applyUser(next){
  if(next?.id&&next.id===user?.id)return;
@@ -463,7 +481,6 @@ async function applyUser(next){
   state=readJSON(userKey());
   pending=new Set(readJSON(pendingKey(),[]));
   cloudMeta=readJSON(metaKey());
-  promoteGuestChanges();
   localStorage.setItem(lastAccountKey,user.id);
   uiAuth();render();
   await pullCloud();
@@ -1322,7 +1339,14 @@ $('reset').onclick=async()=>{
   ids.forEach(id=>{pending.delete(id);delete cloudMeta[id]});
  }
  ids.forEach(id=>{delete state[id];delete noteDrafts[id]});
- if(!user){const keep=readJSON(guestPendingKey,[]).filter(id=>!ids.includes(id));localStorage.setItem(guestPendingKey,JSON.stringify(keep))}
+ if(!user){
+  const keep=readJSON(guestPendingKey,[]).filter(id=>!ids.includes(id));
+  const bases=readJSON(guestBaselineKey);
+  ids.forEach(id=>{delete bases[id]});
+  localStorage.setItem(guestPendingKey,JSON.stringify(keep));
+  localStorage.setItem(guestBaselineKey,JSON.stringify(bases));
+  if(!keep.length)localStorage.removeItem(guestOwnerKey);
+ }
  ExamPractice.leave();
  ExamScratch.clearQuestions(ids,user?.id||'guest');
  persistNoteDrafts();
