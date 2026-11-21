@@ -312,7 +312,7 @@ assert.ok(yoyToMom.formula.includes(String.raw`(\text{26年5月}/\text{25年5月
 assert.equal((yoyToMom.formula.match(/\\frac/g)||[]).length,1,
  '最终结果才采用分数线，推导过程须保持横向斜杠');
 
-assert.ok(yoyToMom.formula.includes('今年当月环比倍数')&&yoyToMom.formula.includes('去年同月环比倍数'),'公式左边必须是两年同月环比倍数之比');
+assert.ok(yoyToMom.formula.includes('26年5月环比倍数')&&yoyToMom.formula.includes('25年5月环比倍数'),'示例左边必须是两年5月环比倍数之比');
 for(const word of ['同比增速a＞上月同比增速b','同比降低','同比不变','不代表今年当月环比增速高于或低于今年上月环比增速','不代表环比增速一定为正'])
   assert.ok(yoyToMom.caution.includes(word),'速判应保留条件和比较对象：'+word);
 assert.equal(yoyToMom.example,undefined,'不得新增未提供的数字例题');
