@@ -81,7 +81,8 @@ send(choice,-85,90);
 assert.equal(visits.length,stopped,'Diagonal/vertical reading must not navigate');
 send(choice,-92,2,{duration:1950});
 assert.equal(visits.length,stopped+1,'Slow but deliberate iPad drag has no arbitrary 1.4s timeout');
-assert.ok(cancelled>0,'Cancelled gestures reset the visual position');
+send(choice,-48,2,{duration:850});
+assert.ok(cancelled>0,'Cancelled horizontal drags reset the visual position');
 const flick=create({getState:()=>({enabled:true,at:1,ids}),onNavigate:id=>visits.push({id}),
  isTouchDevice:()=>true,viewportWidth:()=>1024,now:()=>clock});
 const firstF={identifier:7,clientX:360,clientY:380};
