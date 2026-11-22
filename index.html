@@ -231,6 +231,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <script src="practice-session.js"></script>
 <script src="cloud-sync.js"></script>
 <script src="swipe-navigation.js"></script>
+<script src="device-position.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>console.warn('PWA service worker registration failed',error));
@@ -251,6 +252,9 @@ const APP_SCHEMA_VERSION=3;
 const CLOUD_URL='https://vqynadkbwudbsnrixojb.supabase.co';
 const CLOUD_PUBLIC_KEY='sb_publishable_hW0iMrbyL6ad3yP90xAilw_jWer4x2U';
 const CFG_KEY='gongkao_cloud_config_v2';
+const devicePosition=ExamDevicePosition.create();
+let devicePositionReady=false,lastRenderedKnowledgeId=null,positionScrollTimer=null;
+let pendingModuleNavigation=false;
 const $=id=>document.getElementById(id), letters='ABCDE';
 function readJSON(key,fall={}){try{return JSON.parse(localStorage.getItem(key)||'null')||fall}catch(e){return fall}}
 function clone(value){return JSON.parse(JSON.stringify(value))}
@@ -992,10 +996,109 @@ function refreshLoadedModule(module){
  if(selectedTopic&&!knowledgeExpanded.size)expandKnowledgeSectionForTopic(selectedTopic);
  if(currentView==='knowledge')renderKnowledge();else render();
 }
+// Device-local bookmarks are independent of cloud-synced question progress.
+function deviceModuleResources(module){
+ return {
+  questions:module==='formal'?FORMAL_QUESTIONS:module==='data'?DATA_QUESTIONS:ARGUMENT_QUESTIONS,
+  topics:(module==='formal'?FORMAL_KNOWLEDGE:module==='data'?DATA_KNOWLEDGE:ARGUMENT_KNOWLEDGE)
+   ?.sections?.flatMap(section=>section.topics)||[]
+ };
+}
+function hydrateDevicePosition(){
+ for(const module of ['argument','formal','data']){
+  const resources=deviceModuleResources(module),saved=moduleStates[module];
+  const question=devicePosition.bookmark(module,'practice');
+  const topic=devicePosition.bookmark(module,'knowledge');
+  if(question&&resources.questions.some(q=>q.id===question.id))saved.active=question.id;
+  if(topic&&resources.topics.some(t=>t.id===topic.id))saved.selectedTopic=topic.id;
+ }
+ const argument=moduleStates.argument;
+ if(argument.active&&ARGUMENT_QUESTIONS.some(q=>q.id===argument.active))active=argument.active;
+ if(argument.selectedTopic&&knowledgeTopics.some(t=>t.id===argument.selectedTopic)){
+  selectedTopic=argument.selectedTopic;
+  expandKnowledgeSectionForTopic(selectedTopic);
+ }
+}
+function currentDeviceReading(){
+ if(currentView!=='knowledge'||lastRenderedKnowledgeId!==selectedTopic||!selectedTopic||
+    $('knowledgeView').hidden)return null;
+ const card=$('knowledgeCard'),header=document.querySelector('header.academic-topbar');
+ if(!card?.querySelector('.kb-heading'))return null;
+ const reference=(header?.getBoundingClientRect().height||0)+17;
+ let anchor=card,sectionId=null;
+ for(const section of card.querySelectorAll('.kb-structured-group')){
+  if(section.getBoundingClientRect().top<=reference){
+   anchor=section;
+   sectionId=section.id.startsWith('kb-structured-')?section.id.slice(14):null;
+  }else break;
+ }
+ return {sectionId,offset:Math.max(0,Math.round(reference-anchor.getBoundingClientRect().top))};
+}
+function rememberDevicePage(){
+ if(!devicePositionReady)return;
+ const id=currentView==='knowledge'?selectedTopic:active;
+ if(id)devicePosition.remember(currentModule,currentView,id);
+}
+function flushDeviceReading(){
+ if(positionScrollTimer!==null){clearTimeout(positionScrollTimer);positionScrollTimer=null}
+ if(!devicePositionReady||currentView!=='knowledge'||!selectedTopic)return;
+ const reading=currentDeviceReading();
+ if(reading)devicePosition.updateReading(currentModule,selectedTopic,reading);
+}
+window.addEventListener('scroll',()=>{
+ if(!devicePositionReady||currentView!=='knowledge')return;
+ if(positionScrollTimer!==null)clearTimeout(positionScrollTimer);
+ positionScrollTimer=setTimeout(flushDeviceReading,180);
+},{passive:true});
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='hidden')flushDeviceReading();
+});
+window.addEventListener('pagehide',flushDeviceReading);
+function restoreDeviceReading(bookmark){
+ if(!bookmark?.reading||currentView!=='knowledge'||bookmark.id!==selectedTopic)return;
+ const module=currentModule,id=selectedTopic,reading=bookmark.reading;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  if(currentView!=='knowledge'||currentModule!==module||selectedTopic!==id)return;
+  const card=$('knowledgeCard');
+  const section=reading.sectionId?Array.from(card.querySelectorAll('.kb-structured-group'))
+   .find(el=>el.id==='kb-structured-'+reading.sectionId):null;
+  const target=section||card;
+  const header=document.querySelector('header.academic-topbar')?.getBoundingClientRect().height||0;
+  const offset=section||!reading.sectionId?reading.offset:0;
+  window.scrollTo({top:Math.max(0,window.scrollY+target.getBoundingClientRect().top-header-17+offset),behavior:'instant'});
+ }));
+}
+function restoreDeviceLastPage(){
+ hydrateDevicePosition();
+ // Explicit valid URLs have priority over local preferences.
+ const explicit=restoreHashView();
+ if(!explicit){
+  const last=devicePosition.last();
+  const resources=last?deviceModuleResources(last.module):null;
+  const validLast=last&&(last.view==='knowledge'?resources.topics:resources.questions)
+   .some(item=>item.id===last.id);
+  if(validLast){
+   activateModule(last.module);
+   if(last.view==='knowledge'){
+    selectedTopic=last.id;
+    expandKnowledgeSectionForTopic(last.id);
+   }else active=last.id;
+   switchView(last.view,false,false);
+  }else render();
+ }
+ devicePositionReady=true;
+ updateViewHash();
+ if(currentView==='knowledge'){
+  const saved=devicePosition.bookmark(currentModule,'knowledge');
+  if(saved?.id===selectedTopic)restoreDeviceReading(saved);
+ }
+}
+
 function updateViewHash(){
  const id=currentView==='knowledge'?selectedTopic:active;
  const prefix=currentModule==='formal'?'formal/':currentModule==='data'?'data/':'';
  history.replaceState(null,'','#'+prefix+currentView+(id?'/'+encodeURIComponent(id):''));
+ rememberDevicePage();
 }
 // Desktop: live subject selectors live inside the left study library.
  // Mobile: keep the same selectors visible in the top horizontal course bar.
