@@ -44,8 +44,8 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson07=courseTopics.find(t=>t.id==='data-topic-course-07-fraction-mix');
 assert.ok(lesson07,'第7课课程ID须保持稳定');
 assert.deepEqual(lesson07.contentSections.map(s=>s.title),
- ['7.1 分式混合的基本概念','7.2 累计增速混合','7.3 混合定量'],
- '第7课7.1与7.2为两个并列知识节');
+ ['7.1 分式混合的基本概念','7.2 累计增速混合','7.3 混合定量','7.4 灵活识别分式混合题型'],
+ '第7课各知识节顺序保持完整');
 const cumulativeMix=lesson07.contentSections[1];
 assert.equal(cumulativeMix.id,'fraction-mix-cumulative-growth');
 assert.deepEqual(cumulativeMix.items.map(item=>item.title),[
@@ -128,6 +128,34 @@ assert.ok(waterImpliedRatio>24&&waterImpliedRatio<26,'假设A时距离比大约2
 
 assert.equal(lesson07.contentSections[0].subtopics.length,4,'7.1内容不变');
 assert.equal(lesson07.contentSections[1].items.length,3,'7.2内容不变');
+
+
+const flexibleMix=lesson07.contentSections[3];
+assert.equal(flexibleMix.id,'fraction-mix-flexible-recognition','7.4使用独立且稳定的子节ID');
+assert.equal(flexibleMix.title,'7.4 灵活识别分式混合题型');
+assert.equal(flexibleMix.items.length,1,'7.4只写识别乘法关系的原有方法');
+assert.ok(flexibleMix.description.includes('A＝B×C'),'保留用户提出的识别乘法关系');
+assert.ok(flexibleMix.items[0].formula.includes(String.raw`\text{增长量}=\text{基期量}\times\text{增长率}`),
+ '例题以增长量、基期量、增长率的乘法关系识别混合');
+assert.equal(flexibleMix.items[0].workedExamples?.length,1,'7.4只新增用户提供的一道教材例题');
+const phoneMixExample=flexibleMix.items[0].workedExamples[0];
+assert.ok(phoneMixExample.title.includes('2014年第一、二季度国内手机市场出货量之比'));
+for(const token of ['2.37亿部','7.4%','2G手机增长6.0%','3G手机下降90.6%','4G手机增长381.8%',
+ '6.7%','8.2%','A. 0.75','B. 0.88','C. 1.14','D. 1.81']){
+ assert.ok(phoneMixExample.description.includes(token),'7.4教材例题材料与选项需完整：'+token);
+}
+for(const token of [
+ String.raw`\frac{\text{2014年一季度出货量}}{\text{2014年二季度出货量}}`,
+ String.raw`\frac{8.2\%-7.4\%}{7.4\%-6.7\%}`,
+ String.raw`\frac{0.8}{0.7}`,
+ '所以选择C（1.14）'
+]){
+ assert.ok(phoneMixExample.formula.includes(token),'7.4教材例题须按距离比反比求基期比：'+token);
+}
+assert.ok(!flexibleMix.items[0].caution&&!phoneMixExample.note,'不得额外增加数学限制与警告');
+assert.equal(phoneMixExample.materialImage,undefined,'本题直接使用文字教材材料，不创建正式习题图片');
+assert.equal(lesson07.questionIds.length,0,'教材例题不应加入正式习题库');
+assert.ok(Math.abs((8.2-7.4)/(7.4-6.7)-8/7)<1e-12,'增长率距离之比为8/7，最接近C');
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
