@@ -14,6 +14,8 @@ const practice=read('practice-session.js');
 const swipe=read('swipe-navigation.js');
 assert.ok(html.includes('src="swipe-navigation.js"'));
 assert.ok(sw.includes("'./swipe-navigation.js'"));
+assert.ok(html.includes('src="device-position.js"'));
+assert.ok(sw.includes("'./device-position.js'"),'Bookmark script must remain cached offline');
 assert.ok(swipe.includes('gesturestart')&&swipe.includes('touchstart'));
 assert.match(html,/name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/);
 assert.ok(html.includes('src="practice-session.js"'));
