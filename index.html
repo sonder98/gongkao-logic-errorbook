@@ -1152,14 +1152,21 @@ function switchView(view,updateHash=true,restoreReading=true){
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
+ // Capture the old lesson before changing selectedTopic or rebuilding its DOM.
+ // Otherwise a jump from 7.4 to lesson 5 discards lesson 7's subsection.
+ const sameLesson=currentView==='knowledge'&&currentModule&&selectedTopic===id;
+ if(currentView==='knowledge'&&!sameLesson)flushDeviceReading();
+ const savedReading=devicePosition.readingFor(currentModule,id);
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
  switchView('knowledge',true,false);
- if(source==='swipe'){
-  // A long lesson may be swiped halfway down the page: return directly to
-  // the beginning of the next lesson below the fixed academic header.
+ // Returning from a different lesson (or clicking the current lesson again)
+ // resumes that lesson's own last section. New lessons still start at the top.
+ if(savedReading?.reading){
+  restoreDeviceReading(savedReading);
+ }else if(source==='swipe'){
   requestAnimationFrame(()=>{
    if(currentView!=='knowledge'||selectedTopic!==id)return;
    const topbar=document.querySelector('header.academic-topbar')?.getBoundingClientRect().height||0;
