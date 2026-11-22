@@ -838,7 +838,9 @@
           "recognize": [],
           "patterns": [],
           "pitfalls": [],
-          "questionIds": [],
+          "questionIds": [
+            "data-2019-telecom-revenue-increase-under-1000"
+          ],
           "contentSections": [
             {
               "id": "fraction-mix-basic-concept",
