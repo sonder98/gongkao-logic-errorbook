@@ -64,7 +64,10 @@ async function scrollInto74(page){
   assert.equal((await pc.evaluate(id=>devicePosition.readingFor('data',id),lesson)).reading.sectionId,section,
    'Returning from lesson 5 through the navigation sidebar resumes 7.4');
   await pc.evaluate(id=>openKnowledge(id,false),fifth);
-  await pc.waitForFunction(()=>currentDeviceReading()?.offset>0,null,{timeout:7000});
+  await pc.waitForFunction(expected=>{
+   const actual=currentDeviceReading();
+   return actual?.sectionId===expected.sectionId&&Math.abs(actual.offset-expected.offset)<30;
+  },fifthReading.reading,{timeout:7000});
   assert.equal((await viewState(pc)).topic,fifth);
   await pc.evaluate(id=>openKnowledge(id,false),lesson);
   await pc.waitForFunction(id=>{
