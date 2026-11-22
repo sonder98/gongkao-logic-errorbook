@@ -62,6 +62,18 @@
 .kb-structured-item h4{font-size:15px;color:#24615e;font-weight:850;line-height:1.5;margin:0 0 7px}
 .kb-structured-desc{font-size:14px;color:#334e59;line-height:1.8;margin:0;text-indent:2em}
 .kb-structured-desc+.kb-structured-desc{margin-top:10px}
+
+/* Structured knowledge lists: genuine bullets, distinct from indented prose. */
+.kb-structured-list-block{margin:12px 0 14px}
+.kb-structured-list-title{margin:0 0 6px;font-size:14px;line-height:1.7;font-weight:750;color:#24615e}
+.kb-structured-item .kb-structured-bullets{list-style:disc outside;margin:0;padding:0 0 0 1.65em}
+.kb-structured-bullets li{font-size:14px;line-height:1.8;color:#334e59;padding-left:2px;text-indent:0}
+.kb-structured-bullets li+li{margin-top:7px}
+.kb-structured-bullets li::marker{color:#24615e}
+.kb-structured-list-footer{margin:12px 0 0;font-size:14px;line-height:1.8;color:#334e59}
+.kb-structured-list-footer strong{color:#24615e;font-weight:750}
+@media(max-width:800px){.kb-structured-item .kb-structured-bullets{padding-left:1.5em}.kb-structured-bullets li+li{margin-top:8px}}
+
 .kb-structured-formula{margin:10px 0;max-width:100%;overflow-x:auto}
 .kb-structured-formula .da-equation{font-size:16px}
 .kb-structured-example{margin:11px 0 0;padding:11px 13px;background:#f5f8f8;border-radius:8px;font-size:13px;color:#3d5560;line-height:1.85}
