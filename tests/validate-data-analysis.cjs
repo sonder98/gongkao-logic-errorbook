@@ -101,7 +101,7 @@ for(const token of [String.raw`\frac{6409}{2601}`,String.raw`\frac{64}{26}`,Stri
 assert.ok(example73.formula.includes('先定性判断，排除D')&&example73.formula.includes('不必精算基期比'),
  '例题展示先定性、后现期比估算及误差对线段距离的影响');
 assert.equal(example73.materialImage,undefined,'文字教材例题不擅自新增截图文件');
-assert.equal(lesson07.questionIds.length,0,'教材例题不得写入正式习题关联');
+assert.deepEqual(lesson07.questionIds,['data-2019-telecom-revenue-increase-under-1000'],'7课仅关联新增电信业务课后习题，旧教材例题仍不入练习库');
 const exactExample73=(2601+6409)/(2601/1.098+6409/1.033)-1;
 assert.ok(Math.abs(exactExample73-.051)<0.001,'题目增长率计算独立校验约5.1%，答案B');
 
@@ -119,7 +119,7 @@ for(const token of [
  '基期比不可能达到约25倍','结论：选B（0%）'
 ]) assert.ok(example73Water.formula.includes(token),'水产品例题应忠实保留用户解题链：'+token);
 assert.equal(example73Water.materialImage,undefined,'本题作为教材文字例题，不新建独立图像资源');
-assert.equal(lesson07.questionIds.length,0,'两道教材例题均不得变成正式习题');
+assert.deepEqual(lesson07.questionIds,['data-2019-telecom-revenue-increase-under-1000'],'7课仅关联新增电信业务课后习题，旧教材例题仍不入练习库');
 const waterActualRate=((2700.09-2114.38)/
  ((2700.09/1.032)-(2114.38/1.0413))-1);
 assert.ok(Math.abs(waterActualRate)<0.003,'非养殖水产品实际增长率接近0%，B符合计算');
@@ -154,7 +154,7 @@ for(const token of [
 }
 assert.ok(!flexibleMix.items[0].caution&&!phoneMixExample.note,'不得额外增加数学限制与警告');
 assert.equal(phoneMixExample.materialImage,undefined,'本题直接使用文字教材材料，不创建正式习题图片');
-assert.equal(lesson07.questionIds.length,0,'教材例题不应加入正式习题库');
+assert.deepEqual(lesson07.questionIds,['data-2019-telecom-revenue-increase-under-1000'],'7课仅关联新增电信业务课后习题，旧教材例题仍不入练习库');
 assert.ok(Math.abs((8.2-7.4)/(7.4-6.7)-8/7)<1e-12,'增长率距离之比为8/7，最接近C');
 
 const flattenedMix=lesson07.contentSections[4];
@@ -192,7 +192,7 @@ assert.deepEqual(steps75.map(x=>x.title),['第一步：拉平增长率','第二�
 assert.deepEqual(flattenedMix.items[3].table.rows,[['第5课：乘积增长率','推导修正增长率公式'],['第6课：拉平增长率','统一增长倍数，获得基期比'],['第7课：分式混合','根据基期比确定距离比，求未知增长率']]);
 assert.ok(flattenedMix.items.every(x=>x.workedExamples===undefined&&x.caution===undefined),'7.5不建立例题卡或新数学边界');
 assert.ok(!JSON.stringify(flattenedMix).includes('不是')&&!JSON.stringify(flattenedMix).includes('而是'),'7.5使用简洁教材语言');
-assert.equal(lesson07.questionIds.length,0);
+assert.deepEqual(lesson07.questionIds,['data-2019-telecom-revenue-increase-under-1000'],'7课仅关联新增电信业务课后习题，旧教材例题仍不入练习库');
 const trueImportRate=(680.7-584.7)/(680.7/1.803-584.7/1.869)-1;
 assert.ok(Math.abs(trueImportRate-.4839)<.002,'准确核对示例答案C');
 assert.ok(flattenedMix.items[0].list.items[1].includes("现期比估算基期比可能产生较大误差"),"推导及速算路径需保留：现期比估算基期比可能产生较大误差");
@@ -252,7 +252,7 @@ assert.ok(quarterMix.subitems[2].formula.includes(String.raw`532/530-1`)&&quarte
 assert.ok(quarterMix.subitems[2].keyPoint.includes('选择A（0.4%）'),'最终答案A');
 assert.ok(quarterMix.subitems[3].formula.includes(String.raw`1.036(C-B)`)&&quarterMix.subitems[3].formula.includes(String.raw`1.036(B-A)`)&&quarterMix.subitems[3].formula.includes(String.raw`\frac{C-B}{B-A}`),'同一增长倍数可还原2022年季度比');
 assert.ok(!quarterMix.workedExamples&&!quarterMix.caution,'新内容为独立知识正文，不新增例题卡和条件');
-assert.equal(lesson07.questionIds.length,0,'没有写入正式习题');
+assert.deepEqual(lesson07.questionIds,['data-2019-telecom-revenue-increase-under-1000'],'7课仅关联新增电信业务课后习题，旧教材例题仍不入练习库');
 const q4Leveled=2122.4*1.036/1.048-1566.2;
 const q3Leveled=1566.2-1036.2;
 assert.ok(Math.abs((q4Leveled/q3Leveled-1)-.0036)<.0004,'按真实累计同比独立核算约0.36%选A');
@@ -656,8 +656,8 @@ assert.ok(!newExample.formula.includes('2534')&&!newExample.formula.includes('25
 assert.ok(newExample.note.includes('257.12')&&newExample.note.includes('偏小1%'),'须说明真实值和不应自动加1%');
 assert.deepEqual(scaling.questionIds,['data-2022-g-legal-aid-average-q1','data-2018-q-passenger-average-distance','data-2017-jiangsu-neighbors-unaware-count','data-2015-2016-micro-service-quarterly-average','data-2018-export-cross-border-b2c-growth-rate','data-2020-poverty-alleviated-counties-rural-income-base'],'第3课应关联六道正式题');
 assert.ok(division.items.some(item=>item.title==='精度与量级判断'&&item.example.includes('连续两个步骤')),'应保留有效数字、量级判断连续两步');
-assert.equal(materials.length,28,'应有二十八份真实材料');
-assert.equal(questions.length,29,'应有二十九道真实题目');
+assert.equal(materials.length,29,'新增电信业务材料后共二十九份真实材料');
+assert.equal(questions.length,30,'新增电信业务课后习题后共三十道真实题目');
 const povertyMaterial=materials.find(m=>m.id==='data-material-2021-poverty-alleviated-counties-rural-income');
 const povertyQuestion=questions.find(q=>q.id==='data-2020-poverty-alleviated-counties-rural-income-base');
 assert.ok(povertyMaterial&&povertyQuestion,'脱贫县人均收入基期量习题与材料必须存在');
@@ -1270,6 +1270,32 @@ assert.ok(DA.explanationHtml(expressBaseQuestion).includes('data-da-tex'),'快�
 const exactExpressBaseRatio=(693.6/(1+.359))/(121.7/(1+.102));
 assert.ok(exactExpressBaseRatio>4.6&&exactExpressBaseRatio<4.65,'快递基期比约4.62，对应C选项4.6');
 assert.equal(lesson06.questionIds.filter(x=>x==='data-2020-g-province-import-commodity-unit-price-decline'||x==='data-2019-express-nonlocal-vs-intracity-base-ratio').length,2,'两道题各关联第6课一次');
-assert.equal(materials.length,28,'两份新材料录入，既有26份材料保持不变');
+assert.equal(materials.length,29,'原有二十八份材料及新增电信业务材料完整保留');
+// Lesson 7 after-class exercise: telecom revenue change, direct component-increment strategy.
+const telecomQid='data-2019-telecom-revenue-increase-under-1000';
+const telecomMid='data-material-2019-telecom-fixed-mobile-revenue';
+const telecomQuestion=questions.find(q=>q.id===telecomQid);
+const telecomMaterial=materials.find(m=>m.id===telecomMid);
+assert.ok(telecomQuestion&&telecomMaterial,'第7课电信业务增长量课后习题与完整材料已入库');
+assert.equal(telecomQuestion.materialId,telecomMid);
+assert.equal(telecomQuestion.type,'增长量');
+assert.equal(telecomQuestion.category,'分式混合');
+assert.equal(telecomQuestion.answer,'A');
+assert.deepEqual(telecomQuestion.options,['增加了不到1000亿元','增加了1000亿元以上','减少了不到1000亿元','减少了1000亿元以上']);
+assert.equal(telecomMaterial.blocks.length,1);
+assert.equal(telecomMaterial.blocks[0].type,'paragraph');
+for(const value of ['1.31万亿元','4161亿元','9.5%','2.6个百分点','8942亿元','减少2.9%'])assert.ok(telecomMaterial.blocks[0].text.includes(value),'原材料统计信息完整：'+value);
+assert.ok(telecomQuestion.ask.includes('2019年电信业务收入比2018年'),'题干保留完整统计年份');
+assert.ok(telecomQuestion.analysis.identify.includes('直接分别计算固定通信与移动通信业务的增长量'),'采用用户指定的更简便方法');
+assert.ok(telecomQuestion.analysis.formula.includes(String.raw`\\frac{4161}{11}`)&&telecomQuestion.analysis.formula.includes(String.raw`8942\\times3\\%`),'固定通信4161/11，移动通信8942乘3%');
+assert.ok(telecomQuestion.analysis.quick.includes(String.raw`380-270`)&&telecomQuestion.analysis.quick.includes('110'),'380减270更正为110，不影响答案');
+assert.ok(telecomQuestion.analysis.trap.includes('基期比')&&telecomQuestion.analysis.trap.includes('混合增长率'),'保留先算混合增速增加计算量的陷阱');
+assert.ok(DA.explanationHtml(telecomQuestion).includes('data-da-tex'),'新增题目数学公式应渲染');
+assert.ok(DA.materialHtml(telecomMaterial).includes('2.6个百分点'),'材料的比重变化需呈现');
+assert.deepEqual(lesson07.questionIds,[telecomQid],'第7课习题关联恰好一次');
+const fixedActualIncrease=4161*(.095/1.095);
+const mobileActualIncrease=8942*(-.029/(1-.029));
+assert.ok(fixedActualIncrease+mobileActualIncrease>90&&fixedActualIncrease+mobileActualIncrease<100,'独立精算总增量约94亿元，答案A');
+
 console.log('Data analysis OK:',materials.length,'materials,',questions.length,'questions,',
   book.sections.reduce((sum,s)=>sum+s.topics.length,0),'knowledge topics; rendering fixture validated');
