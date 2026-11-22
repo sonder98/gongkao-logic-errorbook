@@ -183,7 +183,7 @@ assert.ok(dataStyleSource.includes('text-indent:2em'),'正文段落须有两个�
 assert.ok(dataStyleSource.includes('.kb-structured-desc+.kb-structured-desc{margin-top:10px}'),'连续段落之间应有清晰间距');
 
 assert.equal(flattenedMix.id,'fraction-mix-flatten-growth');
-assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联']);
+assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联','五、延伸应用：多个对象的基期排名']);
 assert.deepEqual(flattenedMix.items[0].table.rows,[['整体（进出口）','680.7亿元','80.3%'],['部分1（出口）','584.7亿元','86.9%'],['部分2（进口）','整体－出口','待求']]);
 const principle75=flattenedMix.items[1].subitems;
 assert.deepEqual(principle75.map(x=>x.title),['1. 修正增长率的来源','2. 拉平后为什么可以直接计算基期比']);
@@ -214,6 +214,22 @@ assert.ok(steps75[2].formula.includes("\\frac15"),"推导及速算路径需保�
 assert.ok(steps75[3].formula.includes("\\frac{86\\%-80\\%}{80\\%-r}\\approx\\frac15"),"推导及速算路径需保留：\\frac{86\\%-80\\%}{80\\%-r}\\approx\\frac15");
 assert.ok(steps75[3].formula.includes("80\\%-30\\%"),"推导及速算路径需保留：80\\%-30\\%");
 assert.ok(steps75[3].keyPoint.includes("选择C（48%）"),"推导及速算路径需保留：选择C（48%）");
+
+const ranking75=flattenedMix.items[4];
+assert.equal(ranking75.title,'五、延伸应用：多个对象的基期排名','新增多对象排序为7.5正文第五部分');
+assert.ok(ranking75.description.includes('2022年，全国规模以上文化及相关产业企业')&&ranking75.description.includes('D. 文化辅助生产和中介服务'),'保留题目与正确选项');
+assert.deepEqual(ranking75.subitems.map(s=>s.title),['第一步：排除明显较小的三个行业','第二步：排除最大的内容创作生产','第三步：拉平增长率，比较剩余五个行业','第四步：确定排名'],'保留用户排除、拉平、排序顺序');
+assert.ok(ranking75.subitems[0].description.includes('文化投资运营')&&ranking75.subitems[0].description.includes('文化娱乐休闲服务')&&ranking75.subitems[0].description.includes('文化装备生产'),'先排除的三个小行业不得遗漏');
+assert.ok(ranking75.subitems[1].description.includes('内容创作生产')&&ranking75.subitems[1].description.includes('第三'),'排除最大的内容创作生产，剩余第三即原第四');
+assert.ok(ranking75.subitems[2].description.includes('15.5%')&&ranking75.subitems[2].description.includes('约15%'),'按新闻信息服务约15%的增速近似拉平');
+assert.deepEqual(ranking75.subitems[2].table.headers,['行业','现期量（亿元）','同比增速','拉平后的粗算值（亿元）']);
+assert.deepEqual(ranking75.subitems[2].table.rows,[["新闻信息服务","17243","15.5%","17243（不补正）"],["创意设计服务","21249","8.7%","21249×(1+6%)≈22500"],["文化传播渠道","14797","11.9%","14797×(1+3%)≈15200"],["文化辅助生产和中介服务","15468","0.4%","15468×(1+15%)≈18000"],["文化消费终端生产","23787","3.3%","23787×(1+11%)≈26400"]],'保留五个行业速算数字；最后一项按11%修正孤立笔误');
+assert.ok(ranking75.subitems[3].description.includes('第三位是文化辅助生产和中介服务')&&ranking75.subitems[3].description.includes('选D'),'最终选项D与排名对应');
+assert.ok(htmlSource.includes('...(sub.table?[sub.table.title'),'内层数据表须加入站内搜索索引');
+assert.ok(ranking75.workedExamples===undefined,'新增方法写入7.5知识正文，不另设例题卡');
+const ranks75=[['新闻信息服务',17243,15.5],['内容创作生产',28262,10.7],['创意设计服务',21249,8.7],['文化传播渠道',14797,11.9],['文化投资运营',669,24.4],['文化娱乐休闲服务',1758,63.2],['文化辅助生产和中介服务',15468,.4],['文化装备生产',6282,-2.6],['文化消费终端生产',23787,3.3]].map(([name,value,rate])=>({name,base:value/(1+rate/100)})).sort((a,b)=>b.base-a.base);
+assert.equal(ranks75[3].name,'文化辅助生产和中介服务','按原表全部9个行业的基期值独立校验第四名');
+assert.ok(Math.abs(23787*1.11-26400)<20,'11%补正得到约26400');
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
