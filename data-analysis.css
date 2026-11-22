@@ -60,7 +60,8 @@
 /* Section intro text is in normal flow, outside the pinned heading. */
 .kb-structured-item{padding:16px 18px;margin:12px 0;border:1px solid #e5ecea;border-radius:12px;background:#fff}
 .kb-structured-item h4{font-size:15px;color:#24615e;font-weight:850;line-height:1.5;margin:0 0 7px}
-.kb-structured-desc{font-size:14px;color:#334e59;line-height:1.8;margin:0}
+.kb-structured-desc{font-size:14px;color:#334e59;line-height:1.8;margin:0;text-indent:2em}
+.kb-structured-desc+.kb-structured-desc{margin-top:10px}
 .kb-structured-formula{margin:10px 0;max-width:100%;overflow-x:auto}
 .kb-structured-formula .da-equation{font-size:16px}
 .kb-structured-example{margin:11px 0 0;padding:11px 13px;background:#f5f8f8;border-radius:8px;font-size:13px;color:#3d5560;line-height:1.85}
