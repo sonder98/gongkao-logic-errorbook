@@ -195,7 +195,7 @@ assert.ok(!JSON.stringify(flattenedMix).includes('不是')&&!JSON.stringify(flat
 assert.equal(lesson07.questionIds.length,0);
 const trueImportRate=(680.7-584.7)/(680.7/1.803-584.7/1.869)-1;
 assert.ok(Math.abs(trueImportRate-.4839)<.002,'准确核对示例答案C');
-assert.ok(flattenedMix.items[0].description.includes("现期比估算基期比可能产生较大误差"),"推导及速算路径需保留：现期比估算基期比可能产生较大误差");
+assert.ok(flattenedMix.items[0].list.items[1].includes("现期比估算基期比可能产生较大误差"),"推导及速算路径需保留：现期比估算基期比可能产生较大误差");
 assert.ok(principle75[0].formula.includes("B(1+r_1)(1+r_{\\text{补}})&=B(1+r_2)"),"推导及速算路径需保留：B(1+r_1)(1+r_{\\text{补}})&=B(1+r_2)");
 assert.ok(principle75[0].formula.includes("(1+r_1)(1+r_{\\text{补}})&=1+r_2"),"推导及速算路径需保留：(1+r_1)(1+r_{\\text{补}})&=1+r_2");
 assert.ok(principle75[0].formula.includes("r_{\\text{补}}(1+r_1)&=r_2-r_1"),"推导及速算路径需保留：r_{\\text{补}}(1+r_1)&=r_2-r_1");
