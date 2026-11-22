@@ -44,7 +44,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 const lesson07=courseTopics.find(t=>t.id==='data-topic-course-07-fraction-mix');
 assert.ok(lesson07,'第7课课程ID须保持稳定');
 assert.deepEqual(lesson07.contentSections.map(s=>s.title),
- ['7.1 分式混合的基本概念','7.2 累计增速混合','7.3 混合定量','7.4 灵活识别分式混合题型'],
+ ['7.1 分式混合的基本概念','7.2 累计增速混合','7.3 混合定量','7.4 灵活识别分式混合题型','7.5 分式混合与拉平增长率'],
  '第7课各知识节顺序保持完整');
 const cumulativeMix=lesson07.contentSections[1];
 assert.equal(cumulativeMix.id,'fraction-mix-cumulative-growth');
@@ -156,6 +156,40 @@ assert.ok(!flexibleMix.items[0].caution&&!phoneMixExample.note,'不得额外增�
 assert.equal(phoneMixExample.materialImage,undefined,'本题直接使用文字教材材料，不创建正式习题图片');
 assert.equal(lesson07.questionIds.length,0,'教材例题不应加入正式习题库');
 assert.ok(Math.abs((8.2-7.4)/(7.4-6.7)-8/7)<1e-12,'增长率距离之比为8/7，最接近C');
+
+const flattenedMix=lesson07.contentSections[4];
+assert.equal(flattenedMix.id,'fraction-mix-flatten-growth');
+assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联']);
+assert.deepEqual(flattenedMix.items[0].table.rows,[['整体（进出口）','680.7亿元','80.3%'],['部分1（出口）','584.7亿元','86.9%'],['部分2（进口）','整体－出口','待求']]);
+const principle75=flattenedMix.items[1].subitems;
+assert.deepEqual(principle75.map(x=>x.title),['1. 修正增长率的来源','2. 拉平后为什么可以直接计算基期比']);
+const steps75=flattenedMix.items[2].subitems;
+assert.deepEqual(steps75.map(x=>x.title),['第一步：拉平增长率','第二步：补正整体现期量','第三步：计算基期比','第四步：根据分式距离比求进口增长率']);
+assert.deepEqual(flattenedMix.items[3].table.rows,[['第5课：乘积增长率','推导修正增长率公式'],['第6课：拉平增长率','统一增长倍数，获得基期比'],['第7课：分式混合','根据基期比确定距离比，求未知增长率']]);
+assert.ok(flattenedMix.items.every(x=>x.workedExamples===undefined&&x.caution===undefined),'7.5不建立例题卡或新数学边界');
+assert.ok(!JSON.stringify(flattenedMix).includes('不是')&&!JSON.stringify(flattenedMix).includes('而是'),'7.5使用简洁教材语言');
+assert.equal(lesson07.questionIds.length,0);
+const trueImportRate=(680.7-584.7)/(680.7/1.803-584.7/1.869)-1;
+assert.ok(Math.abs(trueImportRate-.4839)<.002,'准确核对示例答案C');
+assert.ok(flattenedMix.items[0].description.includes("现期比估算基期比可能产生较大误差"),"推导及速算路径需保留：现期比估算基期比可能产生较大误差");
+assert.ok(principle75[0].formula.includes("B(1+r_1)(1+r_{\\text{补}})&=B(1+r_2)"),"推导及速算路径需保留：B(1+r_1)(1+r_{\\text{补}})&=B(1+r_2)");
+assert.ok(principle75[0].formula.includes("(1+r_1)(1+r_{\\text{补}})&=1+r_2"),"推导及速算路径需保留：(1+r_1)(1+r_{\\text{补}})&=1+r_2");
+assert.ok(principle75[0].formula.includes("r_{\\text{补}}(1+r_1)&=r_2-r_1"),"推导及速算路径需保留：r_{\\text{补}}(1+r_1)&=r_2-r_1");
+assert.ok(principle75[0].formula.includes("\\frac{r_2-r_1}{1+r_1}"),"推导及速算路径需保留：\\frac{r_2-r_1}{1+r_1}");
+assert.ok(principle75[1].formula.includes("(A+B)\\times1.803"),"推导及速算路径需保留：(A+B)\\times1.803");
+assert.ok(principle75[1].formula.includes("A\\times1.869"),"推导及速算路径需保留：A\\times1.869");
+assert.ok(principle75[1].formula.includes("(A+B)\\times1.869-A\\times1.869"),"推导及速算路径需保留：(A+B)\\times1.869-A\\times1.869");
+assert.ok(principle75[1].formula.includes("\\frac{B\\times1.869}{A\\times1.869}"),"推导及速算路径需保留：\\frac{B\\times1.869}{A\\times1.869}");
+assert.ok(principle75[1].formula.includes("\\boxed{\\frac BA}"),"推导及速算路径需保留：\\boxed{\\frac BA}");
+assert.ok(steps75[0].formula.includes("\\frac{86.9\\%-80.3\\%}{1+80.3\\%}"),"推导及速算路径需保留：\\frac{86.9\\%-80.3\\%}{1+80.3\\%}");
+assert.ok(steps75[0].formula.includes("\\frac{86\\%-80\\%}{1.8}"),"推导及速算路径需保留：\\frac{86\\%-80\\%}{1.8}");
+assert.ok(steps75[0].formula.includes("\\approx3.3\\%"),"推导及速算路径需保留：\\approx3.3\\%");
+assert.ok(steps75[1].formula.includes("680\\times(1+3\\%)\\approx700"),"推导及速算路径需保留：680\\times(1+3\\%)\\approx700");
+assert.ok(steps75[2].formula.includes("(700-584)/584"),"推导及速算路径需保留：(700-584)/584");
+assert.ok(steps75[2].formula.includes("\\frac15"),"推导及速算路径需保留：\\frac15");
+assert.ok(steps75[3].formula.includes("\\frac{86\\%-80\\%}{80\\%-r}\\approx\\frac15"),"推导及速算路径需保留：\\frac{86\\%-80\\%}{80\\%-r}\\approx\\frac15");
+assert.ok(steps75[3].formula.includes("80\\%-30\\%"),"推导及速算路径需保留：80\\%-30\\%");
+assert.ok(steps75[3].keyPoint.includes("选择C（48%）"),"推导及速算路径需保留：选择C（48%）");
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
