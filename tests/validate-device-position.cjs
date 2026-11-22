@@ -30,6 +30,31 @@ assert.equal(pc.updateReading('data','data-topic-course-07-fraction-mix',
 assert.equal(create({storage:desktop}).last().id,'data-topic-course-06-flatten-growth',
  'Reload hydrates the saved last page');
 assert.equal(create({storage:ipad}).bookmark('argument','practice').id,'argument-q47');
+
+assert.deepEqual(pc.readingFor('data','data-topic-course-07-fraction-mix')?.reading,
+ {sectionId:'fraction-mix-flexible-recognition',offset:113},
+ 'Leaving lesson 7 for lesson 6 retains lesson 7.4 bookmark');
+pc.updateReading('data','data-topic-course-06-flatten-growth',{sectionId:'base-methods',offset:87});
+pc.remember('data','knowledge','data-topic-course-07-fraction-mix');
+assert.deepEqual(pc.bookmark('data','knowledge').reading,
+ {sectionId:'fraction-mix-flexible-recognition',offset:113},
+ 'Returning to lesson 7 resumes its own reading position');
+pc.remember('data','knowledge','data-topic-course-06-flatten-growth');
+assert.equal(pc.bookmark('data','knowledge').reading.offset,87,
+ 'Returning to lesson 6 resumes its different independent position');
+const reloaded=create({storage:desktop});
+assert.equal(reloaded.readingFor('data','data-topic-course-07-fraction-mix').reading.offset,113,
+ 'Per-lesson bookmarks survive browser reload');
+assert.equal(reloaded.readingFor('data','data-topic-course-06-flatten-growth').reading.offset,87);
+const legacy=new MemoryStorage();
+legacy.setItem(KEY,JSON.stringify({version:1,modules:{data:{
+ knowledge:{id:'data-topic-course-07-fraction-mix',reading:
+ {sectionId:'fraction-mix-flexible-recognition',offset:91}}}},
+ last:{module:'data',view:'knowledge',id:'data-topic-course-07-fraction-mix'}}));
+const migrated=create({storage:legacy});
+assert.equal(migrated.readingFor('data','data-topic-course-07-fraction-mix').reading.offset,91,
+ 'Older device-local bookmark format migrates without deleting saved 7.4');
+
 assert.equal(pc.remember('x','practice','test'),false,'Unknown module cannot be persisted');
 assert.equal(pc.remember('data','x','test'),false,'Unknown view cannot be persisted');
 desktop.setItem(KEY,'{corrupted JSON');
