@@ -159,7 +159,23 @@ assert.ok(Math.abs((8.2-7.4)/(7.4-6.7)-8/7)<1e-12,'增长率距离之比为8/7�
 
 const flattenedMix=lesson07.contentSections[4];
 const chapter75Intro=lesson07.contentSections[4].items[0].description;
-assert.equal(chapter75Intro.split(/\n\s*\n/).length,3,'7.5题型识别须明确分为三个正文段落');
+assert.equal(chapter75Intro,'已知整体和部分1的现期量及增长率，求部分2增长率。','7.5保留精简题型引言');
+const chapter75List=lesson07.contentSections[4].items[0].list;
+assert.deepEqual(chapter75List,{
+ title:'题型特点',
+ items:[
+  '部分2的现期量可由整体减去部分1得到，但增长率未知，无法直接求基期比。',
+  '若结合选项判断两部分增速相差较大，直接用现期比估算基期比可能产生较大误差。'
+ ],
+ footerTitle:'解题顺序',
+ footer:'拉平增长率→补正现期量→计算基期比→利用距离比求未知增长率。'
+},'7.5列表只组织用户确认的内容，不扩写知识');
+assert.ok(htmlSource.includes('<ul class="kb-structured-bullets">'),'7.5特点应以语义化项目列表渲染');
+assert.ok(htmlSource.includes("item.list.items.map(point=>'<li>'"),'每条特点独立成li');
+assert.ok(htmlSource.includes('item.list.footerTitle'),'解题顺序应保持独立于题型特点');
+assert.ok(htmlSource.includes('item.list.title,...(item.list.items||[])'),'7.5项目列表应可搜索');
+assert.ok(dataStyleSource.includes('list-style:disc outside'),'项目符号需真实显示');
+assert.ok(dataStyleSource.includes('.kb-structured-list-footer{'),'解题顺序具有独立行距');
 assert.ok(htmlSource.includes('function structuredKnowledgeDescriptionHtml(value)'),'页面应有独立的正文段落渲染函数');
 assert.ok(htmlSource.includes('structuredKnowledgeDescriptionHtml(item.description)'),'知识条目应使用分段渲染');
 assert.ok(htmlSource.includes('structuredKnowledgeDescriptionHtml(ex.description)'),'教材例题也应保留分行');
