@@ -158,6 +158,14 @@ assert.equal(lesson07.questionIds.length,0,'教材例题不应加入正式习题
 assert.ok(Math.abs((8.2-7.4)/(7.4-6.7)-8/7)<1e-12,'增长率距离之比为8/7，最接近C');
 
 const flattenedMix=lesson07.contentSections[4];
+const chapter75Intro=lesson07.contentSections[4].items[0].description;
+assert.equal(chapter75Intro.split(/\n\s*\n/).length,3,'7.5题型识别须明确分为三个正文段落');
+assert.ok(htmlSource.includes('function structuredKnowledgeDescriptionHtml(value)'),'页面应有独立的正文段落渲染函数');
+assert.ok(htmlSource.includes('structuredKnowledgeDescriptionHtml(item.description)'),'知识条目应使用分段渲染');
+assert.ok(htmlSource.includes('structuredKnowledgeDescriptionHtml(ex.description)'),'教材例题也应保留分行');
+assert.ok(dataStyleSource.includes('text-indent:2em'),'正文段落须有两个汉字的首行缩进');
+assert.ok(dataStyleSource.includes('.kb-structured-desc+.kb-structured-desc{margin-top:10px}'),'连续段落之间应有清晰间距');
+
 assert.equal(flattenedMix.id,'fraction-mix-flatten-growth');
 assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联']);
 assert.deepEqual(flattenedMix.items[0].table.rows,[['整体（进出口）','680.7亿元','80.3%'],['部分1（出口）','584.7亿元','86.9%'],['部分2（进口）','整体－出口','待求']]);
