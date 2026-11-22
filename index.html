@@ -1216,6 +1216,8 @@ function restoreHashView(){
   }
   return false;
  }
+ if(devicePositionReady&&currentView==='knowledge'&&module===currentModule&&
+    (view!=='knowledge'||(id&&id!==selectedTopic)))flushDeviceReading();
  activateModule(module);
  if(view==='knowledge'){
   if(id){
@@ -1231,8 +1233,8 @@ function restoreHashView(){
  }
  if(devicePositionReady){
   rememberDevicePage();
-  const saved=devicePosition.bookmark(module,view);
-  if(view==='knowledge'&&saved?.id===selectedTopic)restoreDeviceReading(saved);
+  const saved=view==='knowledge'?devicePosition.readingFor(module,selectedTopic):null;
+  if(saved?.reading)restoreDeviceReading(saved);
  }
  return true;
 }
