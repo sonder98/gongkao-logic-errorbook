@@ -1179,21 +1179,34 @@ function openPractice(id){
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function restoreHashView(){
- const route=decodeURIComponent(location.hash.slice(1)).match(/^(?:(formal|data)\/)?(knowledge|practice)(?:\/(.+))?$/);
- if(!route)return;
- activateModule(route[1]==='formal'?'formal':route[1]==='data'?'data':'argument');
- if(route[2]==='knowledge'){
-  if(knowledgeTopic(route[3])){
-   selectedTopic=route[3];
-   expandKnowledgeSectionForTopic(selectedTopic);
+ let route;
+ try{route=decodeURIComponent(location.hash.slice(1)).match(/^(?:(formal|data)\/)?(knowledge|practice)(?:\/(.+))?$/)}
+ catch(_){return false}
+ if(!route)return false;
+ const module=route[1]==='formal'?'formal':route[1]==='data'?'data':'argument';
+ const resources=deviceModuleResources(module),id=route[3],view=route[2];
+ // Ignore stale or unknown IDs. A valid shared URL always wins over the
+ // device bookmark, but a broken link must not strand the reader.
+ if(id&&!(view==='knowledge'?resources.topics:resources.questions).some(item=>item.id===id))return false;
+ activateModule(module);
+ if(view==='knowledge'){
+  if(id){
+   selectedTopic=id;
+   expandKnowledgeSectionForTopic(id);
    knowledgeQuery='';
    $('knowledgeSearch').value='';
   }
-  switchView('knowledge',false);
+  switchView('knowledge',false,false);
  }else{
-  if(QUESTIONS.some(q=>q.id===route[3]))active=route[3];
-  switchView('practice',false);
+  if(id)active=id;
+  switchView('practice',false,false);
  }
+ if(devicePositionReady){
+  rememberDevicePage();
+  const saved=devicePosition.bookmark(module,view);
+  if(view==='knowledge'&&saved?.id===selectedTopic)restoreDeviceReading(saved);
+ }
+ return true;
 }
 async function loadKnowledge(){
  try{
