@@ -3,7 +3,7 @@
  * still use cache:'no-cache'; this worker only refreshes the offline fallback.
  */
 const CACHE_PREFIX = 'gongkao-pwa-';
-const CACHE_VERSION = 'v14';
+const CACHE_VERSION = 'v15';
 const SHELL_CACHE = CACHE_PREFIX + CACHE_VERSION + '-shell';
 const DATA_CACHE = CACHE_PREFIX + CACHE_VERSION + '-data';
 const APP_BASE = new URL(self.registration.scope);
@@ -18,6 +18,7 @@ const SHELL_FILES = [
   './practice-session.js',
   './cloud-sync.js',
   './swipe-navigation.js',
+  './device-position.js',
   './data-analysis.js',
   './scratch-overlay.css',
   './scratch-overlay.js',
