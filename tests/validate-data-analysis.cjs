@@ -217,7 +217,7 @@ assert.ok(steps75[3].keyPoint.includes("选择C（48%）"),"推导及速算路�
 
 const applications75=flattenedMix.items[4];
 assert.equal(applications75.title,'五、延伸应用','两道应用题统一归属第五部分');
-assert.deepEqual(applications75.subitems.map(s=>s.title),['（一）多个对象的基期排名','（二）累计量拉平求基期环比'],'两个应用为第五部分内的并列小节');
+assert.deepEqual(applications75.subitems.map(s=>s.title),['（一）多个对象的基期排名','（二）累计量拉平求基期环比','（三）拉平增长率求基期差'],'三个应用均为第五部分内的并列小节');
 assert.ok(htmlSource.includes('function structuredKnowledgeSubitemHtml(sub, titleTag)'),'两层子节必须能正常显示');
 assert.ok(htmlSource.includes('sub.subitems.map(step=>structuredKnowledgeSubitemHtml(step'),'每个应用中的计算步骤继续显示');
 assert.ok(htmlSource.includes('...(sub.subitems||[]).flatMap(step=>'),'各应用内的步骤能被搜索到');
@@ -256,6 +256,22 @@ assert.equal(lesson07.questionIds.length,0,'没有写入正式习题');
 const q4Leveled=2122.4*1.036/1.048-1566.2;
 const q3Leveled=1566.2-1036.2;
 assert.ok(Math.abs((q4Leveled/q3Leveled-1)-.0036)<.0004,'按真实累计同比独立核算约0.36%选A');
+
+const baseDiff75=applications75.subitems[2];
+assert.equal(baseDiff75.title,'（三）拉平增长率求基期差','新增第三个并列应用');
+for(const token of ['2019年7月','3289万吨','13.4%','579万吨','18736万吨','同比增长7%','2018年','A. 14221万吨','B. 14610万吨','C. 15447万吨','D. 15836万吨'])assert.ok(baseDiff75.description.includes(token),'题目材料及选项保留：'+token);
+assert.deepEqual(baseDiff75.subitems.map(s=>s.title),['第一步：列出基期差，选择拉平方向','第二步：计算补正增长率，退还3289','第三步：求基期差并判断选项'],'严格保留用户选择补退方向的解题顺序');
+assert.ok(baseDiff75.subitems[0].description.includes('修正较小的3289'),'选择修正较小现期量');
+assert.ok(baseDiff75.subitems[0].formula.includes(String.raw`\frac{18736}{1+7\%}-\frac{3289}{1+13.4\%}`),'基期差由两个原始基期量相减');
+assert.ok(baseDiff75.subitems[0].formula.includes(String.raw`\frac{18736-3289/(1+r_{\text{补}})}{1+7\%}`),'退还3289后统一除以1.07');
+assert.ok(baseDiff75.subitems[1].formula.includes(String.raw`\frac{13.4\%-7\%}{1+7\%}`),'沿用第6课修正率公式');
+assert.ok(baseDiff75.subitems[1].formula.includes(String.raw`3289-3289\times6\%`)&&baseDiff75.subitems[1].formula.includes(String.raw`\approx3100`),'用户口述近似计算后退还3289约3100');
+assert.ok(baseDiff75.subitems[2].formula.includes(String.raw`(18736-3100)/1.07`)&&baseDiff75.subitems[2].formula.includes(String.raw`\approx14600`),'基期差速算不遗漏最后除以1.07');
+assert.ok(baseDiff75.subitems[2].keyPoint.includes('B（14610万吨）'),'选择B');
+assert.ok(!baseDiff75.workedExamples&&!baseDiff75.caution,'与前两应用同为知识正文');
+const exactBaseDiff75=18736/1.07-3289/1.134;
+assert.ok(Math.abs(exactBaseDiff75-14610)<.3,'原始数据独立核算约14610万吨');
+assert.ok(htmlSource.includes('sub.subitems.map(step=>structuredKnowledgeSubitemHtml(step'),'第三应用的三个步骤仍可显示');
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
