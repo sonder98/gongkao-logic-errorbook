@@ -1187,7 +1187,21 @@ function restoreHashView(){
  const resources=deviceModuleResources(module),id=route[3],view=route[2];
  // Ignore stale or unknown IDs. A valid shared URL always wins over the
  // device bookmark, but a broken link must not strand the reader.
- if(id&&!(view==='knowledge'?resources.topics:resources.questions).some(item=>item.id===id))return false;
+ if(id&&!(view==='knowledge'?resources.topics:resources.questions).some(item=>item.id===id)){
+  if(devicePositionReady){
+   // A broken hash can also arrive via an in-page navigation, without a
+   // full reload. Restore the device's last valid page and repair the URL.
+   const last=devicePosition.last(),available=last?deviceModuleResources(last.module):null;
+   if(last&&(last.view==='knowledge'?available.topics:available.questions).some(item=>item.id===last.id)){
+    activateModule(last.module);
+    if(last.view==='knowledge'){selectedTopic=last.id;expandKnowledgeSectionForTopic(last.id)}
+    else active=last.id;
+    switchView(last.view,false,false);
+   }
+   updateViewHash();
+  }
+  return false;
+ }
  activateModule(module);
  if(view==='knowledge'){
   if(id){
