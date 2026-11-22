@@ -861,6 +861,7 @@ function renderKnowledge(){
   $('knowledgeCount').textContent='—';
   $('knowledgeNav').textContent='知识目录加载中…';
   $('knowledgeCard').innerHTML='<div class="kb-load-state">当前模块的知识体系加载中…</div>';
+  lastRenderedKnowledgeId=null;
   return;
  }
  const searching=Boolean(knowledgeQuery.trim());
@@ -915,6 +916,7 @@ function renderKnowledge(){
  if(!topic){
   const emptySection=currentModule==='formal'&&!searching&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
   $('knowledgeCard').innerHTML='<div class="kb-load-state">'+(emptySection?safe(emptySection.title)+'：本章尚未开始整理，后续学习时逐步补充。':'没有符合条件的知识点，请调整搜索词。')+'</div>';
+  lastRenderedKnowledgeId=null;
   return;
  }
  const group=KNOWLEDGE.sections.find(section=>section.topics.some(item=>item.id===topic.id));
@@ -962,9 +964,12 @@ function renderKnowledge(){
   else if(rect.bottom>area.bottom)nav.scrollTop+=rect.bottom-area.bottom+4;
  }
  renderAcademicReadingRail(topic,topicIndex);
+ lastRenderedKnowledgeId=topic.id;
 }
 function activateModule(next){
  if(next===currentModule)return;
+ flushDeviceReading();
+ pendingModuleNavigation=true;
  moduleStates[currentModule]={
   active,selectedTopic,category,wrongOnly,importantOnly,searchTerm,knowledgeQuery,
   knowledgeExpanded:new Set(knowledgeExpanded),lastNavActive
@@ -1119,8 +1124,14 @@ function academicPlaceTabs(){
  }
 }
 window.addEventListener('resize',academicPlaceTabs);
-function switchView(view,updateHash=true){
+function switchView(view,updateHash=true,restoreReading=true){
  const nextView=view==='knowledge'?'knowledge':'practice';
+ const priorView=currentView,shouldRestore=restoreReading&&
+  (priorView!==nextView||pendingModuleNavigation);
+ if(priorView==='knowledge'&&!pendingModuleNavigation)flushDeviceReading();
+ pendingModuleNavigation=false;
+ const savedReading=shouldRestore&&nextView==='knowledge'?
+  devicePosition.bookmark(currentModule,'knowledge'):null;
  if(nextView!==currentView)ExamPractice.leave();
  currentView=nextView;
  if(currentView==='knowledge'){ExamLayout.closeLibrary();ExamScratch.close();}
@@ -1137,6 +1148,7 @@ function switchView(view,updateHash=true){
  $('academicPracticeMode').setAttribute('aria-pressed',String(currentView==='practice'));
  if(currentView==='knowledge')renderKnowledge();else render();
  if(updateHash)updateViewHash();
+ if(savedReading?.id===selectedTopic)restoreDeviceReading(savedReading);
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
@@ -1144,7 +1156,7 @@ function openKnowledge(id,scrollToArticle=false,source='button'){
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
- switchView('knowledge');
+ switchView('knowledge',true,false);
  if(source==='swipe'){
   // A long lesson may be swiped halfway down the page: return directly to
   // the beginning of the next lesson below the fixed academic header.
@@ -1163,7 +1175,7 @@ function openPractice(id){
  active=id;
  category='全部';wrongOnly=false;importantOnly=false;searchTerm='';
  $('questionSearch').value='';
- switchView('practice');
+ switchView('practice',true,false);
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function restoreHashView(){
@@ -1580,7 +1592,7 @@ async function boot(){
  await loadKnowledge();
  await loadFormalData();
  await loadDataAnalysis();
- restoreHashView();
+ restoreDeviceLastPage();
 }
 boot().catch(error=>{
  console.error('题库加载失败',error);
