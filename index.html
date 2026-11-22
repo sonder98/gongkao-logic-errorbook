@@ -902,14 +902,21 @@ function renderKnowledge(){
  nav.querySelectorAll('[data-knowledge-section]').forEach(button=>button.onclick=()=>{
   const id=button.dataset.knowledgeSection;
   const opening=!knowledgeExpanded.has(id);
+  const group=KNOWLEDGE.sections.find(section=>section.id===id);
+  const target=opening?group?.topics[0]?.id:null;
+  if(currentView==='knowledge'&&target&&target!==selectedTopic)flushDeviceReading();
   knowledgeExpanded=opening?new Set([id]):new Set();
   if(opening){
-   const group=KNOWLEDGE.sections.find(section=>section.id===id);
-   if(group?.topics.length)selectedTopic=group.topics[0].id;
+   if(target)selectedTopic=target;
    else if(currentModule==='formal')selectedTopic=null;
   }
   renderKnowledge();
-  if(opening&&currentView==='knowledge')updateViewHash();
+  if(opening&&currentView==='knowledge'){
+   updateViewHash();
+   const saved=target?devicePosition.readingFor(currentModule,target):null;
+   if(saved?.reading)restoreDeviceReading(saved);
+   else if(target)$('knowledgeCard').scrollIntoView({block:'start',behavior:'instant'});
+  }
  });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
  const topic=knowledgeTopic(selectedTopic);
@@ -1309,6 +1316,7 @@ $('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practic
 $('tabDataKnowledge').onclick=()=>{activateModule('data');switchView('knowledge')};
 $('tabDataPractice').onclick=()=>{activateModule('data');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
+ if(currentView==='knowledge')flushDeviceReading();
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
  renderKnowledge();
