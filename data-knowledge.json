@@ -839,7 +839,9 @@
           "patterns": [],
           "pitfalls": [],
           "questionIds": [
-            "data-2019-telecom-revenue-increase-under-1000"
+            "data-2019-telecom-revenue-increase-under-1000",
+            "data-2017-a-province-telecom-postal-total-growth-range",
+            "data-2022-s-city-primary-secondary-fdi-growth-range"
           ],
           "contentSections": [
             {
