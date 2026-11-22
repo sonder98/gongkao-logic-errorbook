@@ -24,3 +24,4 @@ jobs:
           node tests/validate-repeat-practice.cjs
           node tests/validate-cloud-sync.cjs
           node tests/validate-swipe-navigation.cjs
+          node tests/validate-device-position.cjs
