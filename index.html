@@ -667,7 +667,7 @@ function structuredKnowledgeSearchParts(group){
    item.title,item.description,item.formula,item.example,item.caution,item.keyPoint,
    ...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),
    ...(item.list?[item.list.title,...(item.list.items||[]),item.list.footerTitle,item.list.footer]:[]),
-   ...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution,sub.keyPoint,...(sub.table?[sub.table.title,sub.table.note,...(sub.table.headers||[]),...(sub.table.rows||[]).flat()]:[]),...(sub.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])]),
+   ...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution,sub.keyPoint,...(sub.table?[sub.table.title,sub.table.note,...(sub.table.headers||[]),...(sub.table.rows||[]).flat()]:[]),...(sub.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note]),...(sub.subitems||[]).flatMap(step=>[step.title,step.description,step.formula,step.example,step.caution,step.keyPoint,...(step.table?[step.table.title,step.table.note,...(step.table.headers||[]),...(step.table.rows||[]).flat()]:[]),...(step.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])])]),
    ...(item.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])
   ]),
   ...(group.subtopics||[]).flatMap(structuredKnowledgeSearchParts)
@@ -750,13 +750,19 @@ function structuredKnowledgeFlowchartHtml(flow){
   node(flow.decision.title,flow.decision.detail,'kb-flow-decision')+arrow+
   '<div class="kb-flow-branches">'+branches+'</div></div>';
 }
+function structuredKnowledgeSubitemHtml(sub, titleTag){
+ return '<section class="kb-structured-subitem"><'+titleTag+'>'+safe(sub.title)+'</'+titleTag+'>'+
+  structuredKnowledgeDetailsHtml(sub)+
+  (sub.subitems?.length?'<div class="kb-structured-subitems kb-structured-substeps">'+
+   sub.subitems.map(step=>structuredKnowledgeSubitemHtml(step,'h6')).join('')+'</div>':'')+
+  '</section>';
+}
 function structuredKnowledgeItemHtml(item, nested){
  const titleTag=nested?'h5':'h4', subTag=nested?'h6':'h5';
  return '<article class="kb-structured-item"><'+titleTag+'>'+safe(item.title)+'</'+titleTag+'>'+
   structuredKnowledgeDetailsHtml(item)+
-  (item.subitems?.length?'<div class="kb-structured-subitems">'+item.subitems.map(sub=>
-   '<section class="kb-structured-subitem"><'+subTag+'>'+safe(sub.title)+'</'+subTag+'>'+
-   structuredKnowledgeDetailsHtml(sub)+'</section>').join('')+'</div>':'')+
+  (item.subitems?.length?'<div class="kb-structured-subitems">'+
+   item.subitems.map(sub=>structuredKnowledgeSubitemHtml(sub,subTag)).join('')+'</div>':'')+
   '</article>';
 }
 function structuredKnowledgeSubtopicHtml(subtopic){
