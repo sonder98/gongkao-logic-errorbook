@@ -666,6 +666,7 @@ function structuredKnowledgeSearchParts(group){
   ...(group.items||[]).flatMap(item=>[
    item.title,item.description,item.formula,item.example,item.caution,item.keyPoint,
    ...(item.table?[item.table.title,item.table.note,...(item.table.headers||[]),...(item.table.rows||[]).flat()]:[]),
+   ...(item.list?[item.list.title,...(item.list.items||[]),item.list.footerTitle,item.list.footer]:[]),
    ...(item.subitems||[]).flatMap(sub=>[sub.title,sub.description,sub.formula,sub.example,sub.caution,sub.keyPoint,...(sub.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])]),
    ...(item.workedExamples||[]).flatMap(ex=>[ex.title,ex.description,ex.formula,ex.note])
   ]),
@@ -707,6 +708,12 @@ function structuredKnowledgeDescriptionHtml(value){
 }
 function structuredKnowledgeDetailsHtml(item){
  return (item.description?structuredKnowledgeDescriptionHtml(item.description):'')+
+  (item.list?.items?.length?
+   '<div class="kb-structured-list-block">'+
+   (item.list.title?'<p class="kb-structured-list-title">'+DataAnalysis.rich(item.list.title)+'</p>':'')+
+   '<ul class="kb-structured-bullets">'+item.list.items.map(point=>'<li>'+DataAnalysis.rich(point)+'</li>').join('')+'</ul>'+
+   (item.list.footer?'<p class="kb-structured-list-footer">'+(item.list.footerTitle?'<strong>'+DataAnalysis.rich(item.list.footerTitle)+'：</strong>':'')+DataAnalysis.rich(item.list.footer)+'</p>':'')+
+   '</div>':'')+
   (item.keyPoint?'<p class="kb-structured-key-point"><strong>需要着重说明：</strong>'+DataAnalysis.rich(item.keyPoint)+'</p>':'')+
   (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
   (item.table?knowledgeTableMarkup(item.table):'')+
