@@ -90,12 +90,14 @@ async function scrollInto74(page){
    'The desktop still resumes 7.4 after the iPad studies a different question');
   // A shared deep link takes precedence over the iPad's local 47th question.
   await open(pad,root+'#data/knowledge/'+encodeURIComponent(lesson));
+  await pad.waitForFunction(id=>currentView==='knowledge'&&currentModule==='data'&&selectedTopic===id,lesson);
   assert.equal((await viewState(pad)).topic,lesson);
   assert.equal((await viewState(pad)).view,'knowledge');
   assert.equal((await viewState(pad)).module,'data');
   // An invalid link should not strand the learner: use the latest valid
   // device bookmark instead of routing to an empty lesson.
   await open(pad,root+'#data/knowledge/no-such-lesson-404');
+  await pad.waitForFunction(()=>!location.hash.includes('no-such-lesson-404'),null,{timeout:3000});
   assert.equal((await viewState(pad)).topic,lesson);
   assert.ok(locationHashDoesNotContainStale(await pad.evaluate(()=>location.hash)));
   // On returning to Practice, the iPad retains its previous question.
