@@ -183,7 +183,7 @@ assert.ok(dataStyleSource.includes('text-indent:2em'),'正文段落须有两个�
 assert.ok(dataStyleSource.includes('.kb-structured-desc+.kb-structured-desc{margin-top:10px}'),'连续段落之间应有清晰间距');
 
 assert.equal(flattenedMix.id,'fraction-mix-flatten-growth');
-assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联','五、延伸应用：多个对象的基期排名','六、延伸应用：累计量拉平求基期环比']);
+assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联','五、延伸应用'],'7.5只包含五个正文部分');
 assert.deepEqual(flattenedMix.items[0].table.rows,[['整体（进出口）','680.7亿元','80.3%'],['部分1（出口）','584.7亿元','86.9%'],['部分2（进口）','整体－出口','待求']]);
 const principle75=flattenedMix.items[1].subitems;
 assert.deepEqual(principle75.map(x=>x.title),['1. 修正增长率的来源','2. 拉平后为什么可以直接计算基期比']);
@@ -215,8 +215,15 @@ assert.ok(steps75[3].formula.includes("\\frac{86\\%-80\\%}{80\\%-r}\\approx\\fra
 assert.ok(steps75[3].formula.includes("80\\%-30\\%"),"推导及速算路径需保留：80\\%-30\\%");
 assert.ok(steps75[3].keyPoint.includes("选择C（48%）"),"推导及速算路径需保留：选择C（48%）");
 
-const ranking75=flattenedMix.items[4];
-assert.equal(ranking75.title,'五、延伸应用：多个对象的基期排名','新增多对象排序为7.5正文第五部分');
+const applications75=flattenedMix.items[4];
+assert.equal(applications75.title,'五、延伸应用','两道应用题统一归属第五部分');
+assert.deepEqual(applications75.subitems.map(s=>s.title),['（一）多个对象的基期排名','（二）累计量拉平求基期环比'],'两个应用为第五部分内的并列小节');
+assert.ok(htmlSource.includes('function structuredKnowledgeSubitemHtml(sub, titleTag)'),'两层子节必须能正常显示');
+assert.ok(htmlSource.includes('sub.subitems.map(step=>structuredKnowledgeSubitemHtml(step'),'每个应用中的计算步骤继续显示');
+assert.ok(htmlSource.includes('...(sub.subitems||[]).flatMap(step=>'),'各应用内的步骤能被搜索到');
+assert.ok(dataStyleSource.includes('.kb-structured-substeps>.kb-structured-subitem'),'两层内容有独立排版');
+const ranking75=applications75.subitems[0];
+assert.equal(ranking75.title,'（一）多个对象的基期排名','多对象排名属于第五部分的第一小节');
 assert.ok(ranking75.description.includes('2022年，全国规模以上文化及相关产业企业')&&ranking75.description.includes('D. 文化辅助生产和中介服务'),'保留题目与正确选项');
 assert.deepEqual(ranking75.subitems.map(s=>s.title),['第一步：排除明显较小的三个行业','第二步：排除最大的内容创作生产','第三步：拉平增长率，比较剩余五个行业','第四步：确定排名'],'保留用户排除、拉平、排序顺序');
 assert.ok(ranking75.subitems[0].description.includes('文化投资运营')&&ranking75.subitems[0].description.includes('文化娱乐休闲服务')&&ranking75.subitems[0].description.includes('文化装备生产'),'先排除的三个小行业不得遗漏');
@@ -231,8 +238,8 @@ const ranks75=[['新闻信息服务',17243,15.5],['内容创作生产',28262,10.
 assert.equal(ranks75[3].name,'文化辅助生产和中介服务','按原表全部9个行业的基期值独立校验第四名');
 assert.ok(Math.abs(23787*1.11-26400)<20,'11%补正得到约26400');
 
-const quarterMix=flattenedMix.items[5];
-assert.equal(quarterMix.title,'六、延伸应用：累计量拉平求基期环比','新增应用与第五部分同级');
+const quarterMix=applications75.subitems[1];
+assert.equal(quarterMix.title,'（二）累计量拉平求基期环比','累计量拉平属于第五部分的第二小节');
 assert.ok(quarterMix.description.includes('2022年第四季度')&&quarterMix.description.includes('A. 0.4%')&&quarterMix.description.includes('D. 4.9%'),'题干和四个选项应保留');
 assert.deepEqual(quarterMix.table.headers,['2023年累计时间','累计工业用电量（亿千瓦时）','累计同比增速']);
 assert.deepEqual(quarterMix.table.rows,[['1—6月','1036.2','3.6%'],['1—9月','1566.2','3.6%'],['1—12月','2122.4','4.8%']],'保留用户提供的三组累计量及同比');
