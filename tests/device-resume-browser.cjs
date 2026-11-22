@@ -39,6 +39,43 @@ async function scrollInto74(page){
   assert.equal(saved.topic,lesson);
   assert.equal(saved.reading.reading.sectionId,section,'7.4 has its own subsection bookmark');
   assert.ok(saved.reading.reading.offset>=95);
+  // Same-device internal lesson hopping: read 7.4, consult lesson 5,
+  // return through its chapter directory, then return to lesson 5 again.
+  // Neither lesson is allowed to overwrite the other's reading bookmark.
+  const fifth='data-topic-course-05-growth-decomposition';
+  await pc.evaluate(id=>openKnowledge(id,false),fifth);
+  await pc.waitForFunction(id=>selectedTopic===id,fifth);
+  await pc.waitForTimeout(350); // allow the original smooth scroll to finish
+  const fifthReading=await pc.evaluate(()=>{
+   window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'});
+   flushDeviceReading();
+   return devicePosition.readingFor('data','data-topic-course-05-growth-decomposition');
+  });
+  assert.ok(fifthReading?.reading?.offset>0,'Lesson 5 scroll has its own bookmark');
+  const chapter=await pc.evaluate(()=>{
+   document.querySelector('#knowledgeNav [data-knowledge-section="data-fraction-share"]').click();
+   return selectedTopic;
+  });
+  assert.equal(chapter,lesson,'Clicking the lesson 7 chapter opens lesson 7');
+  await pc.waitForFunction(id=>{
+   const el=document.getElementById('kb-structured-'+id);
+   return !!el&&el.getBoundingClientRect().top<50;
+  },section,{timeout:7000});
+  assert.equal((await pc.evaluate(id=>devicePosition.readingFor('data',id),lesson)).reading.sectionId,section,
+   'Returning from lesson 5 through the navigation sidebar resumes 7.4');
+  await pc.evaluate(id=>openKnowledge(id,false),fifth);
+  await pc.waitForFunction(expected=>{
+   const actual=currentDeviceReading();
+   return actual?.sectionId===expected.sectionId&&Math.abs(actual.offset-expected.offset)<30;
+  },fifthReading.reading,{timeout:7000});
+  assert.equal((await viewState(pc)).topic,fifth);
+  await pc.evaluate(id=>openKnowledge(id,false),lesson);
+  await pc.waitForFunction(id=>{
+   const el=document.getElementById('kb-structured-'+id);
+   return !!el&&el.getBoundingClientRect().top<50;
+  },section,{timeout:7000});
+  assert.equal((await pc.evaluate(id=>devicePosition.readingFor('data',id),fifth)).reading.offset,
+   fifthReading.reading.offset,'Navigating back to lesson 7 does not erase lesson 5 progress');
   // Reload with the existing route and then reopen the plain home URL:
   // both must restore the concrete lesson and its internal 7.4 position.
   await pc.reload({waitUntil:'domcontentloaded'});

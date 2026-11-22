@@ -902,14 +902,21 @@ function renderKnowledge(){
  nav.querySelectorAll('[data-knowledge-section]').forEach(button=>button.onclick=()=>{
   const id=button.dataset.knowledgeSection;
   const opening=!knowledgeExpanded.has(id);
+  const group=KNOWLEDGE.sections.find(section=>section.id===id);
+  const target=opening?group?.topics[0]?.id:null;
+  if(currentView==='knowledge'&&target&&target!==selectedTopic)flushDeviceReading();
   knowledgeExpanded=opening?new Set([id]):new Set();
   if(opening){
-   const group=KNOWLEDGE.sections.find(section=>section.id===id);
-   if(group?.topics.length)selectedTopic=group.topics[0].id;
+   if(target)selectedTopic=target;
    else if(currentModule==='formal')selectedTopic=null;
   }
   renderKnowledge();
-  if(opening&&currentView==='knowledge')updateViewHash();
+  if(opening&&currentView==='knowledge'){
+   updateViewHash();
+   const saved=target?devicePosition.readingFor(currentModule,target):null;
+   if(saved?.reading)restoreDeviceReading(saved);
+   else if(target)$('knowledgeCard').scrollIntoView({block:'start',behavior:'instant'});
+  }
  });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
  const topic=knowledgeTopic(selectedTopic);
@@ -1152,14 +1159,21 @@ function switchView(view,updateHash=true,restoreReading=true){
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
+ // Capture the old lesson before changing selectedTopic or rebuilding its DOM.
+ // Otherwise a jump from 7.4 to lesson 5 discards lesson 7's subsection.
+ const sameLesson=currentView==='knowledge'&&currentModule&&selectedTopic===id;
+ if(currentView==='knowledge'&&!sameLesson)flushDeviceReading();
+ const savedReading=devicePosition.readingFor(currentModule,id);
  selectedTopic=id;
  knowledgeQuery='';
  $('knowledgeSearch').value='';
  expandKnowledgeSectionForTopic(id);
  switchView('knowledge',true,false);
- if(source==='swipe'){
-  // A long lesson may be swiped halfway down the page: return directly to
-  // the beginning of the next lesson below the fixed academic header.
+ // Returning from a different lesson (or clicking the current lesson again)
+ // resumes that lesson's own last section. New lessons still start at the top.
+ if(savedReading?.reading){
+  restoreDeviceReading(savedReading);
+ }else if(source==='swipe'){
   requestAnimationFrame(()=>{
    if(currentView!=='knowledge'||selectedTopic!==id)return;
    const topbar=document.querySelector('header.academic-topbar')?.getBoundingClientRect().height||0;
@@ -1202,6 +1216,8 @@ function restoreHashView(){
   }
   return false;
  }
+ if(devicePositionReady&&currentView==='knowledge'&&module===currentModule&&
+    (view!=='knowledge'||(id&&id!==selectedTopic)))flushDeviceReading();
  activateModule(module);
  if(view==='knowledge'){
   if(id){
@@ -1217,8 +1233,8 @@ function restoreHashView(){
  }
  if(devicePositionReady){
   rememberDevicePage();
-  const saved=devicePosition.bookmark(module,view);
-  if(view==='knowledge'&&saved?.id===selectedTopic)restoreDeviceReading(saved);
+  const saved=view==='knowledge'?devicePosition.readingFor(module,selectedTopic):null;
+  if(saved?.reading)restoreDeviceReading(saved);
  }
  return true;
 }
@@ -1302,6 +1318,7 @@ $('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practic
 $('tabDataKnowledge').onclick=()=>{activateModule('data');switchView('knowledge')};
 $('tabDataPractice').onclick=()=>{activateModule('data');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
+ if(currentView==='knowledge')flushDeviceReading();
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
  renderKnowledge();
