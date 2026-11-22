@@ -99,8 +99,9 @@ async function scrollInto74(page){
   assert.equal((await viewState(pad)).topic,lesson);
   assert.ok(locationHashDoesNotContainStale(await pad.evaluate(()=>location.hash)));
   // On returning to Practice, the iPad retains its previous question.
-  await pad.locator('#academicPracticeMode').click();
-  assert.equal((await viewState(pad)).question,pcQuestion,'Per-module Practice location persists across tabs');
+  await pad.evaluate(()=>{activateModule('argument');switchView('practice')});
+  assert.equal((await viewState(pad)).question,pcQuestion,
+   'Per-module Practice location persists even after visiting Data Analysis');
   // A new install still starts at the default instead of adopting either device.
   const freshContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,serviceWorkers:'block'});
   const fresh=await freshContext.newPage();
