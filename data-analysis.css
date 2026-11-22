@@ -87,6 +87,12 @@
 .kb-structured-subitem{min-width:0;padding:15px;border:1px solid #d8e9e5;border-radius:10px;background:#f8fcfb}
 .kb-structured-subitem h5{margin:0 0 9px;color:#1f6860;font-size:14px;line-height:1.45;font-weight:800}
 .kb-structured-subitem .kb-structured-formula{margin:12px 0}
+/* Level-two applications keep the two cases parallel, with their steps visibly subordinate. */
+.kb-structured-substeps{gap:9px;margin-top:12px}
+.kb-structured-substeps>.kb-structured-subitem{padding:10px 12px;background:#fff;border:0;border-left:2px solid #cfdfdb;border-radius:0 6px 6px 0}
+.kb-structured-substeps>.kb-structured-subitem h6{font-size:13px;font-weight:750;line-height:1.5;margin:0 0 7px;color:#24615e}
+@media(max-width:800px){.kb-structured-substeps>.kb-structured-subitem{padding:10px 8px}}
+
 @media(max-width:800px){.kb-structured-subitem{padding:13px 10px}.kb-structured-subitem h5{font-size:13px}}
 
 /* Dedicated worked examples remain nested inside the method they demonstrate. */
