@@ -1287,7 +1287,7 @@ assert.equal(telecomMaterial.blocks[0].type,'paragraph');
 for(const value of ['1.31万亿元','4161亿元','9.5%','2.6个百分点','8942亿元','减少2.9%'])assert.ok(telecomMaterial.blocks[0].text.includes(value),'原材料统计信息完整：'+value);
 assert.ok(telecomQuestion.ask.includes('2019年电信业务收入比2018年'),'题干保留完整统计年份');
 assert.ok(telecomQuestion.analysis.identify.includes('直接分别计算固定通信与移动通信业务的增长量'),'采用用户指定的更简便方法');
-assert.ok(telecomQuestion.analysis.formula.includes(String.raw`\\frac{4161}{11}`)&&telecomQuestion.analysis.formula.includes(String.raw`8942\\times3\\%`),'固定通信4161/11，移动通信8942乘3%');
+assert.ok(telecomQuestion.analysis.formula.includes(String.raw`\frac{4161}{11}`)&&telecomQuestion.analysis.formula.includes(String.raw`8942\times3\%`),'固定通信4161/11，移动通信8942乘3%');
 assert.ok(telecomQuestion.analysis.quick.includes(String.raw`380-270`)&&telecomQuestion.analysis.quick.includes('110'),'380减270更正为110，不影响答案');
 assert.ok(telecomQuestion.analysis.trap.includes('基期比')&&telecomQuestion.analysis.trap.includes('混合增长率'),'保留先算混合增速增加计算量的陷阱');
 assert.ok(DA.explanationHtml(telecomQuestion).includes('data-da-tex'),'新增题目数学公式应渲染');
