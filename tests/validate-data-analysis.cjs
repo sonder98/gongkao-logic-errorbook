@@ -183,7 +183,7 @@ assert.ok(dataStyleSource.includes('text-indent:2em'),'正文段落须有两个�
 assert.ok(dataStyleSource.includes('.kb-structured-desc+.kb-structured-desc{margin-top:10px}'),'连续段落之间应有清晰间距');
 
 assert.equal(flattenedMix.id,'fraction-mix-flatten-growth');
-assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联','五、延伸应用：多个对象的基期排名']);
+assert.deepEqual(flattenedMix.items.map(i=>i.title),['一、题型识别','二、拉平增长率的数学原理','三、考场计算','四、知识关联','五、延伸应用：多个对象的基期排名','六、延伸应用：累计量拉平求基期环比']);
 assert.deepEqual(flattenedMix.items[0].table.rows,[['整体（进出口）','680.7亿元','80.3%'],['部分1（出口）','584.7亿元','86.9%'],['部分2（进口）','整体－出口','待求']]);
 const principle75=flattenedMix.items[1].subitems;
 assert.deepEqual(principle75.map(x=>x.title),['1. 修正增长率的来源','2. 拉平后为什么可以直接计算基期比']);
@@ -230,6 +230,25 @@ assert.ok(ranking75.workedExamples===undefined,'新增方法写入7.5知识正�
 const ranks75=[['新闻信息服务',17243,15.5],['内容创作生产',28262,10.7],['创意设计服务',21249,8.7],['文化传播渠道',14797,11.9],['文化投资运营',669,24.4],['文化娱乐休闲服务',1758,63.2],['文化辅助生产和中介服务',15468,.4],['文化装备生产',6282,-2.6],['文化消费终端生产',23787,3.3]].map(([name,value,rate])=>({name,base:value/(1+rate/100)})).sort((a,b)=>b.base-a.base);
 assert.equal(ranks75[3].name,'文化辅助生产和中介服务','按原表全部9个行业的基期值独立校验第四名');
 assert.ok(Math.abs(23787*1.11-26400)<20,'11%补正得到约26400');
+
+const quarterMix=flattenedMix.items[5];
+assert.equal(quarterMix.title,'六、延伸应用：累计量拉平求基期环比','新增应用与第五部分同级');
+assert.ok(quarterMix.description.includes('2022年第四季度')&&quarterMix.description.includes('A. 0.4%')&&quarterMix.description.includes('D. 4.9%'),'题干和四个选项应保留');
+assert.deepEqual(quarterMix.table.headers,['2023年累计时间','累计工业用电量（亿千瓦时）','累计同比增速']);
+assert.deepEqual(quarterMix.table.rows,[['1—6月','1036.2','3.6%'],['1—9月','1566.2','3.6%'],['1—12月','2122.4','4.8%']],'保留用户提供的三组累计量及同比');
+assert.deepEqual(quarterMix.subitems.map(s=>s.title),['第一步：拉平累计同比增速','第二步：累计量相减，构造季度量','第三步：计算2022年第四季度环比增速','原理：增长倍数统一后，季度量比等于基期比'],'保留原计算三步与数学推导');
+assert.ok(quarterMix.subitems[0].description.includes('将12月的4.8%拉平至3.6%'),'选择拉平目标必须与用户思路一致');
+assert.ok(quarterMix.subitems[0].formula.includes(String.raw`\frac{4.8\%-3.6\%}{1+4.8\%}`),'下调累计增速使用现期修正率');
+assert.ok(quarterMix.subitems[0].formula.includes(String.raw`2122.4\times(1-1.15\%)`)&&quarterMix.subitems[0].formula.includes(String.raw`\approx2098`),'修正后的12月累计量约2098');
+assert.ok(quarterMix.subitems[1].formula.includes('2098-1566=532')&&quarterMix.subitems[1].formula.includes('1566-1036=530'),'按累计量相减得到季度量');
+assert.ok(quarterMix.subitems[2].formula.includes(String.raw`532/530-1`)&&quarterMix.subitems[2].formula.includes(String.raw`2/530`)&&quarterMix.subitems[2].formula.includes(String.raw`0.4\%`),'速算顺序532/530-1=2/530≈0.4%');
+assert.ok(quarterMix.subitems[2].keyPoint.includes('选择A（0.4%）'),'最终答案A');
+assert.ok(quarterMix.subitems[3].formula.includes(String.raw`1.036(C-B)`)&&quarterMix.subitems[3].formula.includes(String.raw`1.036(B-A)`)&&quarterMix.subitems[3].formula.includes(String.raw`\frac{C-B}{B-A}`),'同一增长倍数可还原2022年季度比');
+assert.ok(!quarterMix.workedExamples&&!quarterMix.caution,'新内容为独立知识正文，不新增例题卡和条件');
+assert.equal(lesson07.questionIds.length,0,'没有写入正式习题');
+const q4Leveled=2122.4*1.036/1.048-1566.2;
+const q3Leveled=1566.2-1036.2;
+assert.ok(Math.abs((q4Leveled/q3Leveled-1)-.0036)<.0004,'按真实累计同比独立核算约0.36%选A');
 
 const lesson06=courseTopics.find(t=>t.id==='data-topic-course-06-flatten-growth');
 assert.equal(lesson06.mindmapImage,'assets/data-analysis/lesson-06-flatten-growth-mindmap.svg','第6课思维导图应放在原有知识节前');
