@@ -701,15 +701,19 @@ function knowledgeTablesHtml(tables){
  if(currentModule!=='data'||!Array.isArray(tables)||!tables.length)return '';
  return tables.map(table=>'<section class="kb-article-section"><h3>'+safe(table.title||'速查表')+'</h3>'+knowledgeTableMarkup(table)+'</section>').join('');
 }
+function structuredKnowledgeDescriptionHtml(value){
+ const paragraphs=String(value??'').split(/\r?\n+/).map(part=>part.trim()).filter(Boolean);
+ return paragraphs.map(part=>'<p class="kb-structured-desc">'+DataAnalysis.rich(part)+'</p>').join('');
+}
 function structuredKnowledgeDetailsHtml(item){
- return (item.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(item.description)+'</p>':'')+
+ return (item.description?structuredKnowledgeDescriptionHtml(item.description):'')+
   (item.keyPoint?'<p class="kb-structured-key-point"><strong>需要着重说明：</strong>'+DataAnalysis.rich(item.keyPoint)+'</p>':'')+
   (item.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(item.formula)+'</div>':'')+
   (item.table?knowledgeTableMarkup(item.table):'')+
   (item.example?'<p class="kb-structured-example"><strong>例：</strong>'+DataAnalysis.rich(item.example)+'</p>':'')+
   (item.workedExamples?.length?'<div class="kb-structured-worked-examples">'+item.workedExamples.map(ex=>
    '<section class="kb-structured-worked-example"><h5>'+safe(ex.title)+'</h5>'+
-   (ex.description?'<p class="kb-structured-desc">'+DataAnalysis.rich(ex.description)+'</p>':'')+
+   (ex.description?structuredKnowledgeDescriptionHtml(ex.description):'')+
    (ex.materialImage&&/^assets\/data-analysis\/[\w./-]+\.svg$/.test(ex.materialImage)?
     '<figure class="kb-example-material"><a href="'+safe(ex.materialImage)+'" target="_blank" rel="noopener noreferrer" aria-label="查看例题完整图表"><img src="'+safe(ex.materialImage)+'" alt="'+safe(ex.materialAlt||ex.title)+'" width="1220" height="760" loading="lazy" decoding="async"></a></figure>':'')+
    (ex.formula?'<div class="kb-structured-formula">'+DataAnalysis.rich(ex.formula)+'</div>':'')+
