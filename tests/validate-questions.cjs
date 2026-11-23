@@ -126,7 +126,14 @@ assert.ok(added_2&&added_2.answer==='B'&&added_2.category==='由因推果','new 
 assert.equal(added_2.options.length,4);
 assert.equal(added_2.image,'');
 assert.ok(!Object.hasOwn(added_2,'rule'),'reuse existing topic');
-assert.equal(q.length,69,'argument catalog count');
+const aiCustomerService=q.find(item=>item.id==='unknown-online-store-ai-customer-service-job-disappearance');
+assert.ok(aiCustomerService&&aiCustomerService.category==='由因推果'&&aiCustomerService.answer==='A','AI客服选非题必须正确入库');
+assert.equal(aiCustomerService.options.length,4);
+assert.equal(aiCustomerService.image,'');
+assert.ok(!Object.hasOwn(aiCustomerService,'rule'),'沿用原有知识点，不新增单题口诀');
+assert.ok(aiCustomerService.reason.includes('研发成本')&&aiCustomerService.reason.includes('长期运营成本'),'保留A研发成本和长期替代成本的区别');
+assert.ok(aiCustomerService.trap.includes('很快')&&aiCustomerService.trap.includes('复杂问题'),'保留C/D削弱位置');
+assert.equal(q.length,70,'argument catalog count');
 const formal=JSON.parse(fs.readFileSync(path.join(root,'formal-questions.json'),'utf8'));
 assert.ok(Array.isArray(formal),'形式逻辑题库应是数组');
 const allIds=new Set(q.map(item=>item.id));
