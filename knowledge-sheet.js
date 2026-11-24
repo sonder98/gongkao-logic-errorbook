@@ -47,7 +47,9 @@
  }
  function open(){
   if(opened||!phone()||$('knowledgeView').hidden)return;
+  console.log('[knowledge-sheet] open start',root.scrollY);
   flushDeviceReading();
+  console.log('[knowledge-sheet] after flush',root.scrollY);
   clearTimeout(closingTimer);
   opened=true;
   const sheet=$('knowledgeDirectorySheet'),backdrop=$('knowledgeDirectoryBackdrop');
@@ -59,19 +61,26 @@
   // Ensure the active chapter is visible even if previously collapsed.
   if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
   renderKnowledge(true);
+  console.log('[knowledge-sheet] after directory render',root.scrollY);
   $('knowledgeSheetContent').append(sidebar);
+  console.log('[knowledge-sheet] after sidebar move',root.scrollY);
   $('knowledgeView').inert=true;
   document.querySelector('.academic-topbar').inert=true;
   document.querySelector('.site-tabs').inert=true;
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','true');
+  console.log('[knowledge-sheet] after inert',root.scrollY);
   sheet.hidden=false;backdrop.hidden=false;
+  console.log('[knowledge-sheet] after unhide',root.scrollY);
   sheet.getBoundingClientRect();
+  console.log('[knowledge-sheet] after layout',root.scrollY);
   sheet.classList.add('is-open');backdrop.classList.add('is-open');
+  console.log('[knowledge-sheet] after transition class',root.scrollY);
   const nav=$('knowledgeNav'),current=nav.querySelector('.current');
   if(current){
    const a=nav.getBoundingClientRect(),b=current.getBoundingClientRect();
    nav.scrollTop+=b.top-a.top-(a.height-b.height)/2;
   }
+  console.log('[knowledge-sheet] open end',root.scrollY);
  }
  function close(restoreScroll=true){
   if(!opened)return;
