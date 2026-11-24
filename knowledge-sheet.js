@@ -51,8 +51,8 @@
   const sheet=$('knowledgeDirectorySheet'),backdrop=$('knowledgeDirectoryBackdrop');
   const sidebar=$('knowledgeSidebar');
   scrollY=root.scrollY;
-  previousStyle={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,overflow:document.body.style.overflow};
-  document.body.style.position='fixed';document.body.style.top=-scrollY+'px';document.body.style.width='100%';document.body.style.overflow='hidden';
+  previousStyle={body:document.body.style.overflow,html:document.documentElement.style.overflow};
+  document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';
   // Ensure the active chapter is visible even if previously collapsed.
   if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
   renderKnowledge(true);
@@ -84,7 +84,8 @@
   $('knowledgeView').inert=false;
   document.querySelector('.academic-topbar').inert=false;
   document.querySelector('.site-tabs').inert=false;
-  Object.assign(document.body.style,previousStyle);
+  document.body.style.overflow=previousStyle.body;
+  document.documentElement.style.overflow=previousStyle.html;
   root.scrollTo({top:scrollY,behavior:'instant'});
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
   $('knowledgeDirectoryFab').focus({preventScroll:true});
