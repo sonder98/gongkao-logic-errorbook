@@ -212,7 +212,7 @@ button,a{-webkit-tap-highlight-color:transparent}
  </div>
 </div>
 <div class="shell knowledge-shell" id="knowledgeView" role="tabpanel" aria-labelledby="tabKnowledge" hidden>
- <aside>
+ <aside id="knowledgeSidebar">
   <div class="kb-aside-top"><strong>知识目录</strong><span id="knowledgeCount" class="kb-count">加载中</span></div>
   <label for="knowledgeSearch" class="sr-only" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">搜索知识点</label>
   <input id="knowledgeSearch" class="kb-search" type="search" placeholder="搜索知识点、规则、关键词…" autocomplete="off">
@@ -224,6 +224,12 @@ button,a{-webkit-tap-highlight-color:transparent}
  </main>
  <aside class="academic-reading-rail" id="academicReadingRail" aria-label="本节阅读导航"></aside>
 </div>
+<button type="button" id="knowledgeDirectoryFab" class="knowledge-directory-fab" aria-label="打开知识目录" aria-controls="knowledgeDirectorySheet" aria-expanded="false"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h2m-2 6h2m-2 6h2M10 6h10M10 12h10M10 18h10"/></svg></button>
+<div id="knowledgeDirectoryBackdrop" class="knowledge-directory-backdrop" hidden></div>
+<section id="knowledgeDirectorySheet" class="knowledge-directory-sheet" role="dialog" aria-modal="true" aria-labelledby="knowledgeDirectoryTitle" hidden>
+ <header class="knowledge-sheet-header" id="knowledgeSheetHandle"><div class="knowledge-sheet-grip" aria-hidden="true"></div><button type="button" id="knowledgeDirectoryClose" aria-label="关闭知识目录">×</button><h2 id="knowledgeDirectoryTitle">知识目录</h2></header>
+ <div class="knowledge-sheet-content" id="knowledgeSheetContent"></div>
+</section>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="data-analysis.js"></script>
 <script src="scratch-overlay.js"></script>
@@ -232,6 +238,7 @@ button,a{-webkit-tap-highlight-color:transparent}
 <script src="cloud-sync.js"></script>
 <script src="swipe-navigation.js"></script>
 <script src="device-position.js"></script>
+<script src="knowledge-sheet.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
  navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>console.warn('PWA service worker registration failed',error));
@@ -856,7 +863,7 @@ function renderAcademicReadingRail(topic,position){
  foot.textContent='以章节组织理解，以练习校验方法。';
  rail.append(foot);
 }
-function renderKnowledge(){
+function renderKnowledge(directoryOnly=false){
  if(!KNOWLEDGE){
   $('knowledgeCount').textContent='—';
   $('knowledgeNav').textContent='知识目录加载中…';
@@ -869,8 +876,10 @@ function renderKnowledge(){
   .filter(g=>g.topics.length||(!searching&&currentModule==='formal'&&!g.section.topics.length));
  const allVisible=groups.flatMap(g=>g.topics);
  const emptyExpanded=!searching&&currentModule==='formal'&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
- if(emptyExpanded)selectedTopic=null;
- else if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
+ if(!directoryOnly){
+  if(emptyExpanded)selectedTopic=null;
+  else if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
+ }
  $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
  let lastChapter='',navHtml='';
  for(const {section,topics} of groups){
@@ -902,6 +911,11 @@ function renderKnowledge(){
  nav.querySelectorAll('[data-knowledge-section]').forEach(button=>button.onclick=()=>{
   const id=button.dataset.knowledgeSection;
   const opening=!knowledgeExpanded.has(id);
+  if(ExamKnowledgeSheet.isOpen()){
+   if(opening)knowledgeExpanded.add(id);else knowledgeExpanded.delete(id);
+   ExamKnowledgeSheet.preserveArticle(()=>renderKnowledge(true));
+   return;
+  }
   const group=KNOWLEDGE.sections.find(section=>section.id===id);
   const target=opening?group?.topics[0]?.id:null;
   if(currentView==='knowledge'&&target&&target!==selectedTopic)flushDeviceReading();
@@ -919,6 +933,7 @@ function renderKnowledge(){
   }
  });
  nav.querySelectorAll('[data-knowledge-topic]').forEach(button=>button.onclick=()=>openKnowledge(button.dataset.knowledgeTopic));
+ if(directoryOnly)return;
  const topic=knowledgeTopic(selectedTopic);
  if(!topic){
   const emptySection=currentModule==='formal'&&!searching&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
@@ -1053,7 +1068,7 @@ function rememberDevicePage(){
 }
 function flushDeviceReading(){
  if(positionScrollTimer!==null){clearTimeout(positionScrollTimer);positionScrollTimer=null}
- if(!devicePositionReady||currentView!=='knowledge'||!selectedTopic)return;
+ if(!devicePositionReady||currentView!=='knowledge'||!selectedTopic||ExamKnowledgeSheet.isOpen())return;
  const reading=currentDeviceReading();
  if(reading)devicePosition.updateReading(currentModule,selectedTopic,reading);
 }
@@ -1132,6 +1147,7 @@ function academicPlaceTabs(){
 }
 window.addEventListener('resize',academicPlaceTabs);
 function switchView(view,updateHash=true,restoreReading=true){
+ ExamKnowledgeSheet.close(false);
  const nextView=view==='knowledge'?'knowledge':'practice';
  const priorView=currentView,shouldRestore=restoreReading&&
   (priorView!==nextView||pendingModuleNavigation);
@@ -1141,6 +1157,7 @@ function switchView(view,updateHash=true,restoreReading=true){
   devicePosition.bookmark(currentModule,'knowledge'):null;
  if(nextView!==currentView)ExamPractice.leave();
  currentView=nextView;
+ $('knowledgeDirectoryFab')?.classList.toggle('is-visible',currentView==='knowledge');
  if(currentView==='knowledge'){ExamLayout.closeLibrary();ExamScratch.close();}
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
@@ -1159,6 +1176,7 @@ function switchView(view,updateHash=true,restoreReading=true){
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
+ ExamKnowledgeSheet.close(false);
  // Capture the old lesson before changing selectedTopic or rebuilding its DOM.
  // Otherwise a jump from 7.4 to lesson 5 discards lesson 7's subsection.
  const sameLesson=currentView==='knowledge'&&currentModule&&selectedTopic===id;
@@ -1318,6 +1336,11 @@ $('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practic
 $('tabDataKnowledge').onclick=()=>{activateModule('data');switchView('knowledge')};
 $('tabDataPractice').onclick=()=>{activateModule('data');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
+ if(ExamKnowledgeSheet.isOpen()){
+  knowledgeQuery=e.target.value;
+  renderKnowledge(true);
+  return;
+ }
  if(currentView==='knowledge')flushDeviceReading();
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
@@ -1606,7 +1629,7 @@ async function boot(){
  });
  ExamSwipe.installKnowledge({
   getState:()=>{
-   if(currentView!=='knowledge'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||!KNOWLEDGE||
+   if(currentView!=='knowledge'||ExamScratch.isOpen()||ExamLayout.isDrawerOpen()||ExamKnowledgeSheet.isOpen()||!KNOWLEDGE||
       !$('knowledgeCard').querySelector('.kb-heading'))return {enabled:false};
    // Match the existing ← 上一节 / 下一节 → buttons exactly: course order
    // covers all real topics, including transitions across chapter boundaries.
@@ -1618,6 +1641,7 @@ async function boot(){
  });
  academicPlaceTabs();
  ExamLayout.init();
+ ExamKnowledgeSheet.init();
  const res=await fetch('questions.json',{cache:'no-cache'});
  if(!res.ok)throw new Error('题库请求失败：HTTP '+res.status);
  const data=await res.json();
