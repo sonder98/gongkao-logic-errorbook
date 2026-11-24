@@ -51,8 +51,12 @@
   const sheet=$('knowledgeDirectorySheet'),backdrop=$('knowledgeDirectoryBackdrop');
   const sidebar=$('knowledgeSidebar');
   scrollY=root.scrollY;
-  previousStyle={body:document.body.style.overflow,html:document.documentElement.style.overflow};
-  document.body.style.overflow='hidden';document.documentElement.style.overflow='hidden';
+  previousStyle={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,bodyOverflow:document.body.style.overflow,htmlOverflow:document.documentElement.style.overflow};
+  // Fixed-body locking is reliable on iOS Safari as well as Android Chrome;
+  // unlike overflow:hidden alone, it prevents the page behind the sheet moving.
+  document.body.style.position='fixed';document.body.style.top=-scrollY+'px';
+  document.body.style.width='100%';document.body.style.overflow='hidden';
+  document.documentElement.style.overflow='hidden';
   // Ensure the active chapter is visible even if previously collapsed.
   if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
   renderKnowledge(true);
@@ -84,9 +88,13 @@
   $('knowledgeView').inert=false;
   document.querySelector('.academic-topbar').inert=false;
   document.querySelector('.site-tabs').inert=false;
-  document.body.style.overflow=previousStyle.body;
-  document.documentElement.style.overflow=previousStyle.html;
-  root.scrollTo({top:scrollY,behavior:'instant'});
+  document.body.style.position=previousStyle.position;
+  document.body.style.top=previousStyle.top;
+  document.body.style.width=previousStyle.width;
+  document.body.style.overflow=previousStyle.bodyOverflow;
+  document.documentElement.style.overflow=previousStyle.htmlOverflow;
+  // Restore after layout has returned to the normal document flow.
+  root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>root.scrollTo({top:scrollY,behavior:'instant'})));
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
   $('knowledgeDirectoryFab').focus({preventScroll:true});
   closingTimer=setTimeout(()=>{if(!opened){sheet.hidden=true;backdrop.hidden=true}},220);
