@@ -11,6 +11,8 @@
   $('knowledgeDirectoryClose').onclick=close;
   $('knowledgeDirectoryBackdrop').onclick=close;
   const sheet=$('knowledgeDirectorySheet'),handle=$('knowledgeSheetHandle');
+  $('knowledgeDirectoryBackdrop').addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+  $('knowledgeDirectoryBackdrop').addEventListener('wheel',e=>e.preventDefault(),{passive:false});
   handle.addEventListener('pointerdown',e=>{
    if(e.target.closest('button'))return;
    start={id:e.pointerId,x:e.clientX,y:e.clientY};
@@ -51,12 +53,9 @@
   const sheet=$('knowledgeDirectorySheet'),backdrop=$('knowledgeDirectoryBackdrop');
   const sidebar=$('knowledgeSidebar');
   scrollY=root.scrollY;
-  previousStyle={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,bodyOverflow:document.body.style.overflow,htmlOverflow:document.documentElement.style.overflow};
-  // Fixed-body locking is reliable on iOS Safari as well as Android Chrome;
-  // unlike overflow:hidden alone, it prevents the page behind the sheet moving.
-  document.body.style.position='fixed';document.body.style.top=-scrollY+'px';
-  document.body.style.width='100%';document.body.style.overflow='hidden';
-  document.documentElement.style.overflow='hidden';
+  // The full-screen backdrop intercepts background gestures. Avoid changing
+  // body positioning/overflow: that can trigger iOS scroll anchoring jumps.
+
   // Ensure the active chapter is visible even if previously collapsed.
   if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
   renderKnowledge(true);
@@ -88,13 +87,11 @@
   $('knowledgeView').inert=false;
   document.querySelector('.academic-topbar').inert=false;
   document.querySelector('.site-tabs').inert=false;
-  document.body.style.position=previousStyle.position;
-  document.body.style.top=previousStyle.top;
-  document.body.style.width=previousStyle.width;
-  document.body.style.overflow=previousStyle.bodyOverflow;
-  document.documentElement.style.overflow=previousStyle.htmlOverflow;
-  // Restore after layout has returned to the normal document flow.
-  if(restoreScroll)root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>root.scrollTo({top:scrollY,behavior:'instant'})));
+  // Normally the document never moved while the backdrop was open. Only
+  // correct it if a browser focus/viewport adjustment actually changed it.
+  if(restoreScroll)root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>{
+   if(Math.abs(root.scrollY-scrollY)>2)root.scrollTo({top:scrollY,behavior:'instant'});
+  }));
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
   $('knowledgeDirectoryFab').focus({preventScroll:true});
   closingTimer=setTimeout(()=>{if(!opened){sheet.hidden=true;backdrop.hidden=true}},220);
