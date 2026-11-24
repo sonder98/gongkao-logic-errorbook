@@ -53,6 +53,9 @@
   scrollY=root.scrollY;
   previousStyle={position:document.body.style.position,top:document.body.style.top,width:document.body.style.width,overflow:document.body.style.overflow};
   document.body.style.position='fixed';document.body.style.top=-scrollY+'px';document.body.style.width='100%';document.body.style.overflow='hidden';
+  // Ensure the active chapter is visible even if previously collapsed.
+  if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
+  renderKnowledge(true);
   $('knowledgeSheetContent').append(sidebar);
   $('knowledgeView').inert=true;
   document.querySelector('.academic-topbar').inert=true;
@@ -71,6 +74,9 @@
  function close(){
   if(!opened)return;
   opened=false;start=null;
+  knowledgeQuery='';$('knowledgeSearch').value='';
+  if(selectedTopic)expandKnowledgeSectionForTopic(selectedTopic);
+  renderKnowledge(true);
   const sheet=$('knowledgeDirectorySheet'),backdrop=$('knowledgeDirectoryBackdrop');
   sheet.style.removeProperty('transform');sheet.style.removeProperty('transition');
   sheet.classList.remove('is-open');backdrop.classList.remove('is-open');
