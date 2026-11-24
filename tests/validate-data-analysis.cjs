@@ -42,13 +42,14 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 
 
 
-// 第8课「分式比较大小」：仅按用户已讲授的两大部分和五种方法入库。
+// 第8课「分式比较大小」：按用户已讲授的8.1、8.2五种方法及8.3入库。
 const lesson08=courseTopics.find(t=>t.id==='data-topic-course-08-fraction-compare');
 assert.ok(lesson08&&Array.isArray(lesson08.contentSections),'第8课必须启用结构化知识体系');
 assert.deepEqual(lesson08.contentSections.map(s=>s.title),[
   '8.1 分子、分母大小不同边',
-  '8.2 分子、分母大小同边'
-],'第8课应分两大部分');
+  '8.2 分子、分母大小同边',
+  '8.3 A与非A型分式比较'
+],'第8课保留原两部分并新增独立8.3');
 assert.deepEqual(lesson08.contentSections[1].items.map(i=>i.title),[
   '方法一：直接计算法',
   '方法二：平均数增速比较',
@@ -106,6 +107,28 @@ for(const formula of [
 ]){
   assert.ok(DA.rich(formula).includes('data-da-tex'),'第8课 LaTeX 应交给公式渲染器');
 }
+// 第8课 8.3：只加入用户讲授的 A 与非A、增长率比较，不改动旧五种方法。
+const compareA08=lesson08.contentSections[2];
+assert.equal(compareA08.id,'fraction-compare-a-vs-not-a','8.3稳定章节ID');
+assert.equal(compareA08.title,'8.3 A与非A型分式比较');
+assert.equal(compareA08.items.length,2,'8.3仅原理与增长率重点应用');
+const relationA08=compareA08.items[0],growthA08=compareA08.items[1];
+for(const claim of ['现期＝基期＋增长量','全体＝男性＋女性','收入＝成本＋利润','男性人数÷女性人数','男性人数÷全体人数'])
+ assert.ok(relationA08.description.includes(claim),'8.3讲义案例保留：'+claim);
+assert.ok(relationA08.formula.includes("\\text{整体}=A+\\text{非}A"),'整体=A+非A');
+assert.ok(growthA08.description.includes('直接比较增长量÷现期'),'只比较增速时可以跳过基期计算');
+assert.ok(growthA08.description.includes('两种比值并不是相等'),'比值排序相同但数值不相同');
+assert.ok(growthA08.formula.includes("\\frac{\\Delta_1}{B_1}>\\frac{\\Delta_2}{B_2}"),'增长量/基期比较');
+assert.ok(growthA08.formula.includes("\\frac{\\Delta_1}{C_1}>\\frac{\\Delta_2}{C_2}"),'增长量/现期比较');
+for(const formula of compareA08.items.map(item=>item.formula))
+ assert.ok(DA.rich(formula).includes('data-da-tex'),'8.3 LaTeX公式应正常转为公式节点');
+for(const [baseA,incA,baseB,incB] of [[100,20,150,15],[200,30,100,25],[150,-10,200,-20]]){
+ const byBase=Math.sign(incA/baseA-incB/baseB);
+ const byPresent=Math.sign(incA/(baseA+incA)-incB/(baseB+incB));
+ assert.equal(byBase,byPresent,'增长量÷基期和增长量÷现期大小顺序一致');
+}
+assert.equal(lesson08.questionIds.length,0,'8.3并非正式习题');
+
 assert.ok(!lesson08.contentSections.some(s=>s.tip||s.caution),'不自行添加未经用户讲授的限制提示');
 
 const lesson07=courseTopics.find(t=>t.id==='data-topic-course-07-fraction-mix');
