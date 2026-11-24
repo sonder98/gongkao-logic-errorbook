@@ -13,6 +13,7 @@ const {chromium}=require('playwright');
   const fab=page.locator('#knowledgeDirectoryFab'),sheet=page.locator('#knowledgeDirectorySheet');
   assert.equal(await page.locator('#knowledgeSidebar').evaluate(e=>getComputedStyle(e).display),'none');
   assert.ok(await fab.isVisible());
+  console.log('[knowledge-sheet-test] fab style',await fab.evaluate(e=>({position:getComputedStyle(e).position,rect:e.getBoundingClientRect().toJSON(),parent:e.parentElement.id,scrollY})));
   await page.evaluate(()=>{const e=document.getElementById('kb-structured-fraction-mix-flexible-recognition');window.scrollTo(0,scrollY+e.getBoundingClientRect().top-60)});
   await page.waitForTimeout(300);
   const before=await page.evaluate(()=>scrollY);
