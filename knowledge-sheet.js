@@ -75,7 +75,7 @@
    nav.scrollTop+=b.top-a.top-(a.height-b.height)/2;
   }
  }
- function close(){
+ function close(restoreScroll=true){
   if(!opened)return;
   opened=false;start=null;
   knowledgeQuery='';$('knowledgeSearch').value='';
@@ -94,7 +94,7 @@
   document.body.style.overflow=previousStyle.bodyOverflow;
   document.documentElement.style.overflow=previousStyle.htmlOverflow;
   // Restore after layout has returned to the normal document flow.
-  root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>root.scrollTo({top:scrollY,behavior:'instant'})));
+  if(restoreScroll)root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>root.scrollTo({top:scrollY,behavior:'instant'})));
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
   $('knowledgeDirectoryFab').focus({preventScroll:true});
   closingTimer=setTimeout(()=>{if(!opened){sheet.hidden=true;backdrop.hidden=true}},220);
