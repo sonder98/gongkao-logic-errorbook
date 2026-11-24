@@ -5,6 +5,7 @@ const {chromium}=require('playwright');
  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,serviceWorkers:'block'});
  const page=await ctx.newPage();
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ page.on('console',msg=>{if(msg.text().includes('[knowledge-sheet]'))console.log(msg.text())});
  try{
   await page.goto(process.env.TEST_URL||'http://127.0.0.1:8000/');
   await page.waitForFunction(()=>typeof devicePositionReady!=='undefined'&&devicePositionReady);
