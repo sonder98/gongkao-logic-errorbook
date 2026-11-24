@@ -90,7 +90,9 @@
   // Normally the document never moved while the backdrop was open. Only
   // correct it if a browser focus/viewport adjustment actually changed it.
   if(restoreScroll)root.requestAnimationFrame(()=>root.requestAnimationFrame(()=>{
-   if(Math.abs(root.scrollY-scrollY)>2)root.scrollTo({top:scrollY,behavior:'instant'});
+   const current=root.scrollY;
+   if(Math.abs(current-scrollY)>2)root.scrollTo({top:scrollY,behavior:'instant'});
+   console.log('[knowledge-sheet] restore scroll', {saved:scrollY,current,after:root.scrollY});
   }));
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
   if(sheet.contains(document.activeElement))document.activeElement.blur();
