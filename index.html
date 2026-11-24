@@ -876,8 +876,10 @@ function renderKnowledge(directoryOnly=false){
   .filter(g=>g.topics.length||(!searching&&currentModule==='formal'&&!g.section.topics.length));
  const allVisible=groups.flatMap(g=>g.topics);
  const emptyExpanded=!searching&&currentModule==='formal'&&KNOWLEDGE.sections.find(s=>!s.topics.length&&knowledgeExpanded.has(s.id));
- if(emptyExpanded)selectedTopic=null;
- else if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
+ if(!directoryOnly){
+  if(emptyExpanded)selectedTopic=null;
+  else if(!allVisible.some(topic=>topic.id===selectedTopic))selectedTopic=allVisible[0]?.id||null;
+ }
  $('knowledgeCount').textContent=allVisible.length+' / '+knowledgeTopics.length;
  let lastChapter='',navHtml='';
  for(const {section,topics} of groups){
@@ -1066,7 +1068,7 @@ function rememberDevicePage(){
 }
 function flushDeviceReading(){
  if(positionScrollTimer!==null){clearTimeout(positionScrollTimer);positionScrollTimer=null}
- if(!devicePositionReady||currentView!=='knowledge'||!selectedTopic)return;
+ if(!devicePositionReady||currentView!=='knowledge'||!selectedTopic||ExamKnowledgeSheet.isOpen())return;
  const reading=currentDeviceReading();
  if(reading)devicePosition.updateReading(currentModule,selectedTopic,reading);
 }
@@ -1173,6 +1175,7 @@ function switchView(view,updateHash=true,restoreReading=true){
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
+ ExamKnowledgeSheet.close();
  // Capture the old lesson before changing selectedTopic or rebuilding its DOM.
  // Otherwise a jump from 7.4 to lesson 5 discards lesson 7's subsection.
  const sameLesson=currentView==='knowledge'&&currentModule&&selectedTopic===id;
@@ -1332,6 +1335,11 @@ $('tabFormalPractice').onclick=()=>{activateModule('formal');switchView('practic
 $('tabDataKnowledge').onclick=()=>{activateModule('data');switchView('knowledge')};
 $('tabDataPractice').onclick=()=>{activateModule('data');switchView('practice')};
 $('knowledgeSearch').oninput=e=>{
+ if(ExamKnowledgeSheet.isOpen()){
+  knowledgeQuery=e.target.value;
+  renderKnowledge(true);
+  return;
+ }
  if(currentView==='knowledge')flushDeviceReading();
  knowledgeQuery=e.target.value;
  if(!knowledgeQuery.trim())expandKnowledgeSectionForTopic(selectedTopic);
