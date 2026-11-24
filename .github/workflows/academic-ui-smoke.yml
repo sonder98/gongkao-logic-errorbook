@@ -46,6 +46,6 @@ jobs:
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/repeat-practice-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/mobile-gestures-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/knowledge-swipe-browser.cjs
-          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/device-resume-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/knowledge-sheet-browser.cjs
+          TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/device-resume-browser.cjs
           TEST_URL=http://127.0.0.1:8000/ BROWSER_CHANNEL=chrome node tests/fullscreen-scratch-browser.cjs
