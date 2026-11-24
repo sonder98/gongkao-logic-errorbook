@@ -67,7 +67,6 @@
   sheet.hidden=false;backdrop.hidden=false;
   sheet.getBoundingClientRect();
   sheet.classList.add('is-open');backdrop.classList.add('is-open');
-  $('knowledgeDirectoryClose').focus({preventScroll:true});
   const nav=$('knowledgeNav'),current=nav.querySelector('.current');
   if(current){
    const a=nav.getBoundingClientRect(),b=current.getBoundingClientRect();
