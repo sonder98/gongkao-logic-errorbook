@@ -93,7 +93,7 @@
    if(Math.abs(root.scrollY-scrollY)>2)root.scrollTo({top:scrollY,behavior:'instant'});
   }));
   $('knowledgeDirectoryFab').setAttribute('aria-expanded','false');
-  $('knowledgeDirectoryFab').focus({preventScroll:true});
+  if(sheet.contains(document.activeElement))document.activeElement.blur();
   closingTimer=setTimeout(()=>{if(!opened){sheet.hidden=true;backdrop.hidden=true}},220);
  }
  function preserveArticle(fn){fn()}
