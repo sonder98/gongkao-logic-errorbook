@@ -28,6 +28,7 @@ const target=process.env.TEST_URL||'http://127.0.0.1:8000/';
  try{
   await page.goto(target,{waitUntil:'domcontentloaded',timeout:30000});
   await page.locator('#card .stem').waitFor({state:'visible',timeout:20000});
+  await page.waitForFunction(()=>typeof devicePositionReady!=='undefined'&&devicePositionReady);
   assert.equal(await page.evaluate(()=>matchMedia('(pointer: coarse)').matches),true,
     'Test must emulate a coarse-touch mobile device');
   assert.match(await page.locator('meta[name=viewport]').getAttribute('content'),/maximum-scale=1/);
