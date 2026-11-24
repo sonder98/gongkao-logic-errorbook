@@ -81,11 +81,11 @@ assert.ok(e84.description.includes('54%')&&e84.description.includes('12.5%'),'�
 assert.ok(e84.formula.includes(String.raw`\frac{314}{3065}>\frac{481}{4722}`),'基准线比较方向正确');
 const e85=methods08[4];
 assert.ok(e85.description.includes('楼梯'),'方法五保留用户的“增量跟着上楼梯”表达');
-assert.ok(e85.formula.includes(String.raw`r_{2025}\\ge r_{2024}`),'相邻两年增速比较');
-assert.ok(e85.formula.includes(String.raw`\\Delta_{2025}\\ge\\Delta_{2024}(1+r_{2024})`),'增量不低于上一年增量乘以增长倍数');
+assert.ok(e85.formula.includes(String.raw`r_{2025}\ge r_{2024}`),'相邻两年增速比较');
+assert.ok(e85.formula.includes(String.raw`\Delta_{2025}\ge\Delta_{2024}(1+r_{2024})`),'增量不低于上一年增量乘以增长倍数');
 assert.equal(e85.subitems.length,2,'方法五数学证明及直接推论分开陈列');
-assert.ok(e85.subitems[0].formula.includes(String.raw`\\Delta_{2025}`),'保留相邻两年分式增长率证明');
-assert.ok(e85.subitems[1].formula.includes(String.raw`\\Delta_{2025}<\\Delta_{2024}`),'增量下降的直接推论');
+assert.ok(e85.subitems[0].formula.includes(String.raw`\Delta_{2025}`),'保留相邻两年分式增长率证明');
+assert.ok(e85.subitems[1].formula.includes(String.raw`\Delta_{2025}<\Delta_{2024}`),'增量下降的直接推论');
 assert.ok(e85.subitems[1].formula.includes(String.raw`r_{2025}<r_{2024}`),'增速一定下降的推论');
 assert.ok(!e85.workedExamples,'方法五不杜撰新的例题');
 for(const [x0,x1,x2] of [[100,110,119],[100,80,58],[100,100,99]]){
