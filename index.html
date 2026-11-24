@@ -1147,7 +1147,7 @@ function academicPlaceTabs(){
 }
 window.addEventListener('resize',academicPlaceTabs);
 function switchView(view,updateHash=true,restoreReading=true){
- ExamKnowledgeSheet.close();
+ ExamKnowledgeSheet.close(false);
  const nextView=view==='knowledge'?'knowledge':'practice';
  const priorView=currentView,shouldRestore=restoreReading&&
   (priorView!==nextView||pendingModuleNavigation);
@@ -1175,7 +1175,7 @@ function switchView(view,updateHash=true,restoreReading=true){
 }
 function openKnowledge(id,scrollToArticle=false,source='button'){
  if(!knowledgeTopic(id))return;
- ExamKnowledgeSheet.close();
+ ExamKnowledgeSheet.close(false);
  // Capture the old lesson before changing selectedTopic or rebuilding its DOM.
  // Otherwise a jump from 7.4 to lesson 5 discards lesson 7's subsection.
  const sameLesson=currentView==='knowledge'&&currentModule&&selectedTopic===id;
