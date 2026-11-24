@@ -58,26 +58,26 @@ assert.deepEqual(lesson08.contentSections[1].items.map(i=>i.title),[
 assert.deepEqual(lesson08.questionIds,[],'用户仅讲授教材例题，不创建正式习题');
 const opposite08=lesson08.contentSections[0];
 assert.ok(opposite08.description.includes('分子更大、分母更小'),'不同边直接判断');
-assert.ok(opposite08.items[0].formula.includes(String.raw\`\frac AB>\frac CD\`),'不同边基本判断公式');
+assert.ok(opposite08.items[0].formula.includes(String.raw`\frac AB>\frac CD`),'不同边基本判断公式');
 const methods08=lesson08.contentSections[1].items;
 assert.ok(methods08.every(i=>i.workedExamples?.length===1),'四种方法各有用户原例题');
 const e81=methods08[0].workedExamples[0];
-assert.ok(e81.formula.includes(String.raw\`\frac{155}{500}=0.31\`),'直接计算法第一式153加2为155');
-assert.ok(e81.formula.includes(String.raw\`\frac{402}{1250}\`),'直接计算法第二式保留用户分母凑1250、分子加5');
-assert.ok(e81.formula.includes(String.raw\`0.3216\`),'化除为乘结果为0.3216');
+assert.ok(e81.formula.includes(String.raw`\frac{155}{500}=0.31`),'直接计算法第一式153加2为155');
+assert.ok(e81.formula.includes(String.raw`\frac{402}{1250}`),'直接计算法第二式保留用户分母凑1250、分子加5');
+assert.ok(e81.formula.includes(String.raw`0.3216`),'化除为乘结果为0.3216');
 const e82=methods08[1].workedExamples[0];
-assert.ok(e82.formula.includes(String.raw\`\frac{340-284}{284}\`)&&e82.formula.includes(String.raw\`\frac{56}{284}\`),'平均数增速分子实际为284加56');
-assert.ok(e82.formula.includes(String.raw\`\frac{66}{300}\`),'分母增长率33/150上下同乘2');
-assert.ok(e82.formula.includes(String.raw\`\frac{340}{183}<\frac{284}{150}\`),'平均数增速比较结论正确');
+assert.ok(e82.formula.includes(String.raw`\frac{340-284}{284}`)&&e82.formula.includes(String.raw`\frac{56}{284}`),'平均数增速分子实际为284加56');
+assert.ok(e82.formula.includes(String.raw`\frac{66}{300}`),'分母增长率33/150上下同乘2');
+assert.ok(e82.formula.includes(String.raw`\frac{340}{183}<\frac{284}{150}`),'平均数增速比较结论正确');
 const e83=methods08[2].workedExamples[0];
 assert.ok(methods08[2].description.includes('第7课'),'分式混合比较联系第7课');
-assert.ok(e83.formula.includes(String.raw\`\frac{34}{73}=\frac{340}{730}\`),'分式混合中加入部分应是34/73');
-assert.ok(e83.formula.includes(String.raw\`\frac{260}{729}>\frac{226}{656}\`),'分式混合比较方向正确');
+assert.ok(e83.formula.includes(String.raw`\frac{34}{73}=\frac{340}{730}`),'分式混合中加入部分应是34/73');
+assert.ok(e83.formula.includes(String.raw`\frac{260}{729}>\frac{226}{656}`),'分式混合比较方向正确');
 const e84=methods08[3].workedExamples[0];
 assert.ok(methods08[3].description.includes('0.1'),'基准线为0.1');
-assert.ok(e84.formula.includes(String.raw\`\frac{7.5}{3065}\`)&&e84.formula.includes(String.raw\`\frac{8.8}{4722}\`),'基准线减法余量正确');
+assert.ok(e84.formula.includes(String.raw`\frac{7.5}{3065}`)&&e84.formula.includes(String.raw`\frac{8.8}{4722}`),'基准线减法余量正确');
 assert.ok(e84.description.includes('54%')&&e84.description.includes('12.5%'),'分母增幅54%、分子粗估增幅12.5%');
-assert.ok(e84.formula.includes(String.raw\`\frac{314}{3065}>\frac{481}{4722}\`),'基准线比较方向正确');
+assert.ok(e84.formula.includes(String.raw`\frac{314}{3065}>\frac{481}{4722}`),'基准线比较方向正确');
 for(const [x,y,expected] of [
   [153/493,397/1231,-1],
   [340/183,284/150,-1],
