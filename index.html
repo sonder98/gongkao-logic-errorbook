@@ -223,8 +223,8 @@ button,a{-webkit-tap-highlight-color:transparent}
   <div class="bottom-help">知识和真题可以双向跳转。笔记保留核心规则、常见陷阱与配套练习，后续学习会持续更新。</div>
  </main>
  <aside class="academic-reading-rail" id="academicReadingRail" aria-label="本节阅读导航"></aside>
- <button type="button" id="knowledgeDirectoryFab" class="knowledge-directory-fab" aria-label="打开知识目录" aria-controls="knowledgeDirectorySheet" aria-expanded="false"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h2m-2 6h2m-2 6h2M10 6h10M10 12h10M10 18h10"/></svg></button>
 </div>
+<button type="button" id="knowledgeDirectoryFab" class="knowledge-directory-fab" aria-label="打开知识目录" aria-controls="knowledgeDirectorySheet" aria-expanded="false"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 6h2m-2 6h2m-2 6h2M10 6h10M10 12h10M10 18h10"/></svg></button>
 <div id="knowledgeDirectoryBackdrop" class="knowledge-directory-backdrop" hidden></div>
 <section id="knowledgeDirectorySheet" class="knowledge-directory-sheet" role="dialog" aria-modal="true" aria-labelledby="knowledgeDirectoryTitle" hidden>
  <header class="knowledge-sheet-header" id="knowledgeSheetHandle"><div class="knowledge-sheet-grip" aria-hidden="true"></div><button type="button" id="knowledgeDirectoryClose" aria-label="关闭知识目录">×</button><h2 id="knowledgeDirectoryTitle">知识目录</h2></header>
@@ -1157,6 +1157,7 @@ function switchView(view,updateHash=true,restoreReading=true){
   devicePosition.bookmark(currentModule,'knowledge'):null;
  if(nextView!==currentView)ExamPractice.leave();
  currentView=nextView;
+ $('knowledgeDirectoryFab')?.classList.toggle('is-visible',currentView==='knowledge');
  if(currentView==='knowledge'){ExamLayout.closeLibrary();ExamScratch.close();}
  $('knowledgeView').hidden=currentView!=='knowledge';
  $('practiceView').hidden=currentView!=='practice';
