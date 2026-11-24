@@ -42,7 +42,7 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 
 
 
-// 第8课「分式比较大小」：仅按用户已讲授的两大部分和四种方法入库。
+// 第8课「分式比较大小」：仅按用户已讲授的两大部分和五种方法入库。
 const lesson08=courseTopics.find(t=>t.id==='data-topic-course-08-fraction-compare');
 assert.ok(lesson08&&Array.isArray(lesson08.contentSections),'第8课必须启用结构化知识体系');
 assert.deepEqual(lesson08.contentSections.map(s=>s.title),[
@@ -53,14 +53,15 @@ assert.deepEqual(lesson08.contentSections[1].items.map(i=>i.title),[
   '方法一：直接计算法',
   '方法二：平均数增速比较',
   '方法三：分式混合比较',
-  '方法四：基准线法'
-],'第8课四个方法须保持用户讲授顺序');
+  '方法四：基准线法',
+  '方法五：增速比较大小的技巧'
+],'第8课五个方法须保持用户讲授顺序');
 assert.deepEqual(lesson08.questionIds,[],'用户仅讲授教材例题，不创建正式习题');
 const opposite08=lesson08.contentSections[0];
 assert.ok(opposite08.description.includes('分子更大、分母更小'),'不同边直接判断');
 assert.ok(opposite08.items[0].formula.includes(String.raw`\frac AB>\frac CD`),'不同边基本判断公式');
 const methods08=lesson08.contentSections[1].items;
-assert.ok(methods08.every(i=>i.workedExamples?.length===1),'四种方法各有用户原例题');
+assert.ok(methods08.slice(0,4).every(i=>i.workedExamples?.length===1),'前四种方法各保留用户原例题');
 const e81=methods08[0].workedExamples[0];
 assert.ok(e81.formula.includes(String.raw`\frac{155}{500}=0.31`),'直接计算法第一式153加2为155');
 assert.ok(e81.formula.includes(String.raw`\frac{402}{1250}`),'直接计算法第二式保留用户分母凑1250、分子加5');
@@ -78,6 +79,19 @@ assert.ok(methods08[3].description.includes('0.1'),'基准线为0.1');
 assert.ok(e84.formula.includes(String.raw`\frac{7.5}{3065}`)&&e84.formula.includes(String.raw`\frac{8.8}{4722}`),'基准线减法余量正确');
 assert.ok(e84.description.includes('54%')&&e84.description.includes('12.5%'),'分母增幅54%、分子粗估增幅12.5%');
 assert.ok(e84.formula.includes(String.raw`\frac{314}{3065}>\frac{481}{4722}`),'基准线比较方向正确');
+const e85=methods08[4];
+assert.ok(e85.description.includes('楼梯'),'方法五保留用户的“增量跟着上楼梯”表达');
+assert.ok(e85.formula.includes(String.raw`r_{2025}\\ge r_{2024}`),'相邻两年增速比较');
+assert.ok(e85.formula.includes(String.raw`\\Delta_{2025}\\ge\\Delta_{2024}(1+r_{2024})`),'增量不低于上一年增量乘以增长倍数');
+assert.equal(e85.subitems.length,2,'方法五数学证明及直接推论分开陈列');
+assert.ok(e85.subitems[0].formula.includes(String.raw`\\Delta_{2025}`),'保留相邻两年分式增长率证明');
+assert.ok(e85.subitems[1].formula.includes(String.raw`\\Delta_{2025}<\\Delta_{2024}`),'增量下降的直接推论');
+assert.ok(e85.subitems[1].formula.includes(String.raw`r_{2025}<r_{2024}`),'增速一定下降的推论');
+assert.ok(!e85.workedExamples,'方法五不杜撰新的例题');
+for(const [x0,x1,x2] of [[100,110,119],[100,80,58],[100,100,99]]){
+ const d1=x1-x0,d2=x2-x1,r1=d1/x0,r2=d2/x1;
+ assert.ok(d2<d1&&r2<r1,'增量下降、增速下降的独立核验');
+}
 for(const [x,y,expected] of [
   [153/493,397/1231,-1],
   [340/183,284/150,-1],
@@ -88,7 +102,7 @@ for(const [x,y,expected] of [
 }
 for(const formula of [
   ...opposite08.items.map(i=>i.formula).filter(Boolean),
-  ...methods08.flatMap(item=>[item.formula,...(item.workedExamples||[]).map(ex=>ex.formula)].filter(Boolean))
+  ...methods08.flatMap(item=>[item.formula,...(item.workedExamples||[]).map(ex=>ex.formula),...(item.subitems||[]).map(sub=>sub.formula)].filter(Boolean))
 ]){
   assert.ok(DA.rich(formula).includes('data-da-tex'),'第8课 LaTeX 应交给公式渲染器');
 }
