@@ -43,6 +43,51 @@ assert.deepEqual(courseTopics.map(t=>t.title),[
 
 
 // 第8课「分式比较大小」：按用户已讲授的8.1、8.2五种方法及8.3入库。
+
+ // 第9课9.1：两期比重差。只收录用户已讲的公式、推导、三步计算与艺术表演团体配套例题。
+ const lesson09=courseTopics.find(t=>t.id==='data-topic-course-09-share-special');
+ assert.ok(lesson09&&Array.isArray(lesson09.contentSections),'第9课知识节点须采用结构化正文');
+ assert.deepEqual(lesson09.contentSections.map(s=>s.title),['9.1 两期比重差'],'只录入已讲授的9.1');
+ assert.deepEqual(lesson09.questionIds,[],'教材例题不写成正式习题');
+ const twoPeriod=lesson09.contentSections[0];
+ assert.deepEqual(twoPeriod.items.map(i=>i.title),[
+  '核心公式','公式推导','考场三步走','配套例题：平均每场演出创造收入的同比变化'
+ ],'公式、推导、三步走、配套例题保持顺序');
+ assert.ok(twoPeriod.items[0].formula.includes('r_1-r_2')&&twoPeriod.items[0].formula.includes('1+r_1'),'两期比重差正确公式');
+ assert.ok(twoPeriod.items[1].formula.includes('r_{')&&twoPeriod.items[1].formula.includes('1+r_2'),'推导从平均数增长率出发');
+ const threeSteps=twoPeriod.items[2].subitems;
+ assert.deepEqual(threeSteps.map(s=>s.title),[
+  '第一步：先算增速差','第二步：再乘现期比重','第三步：最后除以1＋r₁'
+ ],'严格遵守用户三步速算顺序');
+ assert.ok(threeSteps[0].description.includes('判断正负'),'第一步判断方向');
+ assert.ok(threeSteps[1].description.includes('优先估算'),'第二步不能要求精算现期比');
+ assert.ok(threeSteps[1].description.includes('1/N')&&threeSteps[1].description.includes('10%、20%'),'第二步用1/N或整十百分比凑易算值');
+ assert.ok(threeSteps[2].formula.includes('1+r_1'),'第三步最后修正');
+ const examplePart=twoPeriod.items[3];
+ assert.equal(examplePart.workedExamples.length,1,'艺术演出题作为一则教材例题');
+ const showExample=examplePart.workedExamples[0];
+ for(const src of ['225.61万场','24.0%','8.93亿人次','27.4%','86.63亿元','31.7%','1000元','选项：A.','D. 增加了1000元以上'])
+  assert.ok(showExample.description.includes(src),'题目材料及选项完整：'+src);
+ assert.ok(!showExample.formula,'例题解题步骤不混在一长段未格式化正文中');
+ assert.deepEqual(examplePart.subitems.map(s=>s.title),[
+  '第一步：增速差，判断正负','第二步：估现期比，保留分式','第三步：除以1＋r₁，约去7'
+ ],'例题三步与用户原始计算顺序一致');
+ assert.ok(examplePart.subitems[0].formula.includes('-7.7')&&examplePart.subitems[0].formula.includes('-7'),'第一步保持精确值与考场近似的区分');
+ assert.ok(examplePart.subitems[1].formula.includes('86.63')&&examplePart.subitems[1].formula.includes('225.61')&&examplePart.subitems[1].formula.includes('866300')&&examplePart.subitems[1].formula.includes('8663'),'第二步单位换算和分母凑整、保留7');
+ assert.ok(examplePart.subitems[2].formula.includes('68.3')&&examplePart.subitems[2].formula.includes('70')&&examplePart.subitems[2].formula.includes('86630')&&examplePart.subitems[2].formula.includes('-385'),'第三步估算70%并约去7，约为-385元');
+ assert.ok(examplePart.subitems[2].formula.includes('选A'),'结论为减少不到1000元，选A');
+ for(const formula of [
+  ...twoPeriod.items.filter(i=>i.formula).map(i=>i.formula),
+  ...threeSteps.map(s=>s.formula),
+  ...examplePart.subitems.map(s=>s.formula)
+ ])
+  assert.ok(DA.rich(formula).includes('data-da-tex'),'第9课公式需能正确交给数学渲染器');
+ const preciseShowDiff=(86.63*10000/225.61)*(-.317+.24)/(1-.317);
+ const roughShowDiff=-86630/225;
+ assert.ok(preciseShowDiff< -400&&preciseShowDiff> -450,'独立核算实际变动约-433元');
+ assert.ok(roughShowDiff< -380&&roughShowDiff> -390,'遵从用户速算约-385元');
+ assert.ok(preciseShowDiff<0&&preciseShowDiff> -1000,'最终应选A');
+ 
 const lesson08=courseTopics.find(t=>t.id==='data-topic-course-08-fraction-compare');
 assert.ok(lesson08&&Array.isArray(lesson08.contentSections),'第8课必须启用结构化知识体系');
 assert.deepEqual(lesson08.contentSections.map(s=>s.title),[
